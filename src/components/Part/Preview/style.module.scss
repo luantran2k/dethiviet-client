@@ -1,0 +1,18 @@
+.parts {
+    counter-reset: partCounter;
+    ::before {
+        font-weight: 500;
+    }
+}
+
+.part {
+    counter-reset: questionCounter;
+    counter-increment: partCounter;
+    word-break: break-all;
+
+    &::before {
+        content: "Phần " counter(partCounter) ": ";
+        font-size: 18px;
+        text-transform: uppercase;
+    }
+}

@@ -1,0 +1,75 @@
+.a4 {
+    background-color: white;
+    width: 210mm;
+    min-height: 297mm;
+    display: block;
+}
+
+.paperWrapper {
+    position: relative;
+}
+
+.paperBackgrounds {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 3rem 0;
+}
+@media screen {
+    .a4 {
+        padding: 3rem;
+        box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+    }
+    .paperBackgrounds {
+        padding: 3rem 0;
+    }
+    .paperBackground {
+        width: 210mm;
+        position: relative;
+        &:not(:last-child) {
+            flex: 0 0 calc(297mm - 6rem);
+            border-bottom: 2px dashed #ccc;
+            .pageNumber {
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+        &:last-child {
+            margin-top: auto;
+            position: relative;
+            .pageNumber {
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    }
+}
+
+@media print {
+    .a4 {
+        padding: 0 3rem;
+    }
+
+    .paperBackground {
+        width: 210mm;
+        flex: 0 0 calc(297mm - 6rem);
+        position: relative;
+        &:last-child {
+            break-after: always;
+        }
+
+        .pageNumber {
+            position: absolute;
+            bottom: 0;
+            right: 3rem;
+        }
+    }
+}
