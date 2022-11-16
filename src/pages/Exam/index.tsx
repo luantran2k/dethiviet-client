@@ -73,7 +73,7 @@ export default function ExamPage(props: IExamPageProps) {
                 </AppModal>
                 <Button
                     onClick={() => {
-                        navigate("create");
+                        navigate("/");
                     }}
                 >
                     Redirect
