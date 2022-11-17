@@ -9,8 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/hooks";
-import IExam, {
+import {
     ExamFilter,
     ExamSummary,
 } from "../../components/Exam/interfaces/IExam";
@@ -21,7 +20,6 @@ import request from "../../Utils/request";
 export interface IExamPageProps {}
 
 export default function ExamPage(props: IExamPageProps) {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [exams, setExams] = useState<ExamSummary[]>([]);
 
