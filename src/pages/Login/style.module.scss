@@ -26,11 +26,11 @@
             justify-content: center;
             align-items: center;
             .imageDecor {
-                border-radius: 50%;
                 display: block;
                 width: 100%;
                 animation: 2s ease-in showImage;
                 filter: grayscale(0.6);
+                user-select: none;
             }
 
             @keyframes showImage {

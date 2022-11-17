@@ -1,7 +1,19 @@
+import { TryOutlined } from "@mui/icons-material";
 import { Button, TextField, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import ultis from "../../Utils/ultis";
 import styles from "./style.module.scss";
+
+interface LoginInfo {
+    userName: string;
+    password: string;
+}
+
+interface RegisterInfo extends LoginInfo {
+    confirmPassword: string;
+}
 
 export default function LoginPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -35,10 +47,47 @@ export function LoginForm(props: {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const { setIsLogin } = props;
+    const {
+        handleSubmit,
+        register,
+        formState: { errors },
+    } = useForm<LoginInfo>();
+
+    const onSubmit: SubmitHandler<LoginInfo> = (data) => {
+        console.log(data);
+    };
+
     return (
-        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-            <TextField label="Tên tài khoản" />
-            <TextField type="password" label="Mật khẩu" />
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+            <TextField
+                {...register("userName", {
+                    required: true,
+                    maxLength: 50,
+                    minLength: 5,
+                })}
+                helperText={ultis.getFormErrorMessage({
+                    error: errors.userName?.type,
+                    minLength: 5,
+                    maxLength: 50,
+                })}
+                error={Boolean(errors.userName?.type)}
+                label="Tên tài khoản"
+            />
+            <TextField
+                type="password"
+                label="Mật khẩu"
+                {...register("password", {
+                    required: true,
+                    maxLength: 50,
+                    minLength: 6,
+                })}
+                helperText={ultis.getFormErrorMessage({
+                    error: errors.password?.type,
+                    minLength: 6,
+                    maxLength: 50,
+                })}
+                error={Boolean(errors.password?.type)}
+            />
             <Button type="submit" variant="contained">
                 Đăng nhập
             </Button>
@@ -56,11 +105,64 @@ export function RegisterForm(props: {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const { setIsLogin } = props;
+
+    const {
+        handleSubmit,
+        register,
+        watch,
+        formState: { errors },
+    } = useForm<RegisterInfo>();
+
+    const onSubmit: SubmitHandler<RegisterInfo> = (data) => {
+        console.log(data);
+    };
+
     return (
-        <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-            <TextField label="Tên tài khoản" />
-            <TextField type="password" label="Mật khẩu" />
-            <TextField type="password" label="Nhập lại mật khẩu" />
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+            <TextField
+                {...register("userName", {
+                    required: true,
+                    maxLength: 50,
+                    minLength: 5,
+                })}
+                helperText={ultis.getFormErrorMessage({
+                    error: errors.userName?.type,
+                    minLength: 5,
+                    maxLength: 50,
+                })}
+                error={Boolean(errors.userName?.type)}
+                label="Tên tài khoản"
+            />
+            <TextField
+                type="password"
+                label="Mật khẩu"
+                {...register("password", {
+                    required: true,
+                    maxLength: 50,
+                    minLength: 6,
+                })}
+                helperText={ultis.getFormErrorMessage({
+                    error: errors.password?.type,
+                    minLength: 6,
+                    maxLength: 50,
+                })}
+                error={Boolean(errors.password?.type)}
+            />
+            <TextField
+                type="password"
+                label="Nhập lại mật khẩu"
+                {...register("confirmPassword", {
+                    required: true,
+                    maxLength: 50,
+                    minLength: 6,
+                    validate: (value: string) => {
+                        if (watch("password") !== value)
+                            return "Mật khẩu không khớp";
+                    },
+                })}
+                helperText={errors.confirmPassword?.message}
+                error={Boolean(errors.confirmPassword?.type)}
+            />
             <Button type="submit" variant="contained">
                 Đăng ký
             </Button>

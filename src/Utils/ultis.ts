@@ -14,6 +14,7 @@ const ultis = {
         maxLength,
     }: FormErrorMessParams): string => {
         if (typeof error === "undefined") return "";
+        alert(error);
         switch (error) {
             case "required":
                 return "Không được bỏ trống trường này";
