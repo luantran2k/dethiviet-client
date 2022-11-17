@@ -20,6 +20,7 @@ import EditExamPage from "./pages/Exam/edit";
 import HomePage from "./pages/Home";
 import FitHeightLayout from "./pages/Layouts/FitHeightLayout";
 import Root from "./pages/Layouts/Root";
+import LoginPage from "./pages/Login";
 import { store } from "./redux/store";
 import "./scss/index.scss";
 import { theme } from "./themes";
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
         </Route>,
+        <Route path="login" element={<LoginPage />} />,
         <Route path="exam" element={<FitHeightLayout />}>
             <Route index element={<ExamPage />} />
             <Route path="edit" element={<EditExamPage />}>
