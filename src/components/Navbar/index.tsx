@@ -1,29 +1,47 @@
-import { AppBar, Button, MenuItem, Toolbar } from "@mui/material";
-import * as React from "react";
+import { AppBar, Box, MenuItem, Toolbar } from "@mui/material";
+import { Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { signOut } from "../../redux/slices/appSlice";
+import AppBarSearch from "../Search/AppBarSearch";
+import UserControl from "../UserControl";
 
 export interface INavbarProps {}
 
 export default function Navbar(props: INavbarProps) {
-    const isSignIn = useAppSelector((state) => state.app.isSignIn);
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
     return (
         <AppBar position="static">
-            <Toolbar>
-                {isSignIn && (
+            <Toolbar sx={{ alignItems: "center" }}>
+                <Stack direction="row" flexGrow={1} alignItems="center">
+                    <img
+                        src="/image/logo/white_logo.png"
+                        style={{ height: "1.4rem" }}
+                    />
                     <MenuItem
                         onClick={() => {
-                            dispatch(signOut());
-                            navigate("/signIn");
+                            navigate("/");
                         }}
                     >
-                        Đăng xuất
+                        Trang chủ
                     </MenuItem>
-                )}
+                    <MenuItem
+                        onClick={() => {
+                            navigate("/exam");
+                        }}
+                    >
+                        Đề thi
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            navigate("/about");
+                        }}
+                    >
+                        Giới thiệu
+                    </MenuItem>
+                </Stack>
+                <AppBarSearch />
+                <UserControl />
             </Toolbar>
         </AppBar>
     );

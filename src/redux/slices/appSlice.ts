@@ -2,14 +2,26 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import request, { removeToken, saveRefreshToken } from "../../Utils/request";
 import { RootState } from "../store";
 
+export interface User {
+    id: number;
+    username: string;
+    profileImg?: string;
+    email?: string;
+    name?: string;
+}
+
 export interface AppSliceState {
     isSignIn: boolean;
     isLoading?: boolean;
+    userInfo?: User;
 }
 
 const initialState: AppSliceState = {
     isSignIn: false,
     isLoading: false,
+    userInfo: localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user")!)
+        : undefined,
 };
 
 const appSlice = createSlice({
@@ -18,6 +30,9 @@ const appSlice = createSlice({
     reducers: {
         setIsSignIn: (state, action: PayloadAction<boolean>) => {
             state.isSignIn = action.payload;
+            state.userInfo = JSON.parse(
+                localStorage.getItem("userInfo") || "{}"
+            );
         },
     },
     extraReducers: (builder) => {
@@ -42,6 +57,7 @@ const appSlice = createSlice({
         });
         builder.addCase(signOut.fulfilled, (state, action) => {
             state.isSignIn = false;
+            state.userInfo = undefined;
             removeToken();
         });
         builder.addCase(signOut.rejected, (state, action) => {
@@ -51,7 +67,7 @@ const appSlice = createSlice({
 });
 
 export const signUp = createAsyncThunk<
-    { accessToken: string; refreshToken: string },
+    { accessToken: string; refreshToken: string; userInfo: User },
     { username: string; password: string },
     { state: RootState }
 >("signUp", async ({ username, password }, { dispatch, getState }) => {
@@ -63,7 +79,7 @@ export const signUp = createAsyncThunk<
 });
 
 export const signIn = createAsyncThunk<
-    { accessToken: string; refreshToken: string },
+    { accessToken: string; refreshToken: string; userInfo: User },
     { username: string; password: string },
     { state: RootState }
 >("signIn", async ({ username, password }, { dispatch, getState }) => {

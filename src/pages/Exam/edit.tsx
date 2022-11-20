@@ -14,7 +14,7 @@ import request from "../../Utils/request";
 export interface ICreateExamPageProps {}
 
 export default function EditExamPage(props: ICreateExamPageProps) {
-    useAuth("edit exam");
+    useAuth();
     const { examId } = useParams();
     const scale = React.useRef(1);
     const pageAreaRef = React.useRef<HTMLDivElement>(null);
@@ -33,7 +33,6 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         if (examId) {
             dispatch(getExam(examId));
         }
-        console.log("dispathc get exam");
     }, []);
 
     useEffect(() => {

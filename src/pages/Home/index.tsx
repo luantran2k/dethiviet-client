@@ -8,14 +8,6 @@ export default function HomePage(props: IHomePageProps) {
     return (
         <div className="home-page">
             <h1>This is home page</h1>
-            <Button
-                onClick={() => {
-                    navigate("exam");
-                }}
-                variant="contained"
-            >
-                Exam
-            </Button>
             <Outlet />
         </div>
     );

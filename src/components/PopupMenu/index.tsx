@@ -1,13 +1,22 @@
 import { MoreVert, Delete, Edit } from "@mui/icons-material";
-import { Button, MenuItem, Popover, Stack, Typography } from "@mui/material";
+import {
+    Button,
+    MenuItem,
+    Popover,
+    PopoverProps,
+    Stack,
+    Typography,
+} from "@mui/material";
 import * as React from "react";
 
 export interface IPopupMenuProps {
     children: React.ReactElement;
+    trigger?: React.ReactElement;
+    popOverProps?: Partial<PopoverProps>;
 }
 
 export default function PopupMenu(props: IPopupMenuProps) {
-    const { children } = props;
+    const { children, trigger, popOverProps } = props;
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
     );
@@ -26,13 +35,17 @@ export default function PopupMenu(props: IPopupMenuProps) {
 
     return (
         <div>
-            <Button
-                aria-describedby={id}
-                sx={{ minHeight: 0, minWidth: 0, padding: 1 }}
-                onClick={handleClick}
-            >
-                <MoreVert />
-            </Button>
+            {trigger ? (
+                React.cloneElement(trigger, { onClick: handleClick })
+            ) : (
+                <Button
+                    aria-describedby={id}
+                    sx={{ minHeight: 0, minWidth: 0, padding: 1 }}
+                    onClick={handleClick}
+                >
+                    <MoreVert />
+                </Button>
+            )}
             <Popover
                 id={id}
                 open={open}
@@ -42,6 +55,7 @@ export default function PopupMenu(props: IPopupMenuProps) {
                     vertical: "bottom",
                     horizontal: "left",
                 }}
+                {...popOverProps}
             >
                 {children}
             </Popover>

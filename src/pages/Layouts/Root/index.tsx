@@ -6,6 +6,7 @@ export interface IRootProps {}
 export default function Root(props: IRootProps) {
     return (
         <div>
+            <Navbar />
             <Outlet />
         </div>
     );

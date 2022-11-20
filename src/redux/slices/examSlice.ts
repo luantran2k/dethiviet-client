@@ -14,7 +14,7 @@ import {
     createEmptyAnswer,
 } from "../../components/Answer/interfaces/IAnswer";
 import { create } from "@mui/material/styles/createTransitions";
-import request from "../../Utils/request";
+import request, { removeToken } from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 
 export interface examSliceState extends IExam {}
@@ -218,11 +218,16 @@ export const saveExam = createAsyncThunk<
     }
 >("exams/create", async (examId, { dispatch, getState }) => {
     const exam: examSliceState = getState().exam;
+    const ownerId = getState().app.userInfo?.id;
+    if (ownerId) {
+        removeToken();
+        throw new Error("Bạn cần đăng nhập trước");
+    }
     //console.log(JSON.stringify(exam));
     if (examId) {
-        return await request.patch("exams/" + examId, { ...exam, ownerId: 1 });
+        return await request.patch("exams/" + examId, { ...exam, ownerId });
     }
-    return await request.post("exams", { ...exam, ownerId: 1 });
+    return await request.post("exams", { ...exam, ownerId });
 });
 
 export const getExam = createAsyncThunk<

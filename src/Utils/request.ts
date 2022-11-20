@@ -1,3 +1,4 @@
+import { User } from "./../redux/slices/appSlice";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const instance = axios.create({
@@ -20,7 +21,6 @@ instance.interceptors.request.use(
                 "accessToken"
             )}`;
         }
-        //console.log("config", JSON.stringify(config));
         return config;
     },
     (error) => Promise.reject(error)
@@ -50,7 +50,6 @@ instance.interceptors.response.use(
 );
 
 export const refreshToken = async () => {
-    console.log("refreshToken");
     const oldRefreshToken = localStorage.getItem("refreshToken");
     const response = await instance.get("auth/refreshToken", {
         headers: {
@@ -58,7 +57,6 @@ export const refreshToken = async () => {
         },
     });
     if (response && response.status === 200) {
-        console.log(JSON.stringify(response.data));
         saveRefreshToken(response.data);
         return response.data;
     }
@@ -69,15 +67,18 @@ export const refreshToken = async () => {
 export const saveRefreshToken = (data: {
     accessToken: string;
     refreshToken: string;
+    userInfo: User;
 }) => {
-    const { accessToken, refreshToken } = data;
+    const { accessToken, refreshToken, userInfo } = data;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
 };
 
 export const removeToken = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userInfo");
 };
 
 const request = {
