@@ -1,13 +1,15 @@
-import { TryOutlined } from "@mui/icons-material";
 import { Button, TextField, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setIsSignIn, signIn, signUp } from "../../redux/slices/appSlice";
 import ultis from "../../Utils/ultis";
 import styles from "./style.module.scss";
 
 interface LoginInfo {
-    userName: string;
+    username: string;
     password: string;
 }
 
@@ -16,7 +18,31 @@ interface RegisterInfo extends LoginInfo {
 }
 
 export default function LoginPage() {
-    const [isLogin, setIsLogin] = useState(true);
+    const navigate = useNavigate();
+    const [isSignInForm, setIsSignInForm] = useState(true);
+    const isSignIn = useAppSelector((state) => state.app.isSignIn);
+    const location = useLocation();
+    const from = location.state?.from || "/";
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const checkRefreshTokenExpire = () => {
+            const refreshToken = localStorage.getItem("refreshToken");
+            if (
+                refreshToken &&
+                new Date(ultis.parseJwt(refreshToken).exp * 1000) >= new Date()
+            ) {
+                return true;
+            }
+            return false;
+        };
+        const isRefreshTokenExpire = checkRefreshTokenExpire();
+        if (isRefreshTokenExpire) {
+            dispatch(setIsSignIn(isRefreshTokenExpire));
+        }
+        if (isSignIn) {
+            navigate(from, { replace: true });
+        }
+    });
 
     return (
         <div className={styles.container}>
@@ -32,10 +58,10 @@ export default function LoginPage() {
                         src="/image/logo/teal_logo.png"
                         className={styles.logo}
                     />
-                    {isLogin ? (
-                        <LoginForm setIsLogin={setIsLogin} />
+                    {isSignInForm ? (
+                        <LoginForm setIsSignInForm={setIsSignInForm} />
                     ) : (
-                        <RegisterForm setIsLogin={setIsLogin} />
+                        <RegisterForm setIsSignInForm={setIsSignInForm} />
                     )}
                 </div>
             </div>
@@ -44,33 +70,35 @@ export default function LoginPage() {
 }
 
 export function LoginForm(props: {
-    setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsSignInForm: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { setIsLogin } = props;
+    const { setIsSignInForm } = props;
+    const dispatch = useAppDispatch();
     const {
         handleSubmit,
         register,
         formState: { errors },
     } = useForm<LoginInfo>();
+    const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<LoginInfo> = (data) => {
-        console.log(data);
+        dispatch(signIn(data));
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <TextField
-                {...register("userName", {
+                {...register("username", {
                     required: true,
                     maxLength: 50,
                     minLength: 5,
                 })}
                 helperText={ultis.getFormErrorMessage({
-                    error: errors.userName?.type,
+                    error: errors.username?.type,
                     minLength: 5,
                     maxLength: 50,
                 })}
-                error={Boolean(errors.userName?.type)}
+                error={Boolean(errors.username?.type)}
                 label="Tên tài khoản"
             />
             <TextField
@@ -94,7 +122,7 @@ export function LoginForm(props: {
             <Typography textAlign="center" color={grey[600]}>
                 hoặc
             </Typography>
-            <Button variant="outlined" onClick={() => setIsLogin(false)}>
+            <Button variant="outlined" onClick={() => setIsSignInForm(false)}>
                 Đăng ký
             </Button>
         </form>
@@ -102,9 +130,10 @@ export function LoginForm(props: {
 }
 
 export function RegisterForm(props: {
-    setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsSignInForm: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { setIsLogin } = props;
+    const { setIsSignInForm } = props;
+    const dispatch = useAppDispatch();
 
     const {
         handleSubmit,
@@ -114,23 +143,23 @@ export function RegisterForm(props: {
     } = useForm<RegisterInfo>();
 
     const onSubmit: SubmitHandler<RegisterInfo> = (data) => {
-        console.log(data);
+        dispatch(signUp(data));
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <TextField
-                {...register("userName", {
+                {...register("username", {
                     required: true,
                     maxLength: 50,
                     minLength: 5,
                 })}
                 helperText={ultis.getFormErrorMessage({
-                    error: errors.userName?.type,
+                    error: errors.username?.type,
                     minLength: 5,
                     maxLength: 50,
                 })}
-                error={Boolean(errors.userName?.type)}
+                error={Boolean(errors.username?.type)}
                 label="Tên tài khoản"
             />
             <TextField
@@ -166,7 +195,7 @@ export function RegisterForm(props: {
             <Button type="submit" variant="contained">
                 Đăng ký
             </Button>
-            <Button variant="outlined" onClick={() => setIsLogin(true)}>
+            <Button variant="outlined" onClick={() => setIsSignInForm(true)}>
                 Về trang đăng nhập
             </Button>
         </form>

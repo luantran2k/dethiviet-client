@@ -4,7 +4,7 @@ import { grey, teal } from "@mui/material/colors";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
 import Exam from "../../components/Exam";
 import AppModal from "../../components/Modal";
 import PaperPage from "../../components/PaperPage";
@@ -14,6 +14,7 @@ import request from "../../Utils/request";
 export interface ICreateExamPageProps {}
 
 export default function EditExamPage(props: ICreateExamPageProps) {
+    useAuth("edit exam");
     const { examId } = useParams();
     const scale = React.useRef(1);
     const pageAreaRef = React.useRef<HTMLDivElement>(null);
@@ -32,7 +33,8 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         if (examId) {
             dispatch(getExam(examId));
         }
-    }, [examId]);
+        console.log("dispathc get exam");
+    }, []);
 
     useEffect(() => {
         document.addEventListener("keydown", (e) => {

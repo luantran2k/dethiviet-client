@@ -14,7 +14,6 @@ const ultis = {
         maxLength,
     }: FormErrorMessParams): string => {
         if (typeof error === "undefined") return "";
-        alert(error);
         switch (error) {
             case "required":
                 return "Không được bỏ trống trường này";
@@ -82,6 +81,31 @@ const ultis = {
     convertPixelToMilimeter: (number: number) => {
         const onePixel = 25.4 / ultis.calcScreenDPI();
         return number * onePixel;
+    },
+
+    parseJwt: (token: string) => {
+        var base64Url = token.split(".")[1];
+        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        var jsonPayload = decodeURIComponent(
+            window
+                .atob(base64)
+                .split("")
+                .map(function (c) {
+                    return (
+                        "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+                    );
+                })
+                .join("")
+        );
+
+        return JSON.parse(jsonPayload);
+    },
+
+    checkEmptyArray: (array: any) => {
+        if (Array.isArray(array) && array.length === 0) {
+            return true;
+        }
+        return false;
     },
 };
 export default ultis;

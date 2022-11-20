@@ -1,10 +1,12 @@
 import examSlice from "./slices/examSlice";
 import { configureStore } from "@reduxjs/toolkit";
+import appSlice from "./slices/appSlice";
 // ...
 
 export const store = configureStore({
     reducer: {
         exam: examSlice.reducer,
+        app: appSlice.reducer,
     },
 });
 

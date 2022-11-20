@@ -6,27 +6,25 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FormEvent, memo, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import {
-    ExamFilter,
-    ExamSummary,
-} from "../../components/Exam/interfaces/IExam";
+import { useAppDispatch, useFetch } from "../../app/hooks";
+import IExam, { ExamFilter } from "../../components/Exam/interfaces/IExam";
 import CreateExamModal from "../../components/Exam/modal/create";
 import AppModal from "../../components/Modal";
-import request from "../../Utils/request";
+import ultis from "../../Utils/ultis";
 
 export interface IExamPageProps {}
 
 export default function ExamPage(props: IExamPageProps) {
     const navigate = useNavigate();
-    const [exams, setExams] = useState<ExamSummary[]>([]);
-
+    const dispatch = useAppDispatch();
+    const [examFilter, setExamFilter] = useState<ExamFilter>({});
     const {
         register,
-        handleSubmit,
         watch,
+        getValues,
         control,
         formState: { errors },
         setValue,
@@ -36,31 +34,18 @@ export default function ExamPage(props: IExamPageProps) {
             quantity: 24,
         },
     });
-    useEffect(() => {
-        const getExams = async () => {
-            setExams(
-                await request.get<ExamFilter>("exams", {
-                    page: 0,
-                    quantity: 24,
-                })
-            );
-        };
-        getExams();
-    }, []);
 
-    const onSubmit: SubmitHandler<ExamFilter> = async (examFilter) => {
-        examFilter = Object.keys(examFilter).reduce((output, key) => {
-            const value = examFilter[key as keyof ExamFilter];
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const data = getValues();
+        const newData = Object.keys(data).reduce((output, key) => {
+            const value = data[key as keyof ExamFilter];
             if (Number.isNaN(value) || value === "") {
                 return output;
             }
             return { ...output, [key]: value };
         }, {});
-
-        console.log(examFilter);
-        const exam = await request.get<ExamFilter>("exams", examFilter);
-        console.log(exam);
-        setExams(exam);
+        setExamFilter(newData);
     };
 
     return (
@@ -77,7 +62,7 @@ export default function ExamPage(props: IExamPageProps) {
                     Redirect
                 </Button>
             </Stack>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit}>
                 <TextField {...register("title")} label="Tiêu đề" />
                 <TextField {...register("subjectName")} label="Tên môn học" />
                 <TextField
@@ -91,6 +76,43 @@ export default function ExamPage(props: IExamPageProps) {
                 </Button>
             </form>
             <Grid container rowGap={2} maxWidth="56.62rem">
+                {examFilter.title ? (
+                    <FindExamResults examFilter={examFilter} />
+                ) : (
+                    <Typography variant="h4">
+                        Nhập thông tin để tìm kiếm
+                    </Typography>
+                )}
+            </Grid>
+        </Stack>
+    );
+}
+
+export const FindExamResults = memo((props: { examFilter: ExamFilter }) => {
+    const { examFilter } = props;
+    const {
+        data: exams,
+        error,
+        loading,
+    } = useFetch<ExamFilter, IExam[]>("exams", {
+        params: examFilter,
+    });
+    const navigate = useNavigate();
+    if (loading) {
+        return <Typography variant="h4"> Đang tải dữ liệu</Typography>;
+    }
+    if (error) {
+        return (
+            <Typography variant="h4" color="red">
+                {error.message}
+            </Typography>
+        );
+    }
+    if (ultis.checkEmptyArray(exams) || !exams) {
+        return <Typography variant="h4">Không tìm thấy</Typography>;
+    } else {
+        return (
+            <>
                 {exams.map((exam) => (
                     <Grid
                         item
@@ -113,12 +135,16 @@ export default function ExamPage(props: IExamPageProps) {
                             </Typography>
                             <Typography>{exam.subjectName}</Typography>
                             <Typography>{exam.ownerId}</Typography>
-                            <Typography>{exam.year}</Typography>
+                            <Typography>
+                                {exam.date
+                                    ? new Date(exam.date).getFullYear()
+                                    : "Không xác định"}
+                            </Typography>
                             <Typography>{exam.grade}</Typography>
                         </CardActions>
                     </Grid>
                 ))}
-            </Grid>
-        </Stack>
-    );
-}
+            </>
+        );
+    }
+});

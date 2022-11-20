@@ -192,18 +192,14 @@ const examSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(saveExam.pending, (state, action) => {
-            console.log("Create exam pending...");
-        });
+        builder.addCase(saveExam.pending, (state, action) => {});
         builder.addCase(saveExam.fulfilled, (state, action) => {
             return action.payload;
         });
         builder.addCase(saveExam.rejected, (state, action) => {
             alert("Save Exam Failed");
         });
-        builder.addCase(getExam.pending, (state, action) => {
-            console.log("Get exam pending...");
-        });
+        builder.addCase(getExam.pending, (state, action) => {});
         builder.addCase(getExam.fulfilled, (state, action) => {
             return action.payload;
         });
