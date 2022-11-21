@@ -31,8 +31,8 @@ export default function UserControl(props: IUserControlProps) {
                     trigger={
                         <Box
                             margin="1rem 2rem"
-                            height="2.8rem"
-                            width="2.8rem"
+                            height="2.4rem"
+                            width="2.4rem"
                             borderRadius="50%"
                             overflow="hidden"
                             display="flex"

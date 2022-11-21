@@ -36,11 +36,16 @@ const appSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(signUp.pending, (state, action) => {
+            state.isLoading = true;
+        });
         builder.addCase(signUp.fulfilled, (state, action) => {
             state.isSignIn = true;
+            state.isLoading = false;
             saveRefreshToken(action.payload);
         });
         builder.addCase(signUp.rejected, (state, action) => {
+            state.isLoading = false;
             console.log("signUp rejected", action.payload);
         });
         builder.addCase(signIn.pending, (state, action) => {

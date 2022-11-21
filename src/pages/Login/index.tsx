@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import AppLoading from "../../components/AppLoading";
 import { setIsSignIn, signIn, signUp } from "../../redux/slices/appSlice";
 import ultis from "../../Utils/ultis";
 import styles from "./style.module.scss";
@@ -18,6 +19,7 @@ interface RegisterInfo extends LoginInfo {
 }
 
 export default function LoginPage() {
+    console.log("LoginPage render");
     const navigate = useNavigate();
     const [isSignInForm, setIsSignInForm] = useState(true);
     const isSignIn = useAppSelector((state) => state.app.isSignIn);
@@ -42,10 +44,11 @@ export default function LoginPage() {
         if (isSignIn) {
             navigate(from, { replace: true });
         }
-    });
+    }, [isSignIn]);
 
     return (
         <div className={styles.container}>
+            <AppLoading />
             <div className={styles.main}>
                 <div className={styles.decor}>
                     <img
