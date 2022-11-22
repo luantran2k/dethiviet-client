@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
-import {
-    BrowserRouter,
-    createBrowserRouter,
-    createRoutesFromElements,
-    Navigate,
-    Route,
-    Routes,
-    useLocation,
-} from "react-router-dom";
+import { ContactPage } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useAppDispatch } from "./app/hooks";
 import AboutPage from "./pages/About";
-import ContactPage from "./pages/Contact";
 import ErrorPage from "./pages/Error";
 import NotFoundPage from "./pages/Error/NotFound";
 import ExamPage from "./pages/Exam";

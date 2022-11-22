@@ -1,9 +1,5 @@
 import { examSliceState } from "../redux/slices/examSlice";
 import { PartType } from "../components/Part/interfaces/IPart";
-import {
-    createEmptyMultipleChoiceQuestion,
-    createEmptyMultipleChoiceQuestions,
-} from "../components/Question/interfaces/IMultipleChoice";
 import QuestionTypeDatas from "../const/QuestionTypes";
 import IMultiSelectAnswer from "../components/Answer/interfaces/IMultiSelect";
 import { AnswerType } from "../components/Answer/interfaces/IAnswer";
@@ -11,70 +7,6 @@ import IMultiSelectQuestion from "../components/Question/interfaces/IMultiSelect
 import { QuestionType } from "../components/Question/interfaces/IQuestion";
 
 const examUltis = {
-    createEmptyQuestion: (
-        type: string,
-        newquestionId: number,
-        newanswerId: number = 0,
-        numberOfAnswers: number = 3
-    ): QuestionType => {
-        switch (type) {
-            case QuestionTypeDatas.MultitpleChoice.value: {
-                return createEmptyMultipleChoiceQuestion(
-                    newquestionId,
-                    numberOfAnswers,
-                    newanswerId
-                );
-            }
-
-            case QuestionTypeDatas.MultiSelect.value: {
-                const answers: IMultiSelectAnswer[] = Array(numberOfAnswers)
-                    .fill({})
-                    .map((x, index) => ({
-                        id: index,
-                        value: "",
-                        isTrue: false,
-                    }));
-
-                const newQuestion: IMultiSelectQuestion = {
-                    id: newquestionId,
-                    title: "",
-                    answers,
-                };
-                return newQuestion;
-            }
-            default: {
-                return createEmptyMultipleChoiceQuestion(
-                    newquestionId,
-                    newanswerId,
-                    numberOfAnswers
-                );
-            }
-        }
-    },
-    createManyEmptyQuestion: (
-        type: string,
-        numberOfQuestions: number,
-        numberOfAnswers?: number,
-        newquestionId: number = 0,
-        newanswerId: number = 0
-    ) => {
-        const questions = [];
-        for (
-            let questionId = newquestionId;
-            questionId < newquestionId + numberOfQuestions;
-            questionId++
-        ) {
-            questions.push(
-                examUltis.createEmptyQuestion(
-                    type,
-                    questionId,
-                    newanswerId,
-                    numberOfAnswers
-                )
-            );
-        }
-        return questions;
-    },
     getNewpartId(state: examSliceState): number {
         const part = state?.parts?.[state.parts.length - 1];
         return part ? part.id + 1 : 0;

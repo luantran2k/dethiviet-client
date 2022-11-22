@@ -25,7 +25,6 @@ import OrderList from "../OrderList";
 import PopupMenu from "../PopupMenu";
 import IMultipleChoiceQuestion from "./interfaces/IMultipleChoice";
 import IQuestion from "./interfaces/IQuestion";
-
 export interface IQuestionProps {
     questionId: number;
     partId: number;
@@ -34,7 +33,7 @@ export interface IQuestionProps {
 export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
     const { questionId, partId } = props;
     const dispatch = useAppDispatch();
-    const question: IMultipleChoiceQuestion = useAppSelector((state) =>
+    const question = useAppSelector((state) =>
         questionSeletor(state, { questionId, partId })
     );
 

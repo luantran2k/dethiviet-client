@@ -31,7 +31,7 @@ const examSlice = createSlice({
             }
         },
         removeExamState: (state) => {
-            return {};
+            return {} as examSliceState;
         },
         createPart: (state, action: PayloadAction<IPart>) => {
             if (state.parts) {
