@@ -88,7 +88,7 @@ const request = {
         config?: AxiosRequestConfig<any> | undefined
     ) => {
         const response = await instance.get(url, { params, ...config });
-        if (response) {
+        if (response.data) {
             return response.data;
         }
         return response;

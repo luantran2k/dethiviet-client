@@ -5,20 +5,20 @@ import styles from "./style.module.scss";
 
 export interface IMultiSelectAnswerPreviewProps {
     size: number;
-    partClientId: number;
-    questionClientId: number;
+    partId: number;
+    questionId: number;
     answer: IMultiSelectAnswer;
 }
 
 export default function MultiSelectAnswerPreview(
     props: IMultiSelectAnswerPreviewProps
 ) {
-    const { size, partClientId, questionClientId, answer } = props;
+    const { size, partId, questionId, answer } = props;
     return (
         <Grid
             item
             xs={size}
-            key={`${partClientId}/${questionClientId}//${answer.clientId}`}
+            key={`${partId}/${questionId}//${answer.id}`}
             className={styles.answer + " " + styles.multiSelect}
         >
             {answer.value}

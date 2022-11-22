@@ -13,16 +13,16 @@ import { QuestionType } from "../components/Question/interfaces/IQuestion";
 const examUltis = {
     createEmptyQuestion: (
         type: string,
-        newQuestionClientId: number,
-        newanswerClientId: number = 0,
+        newquestionId: number,
+        newanswerId: number = 0,
         numberOfAnswers: number = 3
     ): QuestionType => {
         switch (type) {
             case QuestionTypeDatas.MultitpleChoice.value: {
                 return createEmptyMultipleChoiceQuestion(
-                    newQuestionClientId,
+                    newquestionId,
                     numberOfAnswers,
-                    newanswerClientId
+                    newanswerId
                 );
             }
 
@@ -30,13 +30,13 @@ const examUltis = {
                 const answers: IMultiSelectAnswer[] = Array(numberOfAnswers)
                     .fill({})
                     .map((x, index) => ({
-                        clientId: index,
+                        id: index,
                         value: "",
                         isTrue: false,
                     }));
 
                 const newQuestion: IMultiSelectQuestion = {
-                    clientId: newQuestionClientId,
+                    id: newquestionId,
                     title: "",
                     answers,
                 };
@@ -44,8 +44,8 @@ const examUltis = {
             }
             default: {
                 return createEmptyMultipleChoiceQuestion(
-                    newQuestionClientId,
-                    newanswerClientId,
+                    newquestionId,
+                    newanswerId,
                     numberOfAnswers
                 );
             }
@@ -55,84 +55,69 @@ const examUltis = {
         type: string,
         numberOfQuestions: number,
         numberOfAnswers?: number,
-        newQuestionClientId: number = 0,
-        newanswerClientId: number = 0
+        newquestionId: number = 0,
+        newanswerId: number = 0
     ) => {
         const questions = [];
         for (
-            let questionClientId = newQuestionClientId;
-            questionClientId < newQuestionClientId + numberOfQuestions;
-            questionClientId++
+            let questionId = newquestionId;
+            questionId < newquestionId + numberOfQuestions;
+            questionId++
         ) {
             questions.push(
                 examUltis.createEmptyQuestion(
                     type,
-                    questionClientId,
-                    newanswerClientId,
+                    questionId,
+                    newanswerId,
                     numberOfAnswers
                 )
             );
         }
         return questions;
     },
-    getNewPartClientId(state: examSliceState): number {
+    getNewpartId(state: examSliceState): number {
         const part = state?.parts?.[state.parts.length - 1];
-        return part ? part.clientId + 1 : 0;
+        return part ? part.id + 1 : 0;
     },
-    getNewQuestionClientId(
-        state: examSliceState,
-        partClientId: number
-    ): number {
-        const part = examUltis.getPart(state, partClientId);
+    getNewquestionId(state: examSliceState, partId: number): number {
+        const part = examUltis.getPart(state, partId);
         const question = part?.questions?.[part.questions.length - 1];
-        return question ? question.clientId + 1 : 0;
+        return question ? question.id + 1 : 0;
     },
-    getNewAnswerClientId(
+    getNewanswerId(
         state: examSliceState,
-        partClientId: number,
-        questionClientId: number
+        partId: number,
+        questionId: number
     ): number {
-        const question = examUltis.getQuestion(
-            state,
-            partClientId,
-            questionClientId
-        );
+        const question = examUltis.getQuestion(state, partId, questionId);
         const answer = question?.answers?.[question.answers.length - 1];
-        return answer ? answer.clientId + 1 : 0;
+        return answer ? answer.id + 1 : 0;
     },
-    getPart(state: examSliceState, partClientId: number): PartType | undefined {
-        return state.parts?.find((part) => part.clientId === partClientId);
+    getPart(state: examSliceState, partId: number): PartType | undefined {
+        return state.parts?.find((part) => part.id === partId);
     },
     getQuestion(
         state: examSliceState,
-        partClientId: number,
-        questionClientId: number
+        partId: number,
+        questionId: number
     ): QuestionType | undefined {
-        const part = examUltis.getPart(state, partClientId);
-        return part?.questions?.find(
-            (question) => question.clientId === questionClientId
-        );
+        const part = examUltis.getPart(state, partId);
+        return part?.questions?.find((question) => question.id === questionId);
     },
     getAnswer(
         state: examSliceState,
-        partClientId: number,
-        questionClientId: number,
-        answerClientId: number
+        partId: number,
+        questionId: number,
+        answerId: number
     ): AnswerType | undefined {
-        const question = examUltis.getQuestion(
-            state,
-            partClientId,
-            questionClientId
-        );
-        return question?.answers?.find(
-            (answer) => answer.clientId === answerClientId
-        );
+        const question = examUltis.getQuestion(state, partId, questionId);
+        return question?.answers?.find((answer) => answer.id === answerId);
     },
     getNumberOfAnswer(
         state: examSliceState,
-        partClientId: number
+        partId: number
     ): number | undefined {
-        const part = examUltis.getPart(state, partClientId);
+        const part = examUltis.getPart(state, partId);
         return part?.questions?.[0].answers?.length;
     },
     getMaxLengthOfAnswer(answers: AnswerType[]) {

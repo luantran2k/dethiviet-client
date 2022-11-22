@@ -1,22 +1,27 @@
 import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import * as React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import QuestionTypeDatas from "../../../const/QuestionTypes";
 import { createPart } from "../../../redux/slices/examSlice";
+import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
+import { AppModalProps } from "../../Modal";
+import IPart from "../interfaces/IPart";
 
 export interface PartPayLoad {
     title: string;
     description?: string;
     totalPoints: number;
     type: string;
-    numberOfQuesitons: number;
+    numberOfQuestions: number;
     numberOfAnswers?: number;
 }
-export interface ICreatePartModalProps {}
+export interface ICreatePartModalProps extends AppModalProps {}
 
 export default function CreatePartModal(props: ICreatePartModalProps) {
+    const { setOpen } = props;
+    const examId = useAppSelector((state) => state.exam.id);
     const {
         register,
         handleSubmit,
@@ -28,24 +33,15 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
         QuestionTypeDatas.MultitpleChoice.value
     );
 
-    const onSubmit: SubmitHandler<PartPayLoad> = ({
-        title,
-        description,
-        numberOfQuesitons,
-        numberOfAnswers,
-        totalPoints,
-        type,
-    }) => {
-        dispatch(
-            createPart({
-                title,
-                description,
-                numberOfQuesitons,
-                numberOfAnswers,
-                totalPoints,
-                type,
-            })
-        );
+    const onSubmit: SubmitHandler<PartPayLoad> = async (data) => {
+        const newPart = await request.post<IPart>("/parts", {
+            examId,
+            ...data,
+        });
+        dispatch(createPart(newPart));
+        if (setOpen) {
+            setOpen(false);
+        }
     };
 
     return (
@@ -126,7 +122,7 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
                 <Grid item xs={6}>
                     <TextField
                         type="number"
-                        {...register("numberOfQuesitons", {
+                        {...register("numberOfQuestions", {
                             valueAsNumber: true,
                             required: true,
                             min: 2,
@@ -134,11 +130,11 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
                         })}
                         aria-invalid={errors.totalPoints ? "true" : "false"}
                         helperText={ultis.getFormErrorMessage({
-                            error: errors.numberOfQuesitons?.type,
+                            error: errors.numberOfQuestions?.type,
                             min: 2,
                             max: 100,
                         })}
-                        error={Boolean(errors.numberOfQuesitons?.type)}
+                        error={Boolean(errors.numberOfQuestions?.type)}
                         variant="outlined"
                         label="Số câu hỏi*"
                         fullWidth

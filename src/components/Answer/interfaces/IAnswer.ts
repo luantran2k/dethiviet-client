@@ -6,15 +6,14 @@ import IMultiSelectAnswer from "./IMultiSelect";
 export type AnswerType = IMultipleChoiceAnswer | IMultiSelectAnswer;
 
 export default interface IAnswer {
-    id?: number;
-    clientId: number;
+    id: number;
     value?: string | number;
 }
 
 export interface AnswerPayload {
-    partClientId: number;
-    questionClientId: number;
-    answerClientId: number;
+    partId: number;
+    questionId: number;
+    answerId: number;
     isTrue?: boolean;
     value?: string | number;
 }
@@ -22,12 +21,12 @@ export interface AnswerPayload {
 export const createEmptyAnswer = (
     state: examSliceState,
     answerType: string,
-    answerclientId: number
+    answerId: number
 ) => {
     switch (answerType) {
         case QuestionTypeDatas.MultitpleChoice.value: {
             const newAnswer: IMultipleChoiceAnswer = {
-                clientId: answerclientId,
+                id: answerId,
                 value: "",
                 isTrue: false,
             };
@@ -35,7 +34,7 @@ export const createEmptyAnswer = (
         }
         case QuestionTypeDatas.MultiSelect.value: {
             const newAnswer: IMultiSelectAnswer = {
-                clientId: answerclientId,
+                id: answerId,
                 value: "",
                 isTrue: false,
             };
@@ -52,7 +51,7 @@ export const createEmptyAnswer = (
 //     question: QuestionType,
 //     payload: AnswerPayload
 // ) => {
-//     const { partClientId, questionClientId, answerClientId, isTrue, value } = payload;
+//     const { partId, questionId, answerId, isTrue, value } = payload;
 //     if (question === undefined || type === undefined) return undefined;
 //     switch (type) {
 //         case QuestionTypeDatas.MultitpleChoice.value: {
@@ -62,10 +61,10 @@ export const createEmptyAnswer = (
 //             if (oldAnswer) oldAnswer.isTrue = false;
 
 //             let answer = question?.answers?.find(
-//                 (answer) => answer.clientId === answerClientId
+//                 (answer) => answer.id === answerId
 //             );
 //             const newAnswer: IMultipleChoiceAnswer = {
-//                 clientId: answerClientId,
+//                 id: answerId,
 //                 ...payload,
 //             };
 //             return newAnswer;
@@ -73,10 +72,10 @@ export const createEmptyAnswer = (
 
 //         case QuestionTypeDatas.MultiSelect.value: {
 //             let answer = question?.answers?.find(
-//                 (answer) => answer.clientId === answerClientId
+//                 (answer) => answer.id === answerId
 //             );
 //             const newAnswer: IMultipleChoiceAnswer = {
-//                 clientId: answerClientId,
+//                 id: answerId,
 //                 isTrue,
 //                 value,
 //             };

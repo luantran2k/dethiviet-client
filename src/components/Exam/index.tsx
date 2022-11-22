@@ -8,16 +8,14 @@ import ExamInfo from "./Info";
 export interface IExamProps {}
 
 const Exam = (props: IExamProps) => {
-    const partClientIds = useAppSelector(partsSelector)?.map(
-        (part) => part.clientId
-    );
+    const partIds = useAppSelector(partsSelector)?.map((part) => part.id);
 
     return (
         <Box sx={{ maxWidth: "60rem", margin: "0 auto" }}>
             <form className="exam">
                 <ExamInfo />
-                {partClientIds?.map((partClientId) => (
-                    <Part partClientId={partClientId} key={partClientId} />
+                {partIds?.map((partId) => (
+                    <Part partId={partId} key={partId} />
                 ))}
             </form>
         </Box>

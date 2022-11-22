@@ -23,15 +23,15 @@ import OrderList from "../OrderList";
 import PopupMenu from "../PopupMenu";
 
 export interface IQuestionProps {
-    questionClientId: number;
-    partClientId: number;
+    questionId: number;
+    partId: number;
 }
 
 export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
-    const { questionClientId, partClientId } = props;
+    const { questionId, partId } = props;
     const dispatch = useAppDispatch();
     const question = useAppSelector((state) =>
-        questionSeletor(state, { questionClientId, partClientId })
+        questionSeletor(state, { questionId, partId })
     );
 
     if (question === undefined) {
@@ -42,12 +42,12 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
             <CardActions style={{ justifyContent: "center" }}>
                 <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
                     <FormLabel
-                        id={`${partClientId}/${questionClientId}`}
+                        id={`${partId}/${questionId}`}
                         sx={{ width: "100%" }}
                     >
                         <Stack spacing={2} direction="row" alignItems="center">
                             <TextField
-                                key={questionClientId}
+                                key={questionId}
                                 defaultValue={question.title}
                                 multiline
                                 maxRows={4}
@@ -56,8 +56,8 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                                     if (e.target.value !== question.title)
                                         dispatch(
                                             updateQuestionTitle({
-                                                partClientId,
-                                                questionClientId,
+                                                partId,
+                                                questionId,
                                                 value: e.target.value,
                                             })
                                         );
@@ -70,7 +70,7 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                                 <Stack direction="row">
                                     <MenuItem
                                         onClick={() => {
-                                            console.log(question.clientId);
+                                            console.log(question.id);
                                         }}
                                     >
                                         <Edit />
@@ -79,9 +79,8 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                                         onClick={() => {
                                             dispatch(
                                                 deleteQuestion({
-                                                    partClientId,
-                                                    questionClientId:
-                                                        question.clientId,
+                                                    partId,
+                                                    questionId: question.id,
                                                 })
                                             );
                                         }}
@@ -94,26 +93,26 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                     </FormLabel>
 
                     <RadioGroup
-                        name={`${partClientId}/${questionClientId}}`}
+                        name={`${partId}/${questionId}}`}
                         onChange={(e) => {
                             dispatch(
                                 updateCorrectAnswer({
-                                    partClientId,
-                                    questionClientId,
-                                    answerClientId: Number(e.target.value),
+                                    partId,
+                                    questionId,
+                                    answerId: Number(e.target.value),
                                 })
                             );
                         }}
                     >
                         <OrderList variant="upper-alpha">
                             {question?.answers
-                                ?.map((answer) => answer.clientId)
-                                ?.map((answerClientId, index) => (
+                                ?.map((answer) => answer.id)
+                                ?.map((answerId, index) => (
                                     <MultipleChoiceAnswer
-                                        partClientId={partClientId}
-                                        questionClientId={questionClientId}
-                                        answerClientId={answerClientId}
-                                        key={`${partClientId}/${questionClientId}/${answerClientId}`}
+                                        partId={partId}
+                                        questionId={questionId}
+                                        answerId={answerId}
+                                        key={`${partId}/${questionId}/${answerId}`}
                                     />
                                 ))}
                         </OrderList>
@@ -125,9 +124,7 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                 title="Thêm câu trả lời mới"
                 sx={{ marginTop: "-1rem", marginLeft: "0.5rem" }}
                 onClick={() => {
-                    dispatch(
-                        createNewAnswer({ partClientId, questionClientId })
-                    );
+                    dispatch(createNewAnswer({ partId, questionId }));
                 }}
             >
                 <Add />

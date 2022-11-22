@@ -8,38 +8,38 @@ export default interface IMultipleChoiceQuestion extends IQuestion {
 }
 
 const createEmptyMultipleChoiceQuestion = (
-    newQuestionClientId: number,
+    newquestionId: number,
     numberOfAnswers: number,
-    newAnswerClientId: number
+    newanswerId: number
 ): IMultipleChoiceQuestion => {
     const answers: IMultipleChoiceAnswer[] = createEmptyMultipleChoiceAnswers(
-        newAnswerClientId,
+        newanswerId,
         numberOfAnswers
     );
     return {
-        clientId: newQuestionClientId,
+        id: newquestionId,
         title: "",
         answers,
     };
 };
 
 const createEmptyMultipleChoiceQuestions = (
-    newQuestionClientId: number,
+    newquestionId: number,
     numberOfQuestion: number,
-    newAnswerClientId: number,
+    newanswerId: number,
     numberOfAnswers: number
 ): IMultipleChoiceQuestion[] => {
     const questions: IMultipleChoiceQuestion[] = [];
 
     for (let i = 0; i < numberOfQuestion; i++) {
-        newQuestionClientId = newQuestionClientId + i;
+        newquestionId = newquestionId + i;
         const question = createEmptyMultipleChoiceQuestion(
-            newQuestionClientId,
-            newAnswerClientId,
+            newquestionId,
+            newanswerId,
             numberOfAnswers
         );
         questions.push(question);
-        newAnswerClientId = newAnswerClientId + numberOfAnswers;
+        newanswerId = newanswerId + numberOfAnswers;
     }
     return questions;
 };

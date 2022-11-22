@@ -76,7 +76,11 @@ export const signUp = createAsyncThunk<
     { username: string; password: string },
     { state: RootState }
 >("signUp", async ({ username, password }, { dispatch, getState }) => {
-    const data = await request.post("auth/signUp", {
+    const data = await request.post<{
+        accessToken: string;
+        refreshToken: string;
+        userInfo: User;
+    }>("auth/signUp", {
         username,
         password,
     });
@@ -88,7 +92,11 @@ export const signIn = createAsyncThunk<
     { username: string; password: string },
     { state: RootState }
 >("signIn", async ({ username, password }, { dispatch, getState }) => {
-    const data = await request.post("auth/signIn", {
+    const data = await request.post<{
+        accessToken: string;
+        refreshToken: string;
+        userInfo: User;
+    }>("auth/signIn", {
         username,
         password,
     });

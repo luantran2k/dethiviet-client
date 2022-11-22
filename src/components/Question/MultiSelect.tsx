@@ -22,17 +22,16 @@ import PopupMenu from "../PopupMenu";
 import IMultiSelectQuestion from "./interfaces/IMultiSelect";
 
 export interface IMultiSelectQuestionProps {
-    questionClientId: number;
-    partClientId: number;
+    questionId: number;
+    partId: number;
 }
 
 export const MultiSelectQuestion = React.memo(
     (props: IMultiSelectQuestionProps) => {
-        const { questionClientId, partClientId } = props;
+        const { questionId, partId } = props;
         const dispatch = useAppDispatch();
         const question: IMultiSelectQuestion | undefined = useAppSelector(
-            (state) =>
-                questionSeletor(state, { questionClientId, partClientId })
+            (state) => questionSeletor(state, { questionId, partId })
         );
 
         if (question === undefined) {
@@ -44,7 +43,7 @@ export const MultiSelectQuestion = React.memo(
                 <CardActions style={{ justifyContent: "center" }}>
                     <FormControl fullWidth sx={{ marginBottom: "1rem" }}>
                         <FormLabel
-                            id={`${partClientId}/${questionClientId}`}
+                            id={`${partId}/${questionId}`}
                             sx={{ width: "100%" }}
                         >
                             <Stack
@@ -53,7 +52,7 @@ export const MultiSelectQuestion = React.memo(
                                 alignItems="center"
                             >
                                 <TextField
-                                    key={questionClientId}
+                                    key={questionId}
                                     defaultValue={question.title}
                                     multiline
                                     maxRows={4}
@@ -62,8 +61,8 @@ export const MultiSelectQuestion = React.memo(
                                         if (e.target.value !== question.title)
                                             dispatch(
                                                 updateQuestionTitle({
-                                                    partClientId,
-                                                    questionClientId,
+                                                    partId,
+                                                    questionId,
                                                     value: e.target.value,
                                                 })
                                             );
@@ -76,7 +75,7 @@ export const MultiSelectQuestion = React.memo(
                                     <Stack direction="row">
                                         <MenuItem
                                             onClick={() => {
-                                                console.log(question.clientId);
+                                                console.log(question.id);
                                             }}
                                         >
                                             <Edit />
@@ -85,9 +84,8 @@ export const MultiSelectQuestion = React.memo(
                                             onClick={() => {
                                                 dispatch(
                                                     deleteQuestion({
-                                                        partClientId,
-                                                        questionClientId:
-                                                            question.clientId,
+                                                        partId,
+                                                        questionId: question.id,
                                                     })
                                                 );
                                             }}
@@ -101,13 +99,13 @@ export const MultiSelectQuestion = React.memo(
 
                         <OrderList variant="upper-alpha">
                             {question?.answers
-                                ?.map((answer) => answer.clientId)
-                                ?.map((answerClientId, index) => (
+                                ?.map((answer) => answer.id)
+                                ?.map((answerId, index) => (
                                     <MultiSelectAnswer
-                                        partClientId={partClientId}
-                                        questionClientId={questionClientId}
-                                        answerClientId={answerClientId}
-                                        key={answerClientId}
+                                        partId={partId}
+                                        questionId={questionId}
+                                        answerId={answerId}
+                                        key={answerId}
                                     />
                                 ))}
                         </OrderList>
@@ -118,9 +116,7 @@ export const MultiSelectQuestion = React.memo(
                     title="Thêm câu trả lời mới"
                     sx={{ marginTop: "-1rem", marginLeft: "0.5rem" }}
                     onClick={() => {
-                        dispatch(
-                            createNewAnswer({ partClientId, questionClientId })
-                        );
+                        dispatch(createNewAnswer({ partId, questionId }));
                     }}
                 >
                     <Add />

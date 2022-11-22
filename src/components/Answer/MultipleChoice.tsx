@@ -13,16 +13,16 @@ import { answerSeletor } from "../../redux/selectors/examSeletors";
 import { deleteAnswer, updateAnswer } from "../../redux/slices/examSlice";
 
 export interface IAnswerProps {
-    partClientId: number;
-    questionClientId: number;
-    answerClientId: number;
+    partId: number;
+    questionId: number;
+    answerId: number;
 }
 
 export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
-    const { partClientId, questionClientId, answerClientId } = props;
+    const { partId, questionId, answerId } = props;
     const dispatch = useAppDispatch();
     const answer = useAppSelector((state) =>
-        answerSeletor(state, { partClientId, questionClientId, answerClientId })
+        answerSeletor(state, { partId, questionId, answerId })
     );
     if (answer === undefined) {
         return <></>;
@@ -31,7 +31,7 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
     return (
         <Stack direction="row" alignItems="center">
             <FormControlLabel
-                value={answer.clientId}
+                value={answer.id}
                 checked={answer.isTrue}
                 control={<Radio />}
                 label={""}
@@ -47,9 +47,9 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                         if (e.target.value !== answer.value)
                             dispatch(
                                 updateAnswer({
-                                    partClientId,
-                                    questionClientId,
-                                    answerClientId,
+                                    partId,
+                                    questionId,
+                                    answerId,
                                     value: e.target.value,
                                 })
                             );
@@ -70,9 +70,9 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                 onClick={() => {
                     dispatch(
                         deleteAnswer({
-                            partClientId,
-                            questionClientId,
-                            answerClientId,
+                            partId,
+                            questionId,
+                            answerId,
                         })
                     );
                 }}

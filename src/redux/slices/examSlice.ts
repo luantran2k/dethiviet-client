@@ -1,21 +1,15 @@
-import { RootState } from "./../store";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import IExam, { ExamPayload } from "../../components/Exam/interfaces/IExam";
-import {
-    createNewPart,
-    PartType,
-} from "../../components/Part/interfaces/IPart";
-import { PartPayLoad } from "../../components/Part/Modal/create";
-import QuestionTypeDatas from "../../const/QuestionTypes";
-import examUltis from "../../Utils/examUltis";
 import {
     AnswerPayload,
     AnswerType,
     createEmptyAnswer,
 } from "../../components/Answer/interfaces/IAnswer";
-import { create } from "@mui/material/styles/createTransitions";
-import request, { removeToken } from "../../Utils/request";
-import ultis from "../../Utils/ultis";
+import IExam from "../../components/Exam/interfaces/IExam";
+import IPart from "../../components/Part/interfaces/IPart";
+import QuestionTypeDatas from "../../const/QuestionTypes";
+import examUltis from "../../Utils/examUltis";
+import request from "../../Utils/request";
+import { RootState } from "./../store";
 
 export interface examSliceState extends IExam {}
 
@@ -35,70 +29,80 @@ const examSlice = createSlice({
                 ] as undefined; //Just remove warning of ts always returning undefined
             }
         },
-        createPart: (state, action: PayloadAction<PartPayLoad>) => {
-            const newPartClientId = examUltis.getNewPartClientId(state);
-            const newPart = createNewPart(newPartClientId, action.payload);
-            if (newPartClientId === 0) {
-                state.parts = [];
+        createPart: (state, action: PayloadAction<IPart>) => {
+            if (state.parts) {
+                state.parts.push(action.payload);
+            } else {
+                state.parts = [action.payload];
             }
-            state.parts?.push(newPart);
         },
+        updatePart: (state, action: PayloadAction<IPart>) => {
+            const { id, title, totalPoints, type, description } =
+                action.payload;
+            const part = state.parts?.find((part) => part.id === id);
+            if (part) {
+                part.id = id;
+                part.title = title;
+                part.totalPoints = totalPoints;
+                part.type = type;
+                part.description = description;
+            }
+        },
+
         deletePart: (state, action: PayloadAction<number>) => {
             const partIndex = state.parts?.findIndex(
-                (part) => part.clientId === action.payload
+                (part) => part.id === action.payload
             );
             state.parts?.splice(partIndex!, 1);
         },
         createNewQuestion: (
             state,
-            action: PayloadAction<{ partClientId: number }>
+            action: PayloadAction<{ partId: number }>
         ) => {
-            const part = state.parts?.find(
-                (part) => part.clientId === action.payload.partClientId
-            );
-            const numberOfAnswers =
-                part?.numberOfAnswers ||
-                examUltis.getNumberOfAnswer(state, action.payload.partClientId);
-            if (part && numberOfAnswers) {
-                const newQuestionClientId = examUltis.getNewQuestionClientId(
-                    state,
-                    action.payload.partClientId
-                );
-                const newQuestion = examUltis.createEmptyQuestion(
-                    part.type,
-                    newQuestionClientId,
-                    0,
-                    numberOfAnswers
-                );
-                part.questions?.push(newQuestion);
-            }
+            // const part = state.parts?.find(
+            //     (part) => part.id === action.payload.partId
+            // );
+            // const numberOfAnswers =
+            //     part?.numberOfAnswers ||
+            //     examUltis.getNumberOfAnswer(state, action.payload.partId);
+            // if (part && numberOfAnswers) {
+            //     const newquestionId = examUltis.getNewquestionId(
+            //         state,
+            //         action.payload.partId
+            //     );
+            //     const newQuestion = examUltis.createEmptyQuestion(
+            //         part.type,
+            //         newquestionId,
+            //         0,
+            //         numberOfAnswers
+            //     );
+            //     part.questions?.push(newQuestion);
+            // }
         },
         updateQuestionTitle: (
             state,
             action: PayloadAction<{
-                partClientId: number;
-                questionClientId: number;
+                partId: number;
+                questionId: number;
                 value: string;
             }>
         ) => {
-            const part = examUltis.getPart(state, action.payload.partClientId);
+            const part = examUltis.getPart(state, action.payload.partId);
             const question = part?.questions?.find(
-                (question) =>
-                    question.clientId === action.payload.questionClientId
+                (question) => question.id === action.payload.questionId
             );
             question!.title = action.payload.value;
         },
         deleteQuestion: (
             state,
             action: PayloadAction<{
-                partClientId: number;
-                questionClientId: number;
+                partId: number;
+                questionId: number;
             }>
         ) => {
-            const part = examUltis.getPart(state, action.payload.partClientId);
+            const part = examUltis.getPart(state, action.payload.partId);
             const questionIndex = part?.questions?.findIndex(
-                (question) =>
-                    question.clientId === action.payload.questionClientId
+                (question) => question.id === action.payload.questionId
             );
             if (questionIndex !== -1) {
                 part?.questions?.splice(questionIndex!, 1);
@@ -107,55 +111,46 @@ const examSlice = createSlice({
         createNewAnswer: (
             state,
             action: PayloadAction<{
-                partClientId: number;
-                questionClientId: number;
+                partId: number;
+                questionId: number;
             }>
         ) => {
-            const { partClientId, questionClientId } = action.payload;
-            const answerType = examUltis.getPart(state, partClientId)?.type;
-            const question = examUltis.getQuestion(
+            const { partId, questionId } = action.payload;
+            const answerType = examUltis.getPart(state, partId)?.type;
+            const question = examUltis.getQuestion(state, partId, questionId);
+            const newanswerId = examUltis.getNewanswerId(
                 state,
-                partClientId,
-                questionClientId
-            );
-            const newAnswerClientId = examUltis.getNewAnswerClientId(
-                state,
-                partClientId,
-                questionClientId
+                partId,
+                questionId
             );
             const newAnswer = createEmptyAnswer(
                 state,
                 answerType!,
-                newAnswerClientId
+                newanswerId
             );
             question?.answers?.push(newAnswer as AnswerType);
         },
         updateAnswer: (
             state,
             action: PayloadAction<{
-                partClientId: number;
-                questionClientId: number;
-                answerClientId: number;
+                partId: number;
+                questionId: number;
+                answerId: number;
                 value: string;
             }>
         ) => {
             const answer = examUltis.getAnswer(
                 state,
-                action.payload.partClientId,
-                action.payload.questionClientId,
-                action.payload.answerClientId
+                action.payload.partId,
+                action.payload.questionId,
+                action.payload.answerId
             );
             answer!.value = action.payload.value;
         },
         updateCorrectAnswer: (state, action: PayloadAction<AnswerPayload>) => {
-            const { partClientId, questionClientId, answerClientId } =
-                action.payload;
-            const type = examUltis.getPart(state, partClientId)?.type;
-            const question = examUltis.getQuestion(
-                state,
-                partClientId,
-                questionClientId
-            );
+            const { partId, questionId, answerId } = action.payload;
+            const type = examUltis.getPart(state, partId)?.type;
+            const question = examUltis.getQuestion(state, partId, questionId);
 
             if (type === QuestionTypeDatas.MultitpleChoice.value) {
                 const oldAnswer = question?.answers?.find(
@@ -164,27 +159,22 @@ const examSlice = createSlice({
                 if (oldAnswer) oldAnswer.isTrue = false;
             }
             const newAnswer = question?.answers?.find(
-                (answer) => answer.clientId === action.payload.answerClientId
+                (answer) => answer.id === action.payload.answerId
             );
             if (newAnswer) newAnswer.isTrue = !newAnswer.isTrue;
         },
         deleteAnswer: (
             state,
             action: PayloadAction<{
-                partClientId: number;
-                questionClientId: number;
-                answerClientId: number;
+                partId: number;
+                questionId: number;
+                answerId: number;
             }>
         ) => {
-            const { partClientId, questionClientId, answerClientId } =
-                action.payload;
-            const question = examUltis.getQuestion(
-                state,
-                partClientId,
-                questionClientId
-            );
+            const { partId, questionId, answerId } = action.payload;
+            const question = examUltis.getQuestion(state, partId, questionId);
             const answerIndex = question?.answers?.findIndex(
-                (answer) => answer.clientId === answerClientId
+                (answer) => answer.id === answerId
             );
             if (answerIndex !== -1 && answerIndex !== undefined) {
                 question?.answers?.splice(answerIndex, 1);
@@ -221,13 +211,15 @@ export const saveExam = createAsyncThunk<
 
 export const getExam = createAsyncThunk<
     examSliceState,
-    string | undefined,
+    { examId: number; includePart: boolean },
     {
         state: RootState;
     }
->("exams/get", async (examId, { dispatch, getState }) => {
-    const exam = request
-        .get("exams/" + examId)
+>("exams/get", async ({ examId, includePart }, { dispatch, getState }) => {
+    const exam: IExam = await request
+        .get<{ includePart: boolean }>("exams/" + examId, {
+            includePart: true,
+        })
         .catch((error) => console.log(error));
     return exam;
 });
@@ -237,6 +229,7 @@ export const {
     updateExam,
     //saveExam,
     createPart,
+    updatePart,
     deletePart,
     createNewQuestion,
     updateQuestionTitle,

@@ -9,13 +9,13 @@ import { QuestionType } from "../interfaces/IQuestion";
 import styles from "./style.module.scss";
 
 export interface IQuestionPreviewProps {
-    partClientId: number;
+    partId: number;
     type: string;
     question: QuestionType;
 }
 
 const QuestionPreview = memo((props: IQuestionPreviewProps) => {
-    const { partClientId, type, question } = props;
+    const { partId, type, question } = props;
     return (
         <Box className={styles.question} marginY={2}>
             <Typography
@@ -36,10 +36,10 @@ const QuestionPreview = memo((props: IQuestionPreviewProps) => {
                         case QuestionTypeDatas.MultitpleChoice.value: {
                             return (
                                 <MultipleChoiceAnswerPreview
-                                    key={`${partClientId}/${question.clientId}/${answer.clientId}`}
+                                    key={`${partId}/${question.id}/${answer.id}`}
                                     size={size}
-                                    partClientId={partClientId}
-                                    questionClientId={question.clientId}
+                                    partId={partId}
+                                    questionId={question.id}
                                     answer={answer}
                                 />
                             );
@@ -47,10 +47,10 @@ const QuestionPreview = memo((props: IQuestionPreviewProps) => {
                         case QuestionTypeDatas.MultiSelect.value: {
                             return (
                                 <MultiSelectAnswerPreview
-                                    key={`${partClientId}/${question.clientId}/${answer.clientId}`}
+                                    key={`${partId}/${question.id}/${answer.id}`}
                                     size={size}
-                                    partClientId={partClientId}
-                                    questionClientId={question.clientId}
+                                    partId={partId}
+                                    questionId={question.id}
                                     answer={answer}
                                 />
                             );

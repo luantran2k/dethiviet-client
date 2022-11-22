@@ -123,7 +123,7 @@ export default function PaperPage(props: IPaperPageProps) {
                     </Grid>
                 </Grid>
                 {exam.parts?.map((part) => (
-                    <PartPreview key={part.clientId} part={part} />
+                    <PartPreview key={part.id} part={part} />
                 ))}
             </div>
             <div className={styles.paperBackgrounds}>{paperBackground}</div>

@@ -22,8 +22,13 @@ const style = {
     p: 4,
 };
 
-export interface ICreatePartModalProps {
+export interface AppModalProps {
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface IAppModalComponentProps {
     children: React.ReactElement;
+    trigger?: React.ReactElement;
     buttonStartIcon?: React.ReactElement;
     buttonEndIcon?: React.ReactElement;
     buttonText?: string;
@@ -32,9 +37,10 @@ export interface ICreatePartModalProps {
     buttonTitle?: string;
 }
 
-export default function AppModal(props: ICreatePartModalProps) {
+export default function AppModal(props: IAppModalComponentProps) {
     const {
         children,
+        trigger,
         buttonStartIcon,
         buttonEndIcon,
         buttonText,
@@ -48,16 +54,20 @@ export default function AppModal(props: ICreatePartModalProps) {
     const childerWithSetOpenEvent = React.cloneElement(children, { setOpen });
     return (
         <>
-            <Button
-                onClick={handleOpen}
-                variant={buttonVariant}
-                sx={buttonStyle}
-                title={buttonTitle}
-            >
-                {buttonStartIcon}
-                {buttonText}
-                {buttonEndIcon}
-            </Button>
+            {trigger ? (
+                React.cloneElement(trigger, { onClick: handleOpen })
+            ) : (
+                <Button
+                    onClick={handleOpen}
+                    variant={buttonVariant}
+                    sx={buttonStyle}
+                    title={buttonTitle}
+                >
+                    {buttonStartIcon}
+                    {buttonText}
+                    {buttonEndIcon}
+                </Button>
+            )}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

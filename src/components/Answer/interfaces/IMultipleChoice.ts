@@ -5,13 +5,13 @@ export default interface IMultipleChoiceAnswer extends IAnswer {
 }
 
 const createEmptyMultipleChoiceAnswers = (
-    newAnswerClientId: number,
+    newanswerId: number,
     numberOfAnswers: number
 ): IMultipleChoiceAnswer[] => {
     const answers: IMultipleChoiceAnswer[] = [];
     for (let i = 0; i < numberOfAnswers; i++) {
         answers.push({
-            clientId: newAnswerClientId + i,
+            id: newanswerId + i,
             value: "",
             isTrue: false,
         });

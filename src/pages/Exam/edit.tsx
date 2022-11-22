@@ -31,7 +31,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
     //get Exan fron db if has examId
     useEffect(() => {
         if (examId) {
-            dispatch(getExam(examId));
+            dispatch(getExam({ examId: Number(examId), includePart: true }));
         }
     }, []);
 

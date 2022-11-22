@@ -16,16 +16,16 @@ import {
 import { Delete } from "@mui/icons-material";
 
 export interface IMultiSelectAnswerProps {
-    partClientId: number;
-    questionClientId: number;
-    answerClientId: number;
+    partId: number;
+    questionId: number;
+    answerId: number;
 }
 
 const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
-    const { partClientId, questionClientId, answerClientId } = props;
+    const { partId, questionId, answerId } = props;
     const dispatch = useAppDispatch();
     const answer = useAppSelector((state) =>
-        answerSeletor(state, { partClientId, questionClientId, answerClientId })
+        answerSeletor(state, { partId, questionId, answerId })
     );
     if (answer === undefined) {
         return <></>;
@@ -33,16 +33,16 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
     return (
         <Stack direction="row" alignItems="center">
             <FormControlLabel
-                value={answer.clientId}
+                value={answer.id}
                 checked={answer.isTrue}
                 control={
                     <Checkbox
                         onChange={() => {
                             dispatch(
                                 updateCorrectAnswer({
-                                    partClientId,
-                                    questionClientId,
-                                    answerClientId: answerClientId,
+                                    partId,
+                                    questionId,
+                                    answerId: answerId,
                                 })
                             );
                         }}
@@ -61,9 +61,9 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                         if (e.target.value !== answer.value)
                             dispatch(
                                 updateAnswer({
-                                    partClientId,
-                                    questionClientId,
-                                    answerClientId,
+                                    partId,
+                                    questionId,
+                                    answerId,
                                     value: e.target.value,
                                 })
                             );
@@ -84,9 +84,9 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                 onClick={() => {
                     dispatch(
                         deleteAnswer({
-                            partClientId,
-                            questionClientId,
-                            answerClientId,
+                            partId,
+                            questionId,
+                            answerId,
                         })
                     );
                 }}

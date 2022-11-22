@@ -25,8 +25,8 @@ const PartPreview = memo((props: IPartPreviewProps) => {
             </Typography>
             {part.questions?.map((question) => (
                 <QuestionPreview
-                    key={`${part.clientId}/${question.clientId}`}
-                    partClientId={part.clientId}
+                    key={`${part.id}/${question.id}`}
+                    partId={part.id}
                     type={part.type}
                     question={question}
                 />
