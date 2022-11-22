@@ -193,9 +193,6 @@ const examSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(saveExam.pending, (state, action) => {});
-        builder.addCase(saveExam.fulfilled, (state, action) => {
-            return action.payload;
-        });
         builder.addCase(saveExam.rejected, (state, action) => {
             alert("Save Exam Failed");
         });
@@ -212,22 +209,14 @@ const examSlice = createSlice({
 //save exam to database.
 export const saveExam = createAsyncThunk<
     examSliceState,
-    string | undefined,
+    IExam | undefined,
     {
         state: RootState;
     }
->("exams/create", async (examId, { dispatch, getState }) => {
-    const exam: examSliceState = getState().exam;
-    const ownerId = getState().app.userInfo?.id;
-    if (ownerId) {
-        removeToken();
-        throw new Error("Bạn cần đăng nhập trước");
-    }
-    //console.log(JSON.stringify(exam));
-    if (examId) {
-        return await request.patch("exams/" + examId, { ...exam, ownerId });
-    }
-    return await request.post("exams", { ...exam, ownerId });
+>("exams/create", async (exam, { dispatch, getState }) => {
+    const updateRespone = await request.patch<IExam>("exams/" + exam!.id, exam);
+    dispatch(updateExam(updateRespone));
+    return updateRespone;
 });
 
 export const getExam = createAsyncThunk<
@@ -237,7 +226,9 @@ export const getExam = createAsyncThunk<
         state: RootState;
     }
 >("exams/get", async (examId, { dispatch, getState }) => {
-    const exam = request.get("exams/" + examId);
+    const exam = request
+        .get("exams/" + examId)
+        .catch((error) => console.log(error));
     return exam;
 });
 

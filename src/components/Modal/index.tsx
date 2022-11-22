@@ -45,7 +45,7 @@ export default function AppModal(props: ICreatePartModalProps) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
+    const childerWithSetOpenEvent = React.cloneElement(children, { setOpen });
     return (
         <>
             <Button
@@ -70,7 +70,7 @@ export default function AppModal(props: ICreatePartModalProps) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>{children}</Box>
+                    <Box sx={style}>{childerWithSetOpenEvent}</Box>
                 </Fade>
             </Modal>
         </>

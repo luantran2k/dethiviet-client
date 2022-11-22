@@ -9,7 +9,7 @@ import Exam from "../../components/Exam";
 import AppModal from "../../components/Modal";
 import PaperPage from "../../components/PaperPage";
 import CreatePartModal from "../../components/Part/Modal/create";
-import { getExam, saveExam } from "../../redux/slices/examSlice";
+import { getExam } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 export interface ICreateExamPageProps {}
 
@@ -33,16 +33,6 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         if (examId) {
             dispatch(getExam(examId));
         }
-    }, []);
-
-    useEffect(() => {
-        document.addEventListener("keydown", (e) => {
-            if (e.ctrlKey && e.key === "s") {
-                e.preventDefault();
-                console.log("CTRL + S");
-                dispatch(saveExam(examId));
-            }
-        });
     }, []);
 
     //remove ctrl + scrolling event
@@ -142,20 +132,6 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         }}
                     >
                         Delete
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={async () => {
-                            const res = await dispatch(saveExam(examId));
-                            const id =
-                                res.payload?.["id" as keyof typeof res.payload];
-                            if (id != examId) {
-                                console.log("navigate");
-                                return navigate("./" + id);
-                            }
-                        }}
-                    >
-                        Save
                     </Button>
                 </Stack>
                 <Exam />

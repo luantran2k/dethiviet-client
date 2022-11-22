@@ -22,9 +22,12 @@ import { saveExam, updateExam } from "../../../redux/slices/examSlice";
 import ultis from "../../../Utils/ultis";
 import IExam from "../interfaces/IExam";
 
-export interface IUpdateExamModalProps {}
+export interface IUpdateExamModalProps {
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export default function UpdateExamModal(props: IUpdateExamModalProps) {
+    const { setOpen } = props;
     const dispatch = useAppDispatch();
     const exam = useAppSelector((state) => state.exam);
     const subjectList: ISubject[] = SubjectNames.map((category) =>
@@ -56,16 +59,19 @@ export default function UpdateExamModal(props: IUpdateExamModalProps) {
             duration: exam.duration,
             publishers: exam.publishers,
             examName: exam.examName,
+            type: exam.type,
             isPublic: exam.isPublic === true ? true : false,
         },
     });
 
-    const onSubmit: SubmitHandler<IExam> = (data) => {
+    const onSubmit: SubmitHandler<IExam> = async (data) => {
         const newExam: IExam = data;
         newExam.isPublic =
             data.isPublic === true || data?.isPublic === "true" ? true : false;
-        dispatch(updateExam(newExam));
-        dispatch(saveExam(exam.id + ""));
+        dispatch(saveExam({ id: exam.id, ...newExam }));
+        if (setOpen) {
+            setOpen(false);
+        }
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -254,16 +260,27 @@ export default function UpdateExamModal(props: IUpdateExamModalProps) {
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        select
-                        label="Loại đề thi"
-                        defaultValue={exam.type}
-                        {...register("type")}
-                    >
-                        <MenuItem value="official">Chính thức</MenuItem>
-                        <MenuItem value="unOfficial">Không chính thức</MenuItem>
-                    </TextField>
+                    <Controller
+                        control={control}
+                        name={"type"}
+                        render={({ field }) => {
+                            return (
+                                <TextField
+                                    {...field}
+                                    fullWidth
+                                    select
+                                    label="Loại đề thi"
+                                >
+                                    <MenuItem value="official">
+                                        Chính thức
+                                    </MenuItem>
+                                    <MenuItem value="unOfficial">
+                                        Không chính thức
+                                    </MenuItem>
+                                </TextField>
+                            );
+                        }}
+                    />
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
