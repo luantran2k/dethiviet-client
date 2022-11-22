@@ -1,3 +1,4 @@
+import { refreshToken } from "./../Utils/request";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
 import type { RootState, AppDispatch } from "../redux/store";
@@ -5,6 +6,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { useState, useEffect } from "react";
 import request, { instance } from "../Utils/request";
 import { useLocation, useNavigate } from "react-router-dom";
+import ultis from "../Utils/ultis";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -53,7 +55,6 @@ export function useAuth(page?: string) {
     if (page) {
         console.log("check sigin" + page, isSignIn); //for debugging
     }
-
     useEffect(() => {
         if (!isSignIn) {
             navigate("/signIn", { state: { from: location.pathname } });

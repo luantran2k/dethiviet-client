@@ -8,12 +8,14 @@ export default interface IExam {
     isPublic?: boolean | "true" | "false";
     subjectName?: string;
     grade?: string;
-    date?: Date | null;
+    date?: Date | string | null;
     duration?: number;
     publishers?: string;
     type?: string;
     examName?: string;
     parts?: PartType[];
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ExamFilter {

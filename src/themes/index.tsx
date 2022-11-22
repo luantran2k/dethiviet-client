@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-import { teal } from "@mui/material/colors";
+import { amber, orange, teal } from "@mui/material/colors";
 
 export const theme = createTheme({
     palette: {
@@ -7,7 +7,10 @@ export const theme = createTheme({
             main: teal[500],
         },
         secondary: {
-            main: teal[300],
+            main: amber[400],
         },
+    },
+    breakpoints: {
+        values: { xs: 567, sm: 768, md: 992, lg: 1200, xl: 1400 },
     },
 });

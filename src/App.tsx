@@ -14,6 +14,7 @@ import ContactPage from "./pages/Contact";
 import ErrorPage from "./pages/Error";
 import NotFoundPage from "./pages/Error/NotFound";
 import ExamPage from "./pages/Exam";
+import DetailExamPage from "./pages/Exam/detail";
 import EditExamPage from "./pages/Exam/edit";
 import HomePage from "./pages/Home";
 import FitHeightLayout from "./pages/Layouts/FitHeightLayout";
@@ -55,9 +56,11 @@ function App() {
                     </Route>
                     <Route path="exam" element={<FitHeightLayout />}>
                         <Route index element={<ExamPage />} />
-                        <Route path="edit" element={<EditExamPage />}>
-                            <Route path=":examId" element={<EditExamPage />} />
-                        </Route>
+                        <Route
+                            path="detail/:examId"
+                            element={<DetailExamPage />}
+                        />
+                        <Route path="edit/:examId" element={<EditExamPage />} />
                     </Route>
 
                     <Route

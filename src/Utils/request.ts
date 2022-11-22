@@ -93,14 +93,15 @@ const request = {
         }
         return response;
     },
-    post: async (
+    post: async <ResultData>(
         url: string,
         payload: any,
         config?: AxiosRequestConfig<any> | undefined
     ) => {
         const response = await instance.post(url, payload, config);
         if (response) {
-            return response.data;
+            const data: ResultData = response.data;
+            return data;
         }
         return response;
     },

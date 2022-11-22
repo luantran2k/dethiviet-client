@@ -19,7 +19,6 @@ interface RegisterInfo extends LoginInfo {
 }
 
 export default function LoginPage() {
-    console.log("LoginPage render");
     const navigate = useNavigate();
     const [isSignInForm, setIsSignInForm] = useState(true);
     const isSignIn = useAppSelector((state) => state.app.isSignIn);
@@ -27,17 +26,7 @@ export default function LoginPage() {
     const from = location.state?.from || "/";
     const dispatch = useAppDispatch();
     useEffect(() => {
-        const checkRefreshTokenExpire = () => {
-            const refreshToken = localStorage.getItem("refreshToken");
-            if (
-                refreshToken &&
-                new Date(ultis.parseJwt(refreshToken).exp * 1000) >= new Date()
-            ) {
-                return true;
-            }
-            return false;
-        };
-        const isRefreshTokenExpire = checkRefreshTokenExpire();
+        const isRefreshTokenExpire = ultis.checkRefreshTokenExpire();
         if (isRefreshTokenExpire) {
             dispatch(setIsSignIn(isRefreshTokenExpire));
         }

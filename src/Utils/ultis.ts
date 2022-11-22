@@ -107,5 +107,24 @@ const ultis = {
         }
         return false;
     },
+    checkRefreshTokenExpire: () => {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (
+            refreshToken &&
+            new Date(ultis.parseJwt(refreshToken).exp * 1000) >= new Date()
+        ) {
+            return true;
+        }
+        return false;
+    },
+    formatDate: (date: Date | string | undefined) => {
+        if (date === undefined) {
+            return undefined;
+        }
+        if (typeof date === "string") {
+            date = new Date(date);
+        }
+        return date.toLocaleDateString("vi-VN");
+    },
 };
 export default ultis;

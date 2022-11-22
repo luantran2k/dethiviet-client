@@ -16,10 +16,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames from "../../../const/SubjectNames";
 import { createExam } from "../../../redux/slices/examSlice";
+import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import IExam from "../interfaces/IExam";
 
@@ -28,6 +29,7 @@ export interface ICreateExamModalProps {}
 export default function CreateExamModal(props: ICreateExamModalProps) {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const userId = useAppSelector((state) => state.app.userInfo?.id);
     const {
         register,
         handleSubmit,
@@ -56,17 +58,22 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
         value: key,
     }));
 
-    const onSubmit: SubmitHandler<IExam> = (data) => {
+    const onSubmit: SubmitHandler<IExam> = async (data) => {
         (document.activeElement as HTMLElement).blur();
         const newExam: IExam = data;
         newExam.isPublic =
             data.isPublic === true || data?.isPublic === "true" ? true : false;
-        dispatch(createExam(newExam));
-        navigate("/exam/edit");
+
+        const exam = await request.post<IExam>("exams", {
+            ...newExam,
+            ownerId: userId,
+        });
+        dispatch(createExam(exam));
+        navigate("/exam/edit/" + exam.id);
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant="h5">Tạo bài kiểm tra mới</Typography>
+            <Typography variant="h5">Tạo đề thi mới</Typography>
             <Grid
                 container
                 rowSpacing={2}
@@ -194,7 +201,7 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
                                             onChangeField(newValue);
                                         }}
                                         renderInput={(params) => (
-                                            <TextField {...params} />
+                                            <TextField {...params} fullWidth />
                                         )}
                                     />
                                 );

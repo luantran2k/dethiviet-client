@@ -6,12 +6,13 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { FormEvent, memo, useRef, useState } from "react";
+import { FormEvent, memo, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useFetch } from "../../app/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector, useFetch } from "../../app/hooks";
 import IExam, { ExamFilter } from "../../components/Exam/interfaces/IExam";
 import CreateExamModal from "../../components/Exam/modal/create";
+import ExamCard, { IExamCard } from "../../components/ExamCard";
 import AppModal from "../../components/Modal";
 import ultis from "../../Utils/ultis";
 
@@ -20,7 +21,12 @@ export interface IExamPageProps {}
 export default function ExamPage(props: IExamPageProps) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [examFilter, setExamFilter] = useState<ExamFilter>({});
+    const isSignIn = useAppSelector((state) => state.app.isSignIn);
+    const location = useLocation();
+    const [examFilter, setExamFilter] = useState<ExamFilter>({
+        page: 0,
+        quantity: 24,
+    });
     const {
         register,
         watch,
@@ -29,10 +35,7 @@ export default function ExamPage(props: IExamPageProps) {
         formState: { errors },
         setValue,
     } = useForm<ExamFilter>({
-        defaultValues: {
-            page: 0,
-            quantity: 24,
-        },
+        defaultValues: examFilter,
     });
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -49,33 +52,72 @@ export default function ExamPage(props: IExamPageProps) {
     };
 
     return (
-        <Stack alignItems="center" spacing={4}>
-            <Stack direction="row" spacing={2} marginTop={4}>
-                <AppModal buttonText="create">
-                    <CreateExamModal />
-                </AppModal>
-                <Button
-                    onClick={() => {
-                        navigate("/");
-                    }}
-                >
-                    Redirect
-                </Button>
-            </Stack>
+        <Stack
+            alignItems="center"
+            spacing={4}
+            maxWidth="56.62rem"
+            margin="0 auto"
+        >
+            <Stack direction="row" spacing={2} marginTop={4}></Stack>
             <form onSubmit={handleSubmit}>
-                <TextField {...register("title")} label="Tiêu đề" />
-                <TextField {...register("subjectName")} label="Tên môn học" />
-                <TextField
-                    type="number"
-                    {...register("year", { valueAsNumber: true })}
-                    label="Năm học"
-                />
-                <TextField {...register("grade")} label="Lớp/Trình độ" />
-                <Button type="submit" variant="contained">
-                    Tìm kiếm
-                </Button>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <TextField
+                            fullWidth
+                            {...register("title")}
+                            label="Tiêu đề"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <TextField
+                            fullWidth
+                            {...register("subjectName")}
+                            label="Tên môn học"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <TextField
+                            fullWidth
+                            type="number"
+                            {...register("year", { valueAsNumber: true })}
+                            label="Năm học"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <TextField
+                            fullWidth
+                            {...register("grade")}
+                            label="Lớp/Trình độ"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button type="submit" variant="contained">
+                            Tìm kiếm
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        {isSignIn ? (
+                            <AppModal buttonText="Tạo đề thi mới">
+                                <CreateExamModal />
+                            </AppModal>
+                        ) : (
+                            <Button
+                                onClick={() => {
+                                    navigate("/signIn", {
+                                        state: {
+                                            from: location.pathname,
+                                        },
+                                    });
+                                }}
+                                variant="outlined"
+                            >
+                                Đăng nhập để tạo đề thi
+                            </Button>
+                        )}
+                    </Grid>
+                </Grid>
             </form>
-            <Grid container rowGap={2} maxWidth="56.62rem">
+            <Grid container rowGap={2}>
                 {examFilter.title ? (
                     <FindExamResults examFilter={examFilter} />
                 ) : (
@@ -94,7 +136,7 @@ export const FindExamResults = memo((props: { examFilter: ExamFilter }) => {
         data: exams,
         error,
         loading,
-    } = useFetch<ExamFilter, IExam[]>("exams", {
+    } = useFetch<ExamFilter, IExamCard[]>("exams", {
         params: examFilter,
     });
     const navigate = useNavigate();
@@ -116,32 +158,13 @@ export const FindExamResults = memo((props: { examFilter: ExamFilter }) => {
                 {exams.map((exam) => (
                     <Grid
                         item
+                        xs={6}
+                        sm={4}
                         marginLeft="1rem"
                         flexBasis="15rem"
                         key={exam.id}
-                        sx={{ backgroundColor: "#ccc" }}
                     >
-                        <CardActions
-                            onClick={() => {
-                                navigate("./edit/" + exam.id);
-                            }}
-                            sx={{
-                                flexDirection: "column",
-                                alignItems: "start",
-                            }}
-                        >
-                            <Typography variant="h6">
-                                Tiêu đề{exam.title}
-                            </Typography>
-                            <Typography>{exam.subjectName}</Typography>
-                            <Typography>{exam.ownerId}</Typography>
-                            <Typography>
-                                {exam.date
-                                    ? new Date(exam.date).getFullYear()
-                                    : "Không xác định"}
-                            </Typography>
-                            <Typography>{exam.grade}</Typography>
-                        </CardActions>
+                        <ExamCard exam={exam} />
                     </Grid>
                 ))}
             </>
