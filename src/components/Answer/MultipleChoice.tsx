@@ -11,6 +11,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { answerSeletor } from "../../redux/selectors/examSeletors";
 import { deleteAnswer, updateAnswer } from "../../redux/slices/examSlice";
+import request from "../../Utils/request";
 
 export interface IAnswerProps {
     partId: number;
@@ -54,6 +55,11 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                                 })
                             );
                     }}
+                    onBlur={() => {
+                        request.patch("answers/" + answerId, {
+                            value: answer.value,
+                        });
+                    }}
                     InputProps={{
                         disableUnderline: true,
                     }}
@@ -67,14 +73,16 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                     },
                     transition: "all 0.6s",
                 }}
-                onClick={() => {
-                    dispatch(
-                        deleteAnswer({
-                            partId,
-                            questionId,
-                            answerId,
-                        })
-                    );
+                onClick={async () => {
+                    const res = await request.delete("answers/" + answerId);
+                    if (res)
+                        dispatch(
+                            deleteAnswer({
+                                partId,
+                                questionId,
+                                answerId,
+                            })
+                        );
                 }}
             >
                 <Delete />

@@ -14,6 +14,7 @@ import {
     updateCorrectAnswer,
 } from "../../redux/slices/examSlice";
 import { Delete } from "@mui/icons-material";
+import request from "../../Utils/request";
 
 export interface IMultiSelectAnswerProps {
     partId: number;
@@ -37,14 +38,21 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                 checked={answer.isTrue}
                 control={
                     <Checkbox
-                        onChange={() => {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId,
-                                    answerId: answerId,
-                                })
+                        onChange={async () => {
+                            const res = await request.patch(
+                                "answers/" + answer.id,
+                                {
+                                    isTrue: !answer.isTrue,
+                                }
                             );
+                            if (res)
+                                dispatch(
+                                    updateCorrectAnswer({
+                                        partId,
+                                        questionId,
+                                        answerId: answerId,
+                                    })
+                                );
                         }}
                     />
                 }
@@ -68,6 +76,11 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                                 })
                             );
                     }}
+                    onBlur={() => {
+                        request.patch("answers/" + answerId, {
+                            value: answer.value,
+                        });
+                    }}
                     InputProps={{
                         disableUnderline: true,
                     }}
@@ -81,14 +94,16 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                     },
                     transition: "all 0.6s",
                 }}
-                onClick={() => {
-                    dispatch(
-                        deleteAnswer({
-                            partId,
-                            questionId,
-                            answerId,
-                        })
-                    );
+                onClick={async () => {
+                    const res = await request.delete("answers/" + answerId);
+                    if (res)
+                        dispatch(
+                            deleteAnswer({
+                                partId,
+                                questionId,
+                                answerId,
+                            })
+                        );
                 }}
             >
                 <Delete />

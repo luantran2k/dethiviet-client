@@ -18,9 +18,13 @@ import {
     updateCorrectAnswer,
     updateQuestionTitle,
 } from "../../redux/slices/examSlice";
+import request from "../../Utils/request";
+import IAnswer from "../Answer/interfaces/IAnswer";
 import MultipleChoiceAnswer from "../Answer/MultipleChoice";
 import OrderList from "../OrderList";
 import PopupMenu from "../PopupMenu";
+import IMultipleChoiceQuestion from "./interfaces/IMultipleChoice";
+import IQuestion from "./interfaces/IQuestion";
 
 export interface IQuestionProps {
     questionId: number;
@@ -30,7 +34,7 @@ export interface IQuestionProps {
 export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
     const { questionId, partId } = props;
     const dispatch = useAppDispatch();
-    const question = useAppSelector((state) =>
+    const question: IMultipleChoiceQuestion = useAppSelector((state) =>
         questionSeletor(state, { questionId, partId })
     );
 
@@ -62,6 +66,11 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                                             })
                                         );
                                 }}
+                                onBlur={(e) => {
+                                    request.patch("questions/" + question.id, {
+                                        title: question.title,
+                                    });
+                                }}
                                 variant="outlined"
                                 sx={{ scrollbarWidth: 0 }}
                                 fullWidth
@@ -76,13 +85,17 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                                         <Edit />
                                     </MenuItem>
                                     <MenuItem
-                                        onClick={() => {
-                                            dispatch(
-                                                deleteQuestion({
-                                                    partId,
-                                                    questionId: question.id,
-                                                })
+                                        onClick={async () => {
+                                            const res = await request.delete(
+                                                "questions/" + question.id
                                             );
+                                            if (res)
+                                                dispatch(
+                                                    deleteQuestion({
+                                                        partId,
+                                                        questionId: question.id,
+                                                    })
+                                                );
                                         }}
                                     >
                                         <Delete />
@@ -94,14 +107,47 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
 
                     <RadioGroup
                         name={`${partId}/${questionId}}`}
-                        onChange={(e) => {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId,
-                                    answerId: Number(e.target.value),
-                                })
-                            );
+                        onChange={async (e) => {
+                            const oldAnswer: IAnswer | undefined =
+                                question.answers?.find(
+                                    (answer) => answer.isTrue === true
+                                );
+                            if (oldAnswer) {
+                                const updatedAnswers = await request.patch(
+                                    "answers",
+                                    [
+                                        { id: oldAnswer.id, isTrue: false },
+                                        {
+                                            id: Number(e.target.value),
+                                            isTrue: true,
+                                        },
+                                    ]
+                                );
+                                if (updatedAnswers) {
+                                    dispatch(
+                                        updateCorrectAnswer({
+                                            partId,
+                                            questionId,
+                                            answerId: Number(e.target.value),
+                                        })
+                                    );
+                                }
+                            } else {
+                                const updatedAnswer =
+                                    await request.patch<IAnswer>(
+                                        "answers/" + e.target.value,
+                                        { isTrue: true }
+                                    );
+                                if (updatedAnswer) {
+                                    dispatch(
+                                        updateCorrectAnswer({
+                                            partId,
+                                            questionId,
+                                            answerId: updatedAnswer.id,
+                                        })
+                                    );
+                                }
+                            }
                         }}
                     >
                         <OrderList variant="upper-alpha">
@@ -123,8 +169,11 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                 variant="outlined"
                 title="Thêm câu trả lời mới"
                 sx={{ marginTop: "-1rem", marginLeft: "0.5rem" }}
-                onClick={() => {
-                    dispatch(createNewAnswer({ partId, questionId }));
+                onClick={async () => {
+                    const answer = await request.post<IAnswer>("answers", {
+                        questionId,
+                    });
+                    dispatch(createNewAnswer({ partId, questionId, answer }));
                 }}
             >
                 <Add />

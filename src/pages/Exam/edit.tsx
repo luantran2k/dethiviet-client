@@ -9,7 +9,7 @@ import Exam from "../../components/Exam";
 import AppModal from "../../components/Modal";
 import PaperPage from "../../components/PaperPage";
 import CreatePartModal from "../../components/Part/Modal/create";
-import { getExam } from "../../redux/slices/examSlice";
+import { getExam, removeExamState } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 export interface ICreateExamPageProps {}
 
@@ -33,6 +33,9 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         if (examId) {
             dispatch(getExam({ examId: Number(examId), includePart: true }));
         }
+        return () => {
+            dispatch(removeExamState());
+        };
     }, []);
 
     //remove ctrl + scrolling event

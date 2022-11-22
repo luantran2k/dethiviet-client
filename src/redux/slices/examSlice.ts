@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
+import IAnswer, {
     AnswerPayload,
     AnswerType,
     createEmptyAnswer,
 } from "../../components/Answer/interfaces/IAnswer";
 import IExam from "../../components/Exam/interfaces/IExam";
 import IPart from "../../components/Part/interfaces/IPart";
+import IQuestion from "../../components/Question/interfaces/IQuestion";
 import QuestionTypeDatas from "../../const/QuestionTypes";
 import examUltis from "../../Utils/examUltis";
 import request from "../../Utils/request";
@@ -28,6 +29,9 @@ const examSlice = createSlice({
                     key as keyof examSliceState
                 ] as undefined; //Just remove warning of ts always returning undefined
             }
+        },
+        removeExamState: (state) => {
+            return {};
         },
         createPart: (state, action: PayloadAction<IPart>) => {
             if (state.parts) {
@@ -55,29 +59,11 @@ const examSlice = createSlice({
             );
             state.parts?.splice(partIndex!, 1);
         },
-        createNewQuestion: (
-            state,
-            action: PayloadAction<{ partId: number }>
-        ) => {
-            // const part = state.parts?.find(
-            //     (part) => part.id === action.payload.partId
-            // );
-            // const numberOfAnswers =
-            //     part?.numberOfAnswers ||
-            //     examUltis.getNumberOfAnswer(state, action.payload.partId);
-            // if (part && numberOfAnswers) {
-            //     const newquestionId = examUltis.getNewquestionId(
-            //         state,
-            //         action.payload.partId
-            //     );
-            //     const newQuestion = examUltis.createEmptyQuestion(
-            //         part.type,
-            //         newquestionId,
-            //         0,
-            //         numberOfAnswers
-            //     );
-            //     part.questions?.push(newQuestion);
-            // }
+        createNewQuestion: (state, action: PayloadAction<IQuestion>) => {
+            const part = state.parts?.find(
+                (part) => part.id === action.payload.partId
+            );
+            part?.questions?.push(action.payload);
         },
         updateQuestionTitle: (
             state,
@@ -113,22 +99,12 @@ const examSlice = createSlice({
             action: PayloadAction<{
                 partId: number;
                 questionId: number;
+                answer: IAnswer;
             }>
         ) => {
-            const { partId, questionId } = action.payload;
-            const answerType = examUltis.getPart(state, partId)?.type;
+            const { partId, questionId, answer } = action.payload;
             const question = examUltis.getQuestion(state, partId, questionId);
-            const newanswerId = examUltis.getNewanswerId(
-                state,
-                partId,
-                questionId
-            );
-            const newAnswer = createEmptyAnswer(
-                state,
-                answerType!,
-                newanswerId
-            );
-            question?.answers?.push(newAnswer as AnswerType);
+            question?.answers?.push(answer);
         },
         updateAnswer: (
             state,
@@ -227,6 +203,7 @@ export const getExam = createAsyncThunk<
 export const {
     createExam,
     updateExam,
+    removeExamState,
     //saveExam,
     createPart,
     updatePart,

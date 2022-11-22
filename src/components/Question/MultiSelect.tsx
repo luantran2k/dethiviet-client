@@ -16,6 +16,8 @@ import {
     deleteQuestion,
     updateQuestionTitle,
 } from "../../redux/slices/examSlice";
+import request from "../../Utils/request";
+import IAnswer from "../Answer/interfaces/IAnswer";
 import MultiSelectAnswer from "../Answer/MultiSelect";
 import OrderList from "../OrderList";
 import PopupMenu from "../PopupMenu";
@@ -67,6 +69,14 @@ export const MultiSelectQuestion = React.memo(
                                                 })
                                             );
                                     }}
+                                    onBlur={(e) => {
+                                        request.patch(
+                                            "questions/" + question.id,
+                                            {
+                                                title: question.title,
+                                            }
+                                        );
+                                    }}
                                     variant="outlined"
                                     sx={{ scrollbarWidth: 0 }}
                                     fullWidth
@@ -81,13 +91,20 @@ export const MultiSelectQuestion = React.memo(
                                             <Edit />
                                         </MenuItem>
                                         <MenuItem
-                                            onClick={() => {
-                                                dispatch(
-                                                    deleteQuestion({
-                                                        partId,
-                                                        questionId: question.id,
-                                                    })
-                                                );
+                                            onClick={async () => {
+                                                const res =
+                                                    await request.delete(
+                                                        "questions/" +
+                                                            question.id
+                                                    );
+                                                if (res)
+                                                    dispatch(
+                                                        deleteQuestion({
+                                                            partId,
+                                                            questionId:
+                                                                question.id,
+                                                        })
+                                                    );
                                             }}
                                         >
                                             <Delete />
@@ -115,8 +132,13 @@ export const MultiSelectQuestion = React.memo(
                     variant="outlined"
                     title="Thêm câu trả lời mới"
                     sx={{ marginTop: "-1rem", marginLeft: "0.5rem" }}
-                    onClick={() => {
-                        dispatch(createNewAnswer({ partId, questionId }));
+                    onClick={async () => {
+                        const answer = await request.post<IAnswer>("answers", {
+                            questionId,
+                        });
+                        dispatch(
+                            createNewAnswer({ partId, questionId, answer })
+                        );
                     }}
                 >
                     <Add />

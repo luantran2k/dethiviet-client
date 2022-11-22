@@ -16,6 +16,7 @@ import request from "../../Utils/request";
 import UpdateExamModal from "../Exam/modal/update";
 import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
+import IQuestion from "../Question/interfaces/IQuestion";
 import { MultipleChoiceQuestion } from "../Question/MultipleChoiceQs";
 import { MultiSelectQuestion } from "../Question/MultiSelect";
 import UpdatePartModal from "./Modal/update";
@@ -120,12 +121,15 @@ export const Part = React.memo((props: IPartProps) => {
                     <Button
                         title="Thêm câu hỏi mới"
                         variant="contained"
-                        onClick={() => {
-                            dispatch(
-                                createNewQuestion({
-                                    partId: part.id,
-                                })
+                        onClick={async () => {
+                            const question = await request.post<IQuestion>(
+                                "questions",
+                                {
+                                    partId,
+                                    numberOfAnswers: part.numberOfAnswers,
+                                }
                             );
+                            dispatch(createNewQuestion(question));
                         }}
                     >
                         <Add />
