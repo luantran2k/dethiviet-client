@@ -5,9 +5,11 @@
     &::before {
         //Default is multipleChoice
         content: counter(answerCounter, upper-alpha) ". ";
+        font-weight: 500;
     }
     &.multiSelect::before {
         content: "⬜  " counter(answerCounter, upper-alpha) ". ";
         filter: grayscale(1);
+        font-weight: 500;
     }
 }

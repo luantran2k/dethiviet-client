@@ -116,13 +116,6 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     <Button variant="contained" onClick={() => togglePreview()}>
                         Preview
                     </Button>
-                    <Button
-                        onClick={() => {
-                            navigate("../");
-                        }}
-                    >
-                        Redirect
-                    </Button>
                     <Button variant="contained" onClick={handlePrint}>
                         Export
                     </Button>

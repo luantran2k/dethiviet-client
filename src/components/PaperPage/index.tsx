@@ -22,7 +22,7 @@ export default function PaperPage(props: IPaperPageProps) {
               ultis.convertPixelToMilimeter(
                   paper.current?.getBoundingClientRect().height
               ) /
-                  (297 - 25.4) // A4 height in mm, 3 is padding top and bottom , 16 is rem. 25.4 = 3*2*16
+                  (297 - ultis.convertPixelToMilimeter(16 * 6)) // A4 height in mm, 3 is padding top and bottom , 16 is rem. 25.4 = 3*2*16
           )
         : 1;
     const paperBackground = Array(pageNumber)
