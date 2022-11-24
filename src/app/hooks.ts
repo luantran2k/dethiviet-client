@@ -58,12 +58,19 @@ export function useAuth(page?: string) {
         console.log("check sigin" + page, isSignIn); //for debugging
     }
     useEffect(() => {
+        console.log("Location: ", location);
         if (!isSignIn) {
             const refresToken = ultis.checkRefreshTokenExpire();
             if (!refresToken) {
                 console.log("Use auth navigate to signIn");
-                navigate("/signIn", { state: { from: location.pathname } });
+                if (location.state) {
+                    navigate("/signIn", { state: { from: location.pathname } });
+                } else {
+                    navigate("/");
+                }
                 return;
+            } else {
+                dispatch(setIsSignIn(true));
             }
         }
     }, [isSignIn]);

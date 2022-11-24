@@ -63,6 +63,7 @@ const appSlice = createSlice({
         builder.addCase(signOut.fulfilled, (state, action) => {
             state.isSignIn = false;
             state.userInfo = undefined;
+            removeToken();
         });
         builder.addCase(signOut.rejected, (state, action) => {
             console.log("Sign out failed");
