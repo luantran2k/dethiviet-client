@@ -9,5 +9,7 @@ export default interface IQuestion {
     index?: number;
     title: string;
     description?: string;
+    questionAudio?: string;
+    questionImages?: string[];
     explain?: string;
 }

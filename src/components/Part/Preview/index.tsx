@@ -1,4 +1,5 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import * as React from "react";
 import { memo } from "react";
 import { questionSeletor } from "../../../redux/selectors/examSeletors";
@@ -18,10 +19,20 @@ const PartPreview = memo((props: IPartPreviewProps) => {
                 variant="h5"
                 display="inline-block"
                 fontWeight="normal"
-                fontSize={18}
-                textTransform="uppercase"
+                fontSize={20}
             >
                 {part.title}
+                <span style={{ fontSize: "1rem", textTransform: "none" }}>
+                    {" "}
+                    ({part.questions?.length} câu/ {part.totalPoints} điểm)
+                </span>
+            </Typography>
+            <Typography
+                color={grey[800]}
+                fontStyle="italic"
+                sx={{ textIndent: "2.8rem" }}
+            >
+                {part.description}
             </Typography>
             {part.questions?.map((question) => (
                 <QuestionPreview

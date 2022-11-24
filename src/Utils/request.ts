@@ -119,14 +119,14 @@ const request = {
         return response;
     },
 
-    delete: async (
+    delete: async <ResultData>(
         url: string,
         param?: any,
         config?: AxiosRequestConfig<any> | undefined
     ) => {
         const response = await instance.delete(url, config);
         if (response) {
-            return response.data;
+            return response.data as ResultData;
         }
         return response;
     },

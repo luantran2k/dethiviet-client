@@ -112,7 +112,7 @@ export default function UpdatePartModal(props: IUpdatePartModalProps) {
             </Grid>
             <Box marginTop={2}>
                 <Button type="submit" variant="contained">
-                    Tạo
+                    Cập nhật
                 </Button>
             </Box>
         </form>

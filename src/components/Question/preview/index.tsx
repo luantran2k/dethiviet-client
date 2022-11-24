@@ -1,11 +1,14 @@
 import { Typography, Grid, Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import * as React from "react";
 import { memo } from "react";
 import QuestionTypeDatas from "../../../const/QuestionTypes";
 import examUltis from "../../../Utils/examUltis";
+import ultis from "../../../Utils/ultis";
 import MultipleChoiceAnswerPreview from "../../Answer/preview/MultipleChoice";
 import MultiSelectAnswerPreview from "../../Answer/preview/MultiSelect";
 import { QuestionType } from "../interfaces/IQuestion";
+import QuestionImagesPreivew from "./ImagePreview";
 import styles from "./style.module.scss";
 
 export interface IQuestionPreviewProps {
@@ -21,12 +24,24 @@ const QuestionPreview = memo((props: IQuestionPreviewProps) => {
             <Typography
                 variant="h6"
                 fontWeight="normal"
-                fontSize={16}
+                fontSize={18}
                 display="inline"
                 sx={{ wordBreak: "break-word" }}
             >
                 {question.title}
             </Typography>
+            {question.description && (
+                <Typography
+                    variant="subtitle1"
+                    my={1}
+                    fontStyle="italic"
+                    color={grey[900]}
+                    sx={{ textIndent: "2.4rem" }}
+                >
+                    {question.description}
+                </Typography>
+            )}
+            <QuestionImagesPreivew question={question} />
             <Grid container columnSpacing={4} rowSpacing={1}>
                 {question.answers?.map((answer) => {
                     const size = examUltis.getSizeOfColumnAnswer(

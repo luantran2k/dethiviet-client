@@ -65,19 +65,26 @@ const examSlice = createSlice({
             );
             part?.questions?.push(action.payload);
         },
-        updateQuestionTitle: (
+        updateQuestionField: (
             state,
             action: PayloadAction<{
                 partId: number;
                 questionId: number;
-                value: string;
+                field: keyof IQuestion;
+                value: string | string[] | number | null;
             }>
         ) => {
+            // console.log(
+            //     `Update question ${action.payload.questionId} field ${action.payload.field} value ${action.payload.value}`
+            // );
             const part = examUltis.getPart(state, action.payload.partId);
-            const question = part?.questions?.find(
+            const question: IQuestion | undefined = part?.questions?.find(
                 (question) => question.id === action.payload.questionId
             );
-            question!.title = action.payload.value;
+            if (question) {
+                question[action.payload.field as keyof IQuestion] = action
+                    .payload.value as never; //Just remove warning of Ts
+            }
         },
         deleteQuestion: (
             state,
@@ -169,6 +176,9 @@ const examSlice = createSlice({
         builder.addCase(getExam.rejected, (state, action) => {
             alert("Get Exam Failed");
         });
+        builder.addCase(updateQuestionFieldServer.rejected, (state, action) => {
+            alert("Cập nhật câu hỏi lên server bị lỗi, vui lòng thử lại");
+        });
     },
 });
 
@@ -180,7 +190,10 @@ export const saveExam = createAsyncThunk<
         state: RootState;
     }
 >("exams/create", async (exam, { dispatch, getState }) => {
-    const updateRespone = await request.patch<IExam>("exams/" + exam!.id, exam);
+    const updateRespone = await request.patch<examSliceState>(
+        "exams/" + exam!.id,
+        exam
+    );
     dispatch(updateExam(updateRespone));
     return updateRespone;
 });
@@ -200,6 +213,33 @@ export const getExam = createAsyncThunk<
     return exam;
 });
 
+export const updateQuestionFieldServer = createAsyncThunk<
+    any,
+    {
+        partId?: number; // update in store if Passed, not need if is is Input because it is update with onChange event
+        questionId: number;
+        field: keyof IQuestion;
+        value: string | number | null;
+    },
+    {
+        state: RootState;
+    }
+>(
+    "questions/update",
+    async ({ partId, questionId, field, value }, { dispatch }) => {
+        const question = await request.patch<IQuestion>(
+            "questions/" + questionId,
+            {
+                [field]: value,
+            }
+        );
+        if (partId) {
+            dispatch(updateQuestionField({ partId, questionId, field, value }));
+        }
+        return question;
+    }
+);
+
 export const {
     createExam,
     updateExam,
@@ -209,7 +249,7 @@ export const {
     updatePart,
     deletePart,
     createNewQuestion,
-    updateQuestionTitle,
+    updateQuestionField,
     deleteQuestion,
     createNewAnswer,
     updateAnswer,

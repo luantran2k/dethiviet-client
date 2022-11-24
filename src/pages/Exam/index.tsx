@@ -1,16 +1,9 @@
-import {
-    Button,
-    CardActions,
-    Grid,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import { FormEvent, memo, useEffect, useRef, useState } from "react";
+import { Button, Grid, Stack, TextField, Typography } from "@mui/material";
+import { FormEvent, memo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useFetch } from "../../app/hooks";
-import IExam, { ExamFilter } from "../../components/Exam/interfaces/IExam";
+import { ExamFilter } from "../../components/Exam/interfaces/IExam";
 import CreateExamModal from "../../components/Exam/modal/create";
 import ExamCard, { IExamCard } from "../../components/ExamCard";
 import AppModal from "../../components/Modal";
@@ -19,6 +12,7 @@ import ultis from "../../Utils/ultis";
 export interface IExamPageProps {}
 
 export default function ExamPage(props: IExamPageProps) {
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const isSignIn = useAppSelector((state) => state.app.isSignIn);
@@ -34,9 +28,18 @@ export default function ExamPage(props: IExamPageProps) {
         control,
         formState: { errors },
         setValue,
+        trigger,
     } = useForm<ExamFilter>({
         defaultValues: examFilter,
     });
+
+    useEffect(() => {
+        setValue("title", searchParams.get("title") || "");
+        setExamFilter((preValue) => ({
+            ...preValue,
+            title: getValues("title"),
+        }));
+    }, [searchParams.get("title")]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

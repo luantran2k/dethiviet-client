@@ -1,6 +1,7 @@
 import { alpha, InputBase, styled } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -47,6 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export interface IAppBarSearchProps {}
 
 export default function AppBarSearch(props: IAppBarSearchProps) {
+    const navigate = useNavigate();
     return (
         <Search>
             <SearchIconWrapper>
@@ -55,6 +57,11 @@ export default function AppBarSearch(props: IAppBarSearchProps) {
             <StyledInputBase
                 placeholder="Tìm kiếm"
                 inputProps={{ "aria-label": "search" }}
+                onKeyUp={(e) => {
+                    if (e.key === "Enter" && e.currentTarget.value !== "") {
+                        navigate("/exam?title=" + e.currentTarget.value);
+                    }
+                }}
             />
         </Search>
     );

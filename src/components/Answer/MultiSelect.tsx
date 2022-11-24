@@ -15,6 +15,7 @@ import {
 } from "../../redux/slices/examSlice";
 import { Delete } from "@mui/icons-material";
 import request from "../../Utils/request";
+import DeleteButton from "../Button/DeleteButton";
 
 export interface IMultiSelectAnswerProps {
     partId: number;
@@ -86,14 +87,7 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                     }}
                 />
             </li>
-            <Button
-                sx={{
-                    opacity: 0.2,
-                    "&:hover": {
-                        opacity: 1,
-                    },
-                    transition: "all 0.6s",
-                }}
+            <DeleteButton
                 onClick={async () => {
                     const res = await request.delete("answers/" + answerId);
                     if (res)
@@ -105,9 +99,7 @@ const MultiSelectAnswer = React.memo((props: IMultiSelectAnswerProps) => {
                             })
                         );
                 }}
-            >
-                <Delete />
-            </Button>
+            />
         </Stack>
     );
 });

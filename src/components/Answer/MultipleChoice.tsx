@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { answerSeletor } from "../../redux/selectors/examSeletors";
 import { deleteAnswer, updateAnswer } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
+import DeleteButton from "../Button/DeleteButton";
 
 export interface IAnswerProps {
     partId: number;
@@ -65,14 +66,7 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                     }}
                 />
             </li>
-            <Button
-                sx={{
-                    opacity: 0.2,
-                    "&:hover": {
-                        opacity: 1,
-                    },
-                    transition: "all 0.6s",
-                }}
+            <DeleteButton
                 onClick={async () => {
                     const res = await request.delete("answers/" + answerId);
                     if (res)
@@ -84,9 +78,7 @@ export const MultipleChoiceAnswer = React.memo((props: IAnswerProps) => {
                             })
                         );
                 }}
-            >
-                <Delete />
-            </Button>
+            />
         </Stack>
     );
 });

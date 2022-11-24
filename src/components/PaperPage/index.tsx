@@ -1,10 +1,22 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import ultis from "../../Utils/ultis";
 import PartPreview from "../Part/Preview";
 import styles from "./style.module.scss";
 export interface IPaperPageProps {}
+
+function getPageNumber(paper: React.RefObject<HTMLDivElement>) {
+    return paper.current?.getBoundingClientRect().height
+        ? Math.round(
+              ultis.convertPixelToMilimeter(
+                  paper.current?.getBoundingClientRect().height -
+                      ultis.convertPixelToMilimeter(16 * 6) //padding top and bottom in scss
+              ) /
+                  (297 - ultis.convertPixelToMilimeter(16 * 6)) // A4 height in mm, 3 is padding top and bottom , 16 is rem. 25.4 = 3*2*16
+          )
+        : 1;
+}
 
 function PaperBackground({ pageNumber }: { pageNumber: number }) {
     return (
@@ -17,14 +29,12 @@ function PaperBackground({ pageNumber }: { pageNumber: number }) {
 export default function PaperPage(props: IPaperPageProps) {
     const exam = useAppSelector((state) => state.exam);
     const paper = useRef<HTMLDivElement>(null);
-    const pageNumber = paper.current?.getBoundingClientRect().height
-        ? Math.ceil(
-              ultis.convertPixelToMilimeter(
-                  paper.current?.getBoundingClientRect().height
-              ) /
-                  (297 - ultis.convertPixelToMilimeter(16 * 6)) // A4 height in mm, 3 is padding top and bottom , 16 is rem. 25.4 = 3*2*16
-          )
-        : 1;
+    const [pageNumber, setPageNumber] = useState(getPageNumber(paper));
+
+    useEffect(() => {
+        setPageNumber(getPageNumber(paper));
+    });
+
     const paperBackground = Array(pageNumber)
         .fill({})
         .map((x, index) => (
