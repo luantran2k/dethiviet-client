@@ -28,8 +28,8 @@ const appSlice = createSlice({
     name: "app",
     initialState,
     reducers: {
-        setIsSignIn: (state, action: PayloadAction<boolean>) => {
-            state.isSignIn = action.payload;
+        setIsSignIn: (state) => {
+            state.isSignIn = true;
             state.userInfo = JSON.parse(
                 localStorage.getItem("userInfo") || "{}"
             );
@@ -59,6 +59,7 @@ const appSlice = createSlice({
         builder.addCase(signIn.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isSignIn = true;
+            state.userInfo = action.payload.userInfo;
             saveRefreshToken(action.payload);
         });
         builder.addCase(signIn.rejected, (state, action) => {
@@ -97,9 +98,6 @@ export const signIn = createAsyncThunk<
         username,
         password,
     });
-    if (data) {
-        removeToken();
-    }
     return data;
 });
 

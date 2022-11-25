@@ -26,12 +26,13 @@ export default function LoginPage() {
     const from = location.state?.from || "/";
     const dispatch = useAppDispatch();
     useEffect(() => {
-        const isRefreshTokenExpire = ultis.checkRefreshTokenExpire();
-        if (isRefreshTokenExpire) {
-            dispatch(setIsSignIn(isRefreshTokenExpire));
-        }
         if (isSignIn) {
             navigate(from, { replace: true });
+        } else {
+            const isRefreshTokenExpire = ultis.checkRefreshTokenExpire();
+            if (isRefreshTokenExpire) {
+                dispatch(setIsSignIn());
+            }
         }
     }, [isSignIn]);
 

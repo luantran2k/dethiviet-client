@@ -58,7 +58,6 @@ export function useAuth(page?: string) {
         console.log("check sigin" + page, isSignIn); //for debugging
     }
     useEffect(() => {
-        console.log("Location: ", location);
         if (!isSignIn) {
             const refresToken = ultis.checkRefreshTokenExpire();
             if (!refresToken) {
@@ -70,7 +69,7 @@ export function useAuth(page?: string) {
                 }
                 return;
             } else {
-                dispatch(setIsSignIn(true));
+                dispatch(setIsSignIn());
             }
         }
     }, [isSignIn]);

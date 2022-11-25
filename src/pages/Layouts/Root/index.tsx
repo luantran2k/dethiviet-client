@@ -1,13 +1,16 @@
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
 
 export interface IRootProps {}
 
-export default function Root(props: IRootProps) {
+export default function Root(props: IRootProps, fitPageList: string[]) {
     return (
-        <div>
+        <Box>
             <Navbar />
-            <Outlet />
-        </div>
+            <Box height="calc(100vh - 4rem)" sx={{ overflowY: "auto" }}>
+                <Outlet />
+            </Box>
+        </Box>
     );
 }

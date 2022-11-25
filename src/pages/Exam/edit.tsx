@@ -72,7 +72,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
             container
             width={"100vw"}
             alignItems="start"
-            height="100px"
+            height="calc(100vh - 4rem)"
             flexGrow={1}
         >
             {isPreview && (

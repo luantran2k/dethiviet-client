@@ -20,20 +20,12 @@ function App() {
     const EditExamPage = React.lazy(() => import("./pages/Exam/edit"));
 
     const dispatch = useAppDispatch();
-    const isRefreshTokenExpire = () => {
-        const refreshToken = localStorage.getItem("refreshToken");
-        if (
-            refreshToken &&
-            new Date(ultis.parseJwt(refreshToken).exp * 1000) >= new Date()
-        ) {
-            return true;
-        }
-        return false;
-    };
-    const [isSignIn] = useState(isRefreshTokenExpire());
+    const [isSignIn] = useState(ultis.checkRefreshTokenExpire());
 
     useEffect(() => {
-        dispatch(setIsSignIn(isSignIn));
+        if (isSignIn) {
+            dispatch(setIsSignIn());
+        }
     }, []);
 
     return (
@@ -98,24 +90,17 @@ function App() {
                                     </Suspense>
                                 }
                             />
+                            <Route
+                                path="edit/:examId"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <EditExamPage />
+                                    </Suspense>
+                                }
+                            ></Route>
                         </Route>
-                    </Route>
-                    <Route
-                        path="exam/edit/:examId"
-                        element={
-                            <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                <FitHeightLayout />
-                            </Suspense>
-                        }
-                    >
-                        <Route
-                            path=""
-                            element={
-                                <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                    <EditExamPage />
-                                </Suspense>
-                            }
-                        ></Route>
                     </Route>
 
                     <Route
