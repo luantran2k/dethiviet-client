@@ -77,9 +77,31 @@ function App() {
                                 </Suspense>
                             }
                         />
+                        <Route path="exam">
+                            <Route
+                                index
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <ExamPage />
+                                    </Suspense>
+                                }
+                            />
+                            <Route
+                                path="detail/:examId"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <DetailExamPage />
+                                    </Suspense>
+                                }
+                            />
+                        </Route>
                     </Route>
                     <Route
-                        path="exam"
+                        path="exam/edit/:examId"
                         element={
                             <Suspense fallback={<h4>Đang tải trang</h4>}>
                                 <FitHeightLayout />
@@ -87,29 +109,13 @@ function App() {
                         }
                     >
                         <Route
-                            index
-                            element={
-                                <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                    <ExamPage />
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="detail/:examId"
-                            element={
-                                <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                    <DetailExamPage />
-                                </Suspense>
-                            }
-                        />
-                        <Route
-                            path="edit/:examId"
+                            path=""
                             element={
                                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                                     <EditExamPage />
                                 </Suspense>
                             }
-                        />
+                        ></Route>
                     </Route>
 
                     <Route
