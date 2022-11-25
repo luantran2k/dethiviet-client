@@ -1,5 +1,4 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector, useFetch } from "../../app/hooks";
 import IExam from "../../components/Exam/interfaces/IExam";

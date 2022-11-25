@@ -1,16 +1,17 @@
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { Button, Grid, Stack } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
-import Exam from "../../components/Exam";
 import AppModal from "../../components/Modal";
-import PaperPage from "../../components/PaperPage";
 import CreatePartModal from "../../components/Part/Modal/create";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
+const Exam = React.lazy(() => import("../../components/Exam"));
+const PaperPage = React.lazy(() => import("../../components/PaperPage"));
+
 export interface ICreateExamPageProps {}
 
 export default function EditExamPage(props: ICreateExamPageProps) {
@@ -91,7 +92,9 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         spacing={4}
                         alignItems="center"
                     >
-                        <PaperPage />
+                        <Suspense fallback={<h4>Đang tải trang</h4>}>
+                            <PaperPage />
+                        </Suspense>
                     </Stack>
                 </Grid>
             )}
@@ -130,7 +133,9 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         Delete
                     </Button>
                 </Stack>
-                <Exam />
+                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                    <Exam />
+                </Suspense>
                 <Stack justifyContent="center" direction="row" padding={4}>
                     <AppModal
                         buttonStartIcon={
