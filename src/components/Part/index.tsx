@@ -1,4 +1,4 @@
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, AudioFile, Delete, Edit } from "@mui/icons-material";
 import {
     AccordionDetails,
     Button,
@@ -7,12 +7,18 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useId } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import QuestionTypeDatas from "../../const/QuestionTypes";
 import { partSeletor } from "../../redux/selectors/examSeletors";
-import { createNewQuestion, deletePart } from "../../redux/slices/examSlice";
+import {
+    createNewQuestion,
+    deletePart,
+    updatePartField,
+    updateQuestionField,
+} from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
+import DeleteButton from "../Button/DeleteButton";
 import UpdateExamModal from "../Exam/modal/update";
 import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
@@ -57,6 +63,7 @@ const renderQuestion = (
 
 export const Part = React.memo((props: IPartProps) => {
     const { partId } = props;
+    const audioId = useId();
     const dispatch = useAppDispatch();
     const part = useAppSelector((state) => partSeletor(state, partId));
     if (part === undefined) {
@@ -82,6 +89,58 @@ export const Part = React.memo((props: IPartProps) => {
                             >
                                 <UpdatePartModal partId={partId} />
                             </AppModal>
+                            <label
+                                htmlFor={audioId}
+                                style={{ display: "flex", cursor: "pointer" }}
+                            >
+                                <MenuItem title="Thêm âm thanh">
+                                    <AudioFile />
+                                </MenuItem>
+                            </label>
+                            <input
+                                type="file"
+                                id={audioId}
+                                accept="audio/*"
+                                style={{
+                                    visibility: "hidden",
+                                    position: "absolute",
+                                    width: 0,
+                                    height: 0,
+                                }}
+                                onChange={async (e) => {
+                                    if (e.target.files?.[0]) {
+                                        const audioFile = e.target.files[0];
+                                        dispatch(
+                                            updatePartField({
+                                                partId,
+                                                field: "partAudio",
+                                                value: "loading",
+                                            })
+                                        );
+                                        const data = new FormData();
+                                        data.append(
+                                            "partAudio",
+                                            audioFile,
+                                            audioFile.name
+                                        );
+                                        const res = await request.patch<{
+                                            url: string;
+                                        }>(`parts/${part.id}/audio`, data, {
+                                            headers: {
+                                                "Content-Type":
+                                                    "multipart/form-data",
+                                            },
+                                        });
+                                        dispatch(
+                                            updatePartField({
+                                                partId,
+                                                field: "partAudio",
+                                                value: res.url,
+                                            })
+                                        );
+                                    }
+                                }}
+                            />
                             <MenuItem
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -112,6 +171,41 @@ export const Part = React.memo((props: IPartProps) => {
                 </Stack>
             </summary>
             <AccordionDetails>
+                {part.partAudio !== null &&
+                    (part.partAudio === "loading" ? (
+                        <Typography my={1}>Đang xử lý</Typography>
+                    ) : (
+                        <Stack direction="row">
+                            <audio
+                                src={part.partAudio}
+                                controls
+                                style={{ flexGrow: 1, margin: "1rem 0" }}
+                            />
+                            <DeleteButton
+                                onClick={async () => {
+                                    dispatch(
+                                        updatePartField({
+                                            partId,
+                                            field: "partAudio",
+                                            value: "loading",
+                                        })
+                                    );
+                                    const res = await request.delete(
+                                        `parts/${part.id}/audio`
+                                    );
+                                    if (res) {
+                                        dispatch(
+                                            updatePartField({
+                                                partId,
+                                                field: "partAudio",
+                                                value: null,
+                                            })
+                                        );
+                                    }
+                                }}
+                            />
+                        </Stack>
+                    ))}
                 <ol style={{ paddingLeft: "3rem" }}>
                     {part.questions?.map((question) =>
                         renderQuestion(part.type, question.id, partId)

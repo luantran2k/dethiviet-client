@@ -186,6 +186,9 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
                                     questionId: question.id,
                                 })
                             );
+                        else {
+                            alert("Xoá không thành công, vui lòng thử lại");
+                        }
                     }}
                 >
                     <Delete />

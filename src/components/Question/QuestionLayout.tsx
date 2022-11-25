@@ -1,39 +1,31 @@
-import { Add, Delete, Cancel } from "@mui/icons-material";
+import { Add, Cancel, Delete } from "@mui/icons-material";
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
     CardActions,
     FormControl,
     FormLabel,
+    Grid,
     Stack,
     TextField,
-    RadioGroup,
-    Button,
     Typography,
-    Grid,
-    Box,
-    ImageList,
-    ImageListItem,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
 } from "@mui/material";
 import * as React from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { questionSeletor } from "../../redux/selectors/examSeletors";
+import { useAppDispatch } from "../../app/hooks";
 import {
-    updateQuestionField,
-    updateCorrectAnswer,
     createNewAnswer,
+    updateQuestionField,
     updateQuestionFieldServer,
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 import IAnswer from "../Answer/interfaces/IAnswer";
-import MultipleChoiceAnswer from "../Answer/MultipleChoice";
 import DeleteButton from "../Button/DeleteButton";
-import OrderList from "../OrderList";
 import PopupMenu from "../PopupMenu";
 import IQuestion from "./interfaces/IQuestion";
-import QuestionMenu, { IQuestionMenuProps } from "./QuestionMenu";
+import QuestionMenu from "./QuestionMenu";
 
 export interface IQuestionLayoutProps {
     question: IQuestion;

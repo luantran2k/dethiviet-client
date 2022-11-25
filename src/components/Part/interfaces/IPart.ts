@@ -9,10 +9,12 @@ export type PartType = IMultipleChoicePart | IMultiSelectPart;
 
 export default interface IPart {
     id: number;
-    index?: number;
+    examId: number;
     title: string;
-    description?: string;
     type: string;
     totalPoints: number;
+    partAudio: string;
+    description: string;
+    numberOfAnswers: number;
     questions?: QuestionType[];
 }

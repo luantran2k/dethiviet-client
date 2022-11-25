@@ -52,6 +52,20 @@ const examSlice = createSlice({
                 part.description = description;
             }
         },
+        updatePartField: (
+            state,
+            action: PayloadAction<{
+                partId: number;
+                field: keyof IPart;
+                value: string | string[] | number | null;
+            }>
+        ) => {
+            const part = examUltis.getPart(state, action.payload.partId);
+            if (part) {
+                part[action.payload.field as keyof IPart] = action.payload
+                    .value as never; //Just remove warning of Ts
+            }
+        },
 
         deletePart: (state, action: PayloadAction<number>) => {
             const partIndex = state.parts?.findIndex(
@@ -247,6 +261,7 @@ export const {
     //saveExam,
     createPart,
     updatePart,
+    updatePartField,
     deletePart,
     createNewQuestion,
     updateQuestionField,

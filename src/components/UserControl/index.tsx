@@ -2,10 +2,11 @@ import { Box, Button, Menu, MenuItem, Popover } from "@mui/material";
 import * as React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { signOut } from "../../redux/slices/appSlice";
 import PopupMenu from "../PopupMenu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Stack } from "@mui/system";
+import { signOut } from "../../redux/slices/appSlice";
+import request from "../../Utils/request";
 
 export interface IUserControlProps {}
 
@@ -60,7 +61,8 @@ export default function UserControl(props: IUserControlProps) {
                             Trang cá nhân
                         </MenuItem>
                         <MenuItem
-                            onClick={() => {
+                            onClick={async () => {
+                                await request.get("auth/signOut");
                                 dispatch(signOut());
                                 navigate(location.pathname || "/");
                             }}

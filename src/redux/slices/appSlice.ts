@@ -34,6 +34,11 @@ const appSlice = createSlice({
                 localStorage.getItem("userInfo") || "{}"
             );
         },
+        signOut: (state) => {
+            state.isSignIn = false;
+            state.userInfo = undefined;
+            removeToken();
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(signUp.pending, (state, action) => {
@@ -59,14 +64,6 @@ const appSlice = createSlice({
         builder.addCase(signIn.rejected, (state, action) => {
             state.isLoading = false;
             console.log("Sign in rejected", action.payload);
-        });
-        builder.addCase(signOut.fulfilled, (state, action) => {
-            state.isSignIn = false;
-            state.userInfo = undefined;
-            removeToken();
-        });
-        builder.addCase(signOut.rejected, (state, action) => {
-            console.log("Sign out failed");
         });
     },
 });
@@ -106,11 +103,6 @@ export const signIn = createAsyncThunk<
     return data;
 });
 
-export const signOut = createAsyncThunk("signOut", async () => {
-    const data = await request.get("auth/signOut");
-    return true;
-});
-
-export const { setIsSignIn } = appSlice.actions;
+export const { setIsSignIn, signOut } = appSlice.actions;
 
 export default appSlice;
