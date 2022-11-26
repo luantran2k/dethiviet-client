@@ -1,5 +1,13 @@
-import { Button, Grid, Stack, TextField, Typography } from "@mui/material";
-import { FormEvent, memo, useEffect, useState } from "react";
+import {
+    Box,
+    Button,
+    Grid,
+    MenuItem,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { FormEvent, memo, useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useFetch } from "../../app/hooks";
@@ -7,6 +15,7 @@ import { ExamFilter } from "../../components/Exam/interfaces/IExam";
 import CreateExamModal from "../../components/Exam/modal/create";
 import ExamCard, { IExamCard } from "../../components/ExamCard";
 import AppModal from "../../components/Modal";
+import PopupMenu from "../../components/PopupMenu";
 import ultis from "../../Utils/ultis";
 
 export interface IExamPageProps {}
@@ -14,6 +23,7 @@ export interface IExamPageProps {}
 export default function ExamPage(props: IExamPageProps) {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const documentId = useId();
     const dispatch = useAppDispatch();
     const isSignIn = useAppSelector((state) => state.app.isSignIn);
     const location = useLocation();
@@ -100,9 +110,22 @@ export default function ExamPage(props: IExamPageProps) {
                     </Grid>
                     <Grid item>
                         {isSignIn ? (
-                            <AppModal buttonText="Tạo đề thi mới">
-                                <CreateExamModal />
-                            </AppModal>
+                            <PopupMenu
+                                trigger={<Button>Tạo đề thi mới</Button>}
+                            >
+                                <Box>
+                                    <AppModal
+                                        trigger={
+                                            <MenuItem>Tạo đề thi mới</MenuItem>
+                                        }
+                                    >
+                                        <CreateExamModal />
+                                    </AppModal>
+                                    <MenuItem>
+                                        Tạo đề thi từ đề thi đã có
+                                    </MenuItem>
+                                </Box>
+                            </PopupMenu>
                         ) : (
                             <Button
                                 onClick={() => {

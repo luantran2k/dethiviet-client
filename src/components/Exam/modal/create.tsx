@@ -1,3 +1,4 @@
+import { Cancel, ConstructionOutlined } from "@mui/icons-material";
 import {
     Autocomplete,
     Button,
@@ -14,15 +15,17 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useId, useState } from "react";
+import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames from "../../../const/SubjectNames";
-import { createExam } from "../../../redux/slices/examSlice";
+import examSlice, { createExam } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import IExam from "../interfaces/IExam";
+import styles from "./create.module.scss";
 
 export interface ICreateExamModalProps {}
 
@@ -37,6 +40,7 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
         control,
         formState: { errors },
         setValue,
+        getValues,
     } = useForm<IExam>({
         defaultValues: {
             isPublic: true,
@@ -45,6 +49,10 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
             date: null,
         },
     });
+    const [documentFileState, setDocumentFileState] = useState<
+        File | undefined
+    >(getValues("documentFile"));
+
     const subjectList = SubjectNames.map((category) =>
         category.data
             .map((subject) => ({
@@ -64,12 +72,27 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
         newExam.isPublic =
             data.isPublic === true || data?.isPublic === "true" ? true : false;
 
-        const exam = await request.post<IExam>("exams", {
-            ...newExam,
-            ownerId: userId,
-        });
-        dispatch(createExam(exam));
-        navigate("/exam/edit/" + exam.id);
+        // if (newExam.documentFile) {
+        //     console.log(newExam.documentFile);
+        // } else {
+        //     console.log("khong co file");
+        // }
+        const exam = await request.post<IExam>(
+            "exams",
+            {
+                ...newExam,
+                ownerId: userId,
+            },
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        if (exam) {
+            dispatch(createExam(exam));
+            navigate("/exam/edit/" + exam.id);
+        }
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -291,6 +314,45 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
                             )}
                         />
                     </FormControl>
+                </Grid>
+                <Grid item xs={12} position="relative">
+                    <label className={styles.fileLabel} htmlFor="documentFile">
+                        {documentFileState?.name ||
+                            "File tài liệu (Không cần nếu tạo mới hoàn toàn)"}
+                    </label>
+                    <input
+                        type="file"
+                        id="documentFile"
+                        className={styles.fileUpload}
+                        accept="application/pdf"
+                        onChange={(e) => {
+                            if (e.target.files?.[0]) {
+                                setDocumentFileState(e.target.files[0]);
+                                setValue("documentFile", e.target.files[0]);
+                            }
+                        }}
+                    />
+                    {documentFileState && (
+                        <Cancel
+                            sx={{
+                                color: "red",
+                                position: "absolute",
+                                bottom: 0,
+                                left: "50%",
+                                opacity: 0.2,
+                                transition: "all 0.2s ease",
+                                cursor: "pointer",
+                                "&:hover": {
+                                    opacity: 1,
+                                    transform: "scale(1.2)",
+                                },
+                            }}
+                            onClick={() => {
+                                setDocumentFileState(undefined);
+                                setValue("documentFile", undefined);
+                            }}
+                        />
+                    )}
                 </Grid>
             </Grid>
             <CardActions sx={{ justifyContent: "center" }}>
