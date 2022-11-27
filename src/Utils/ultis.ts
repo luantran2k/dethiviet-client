@@ -126,5 +126,12 @@ const ultis = {
         }
         return date.toLocaleDateString("vi-VN");
     },
+    checkPathInArray: (locaitonPath: string, array: string[]) => {
+        const index = array.findIndex((path) => locaitonPath.includes(path));
+        if (index !== -1) {
+            return true;
+        }
+        return false;
+    },
 };
 export default ultis;

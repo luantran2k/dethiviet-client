@@ -1,9 +1,22 @@
+@use "../../scss/variables" as *;
+
 .homePage {
     width: 100%;
-    .heroImage {
-        display: block;
-        width: 80%;
-        margin: 1rem;
-        border: 2px solid black;
+    .hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(100vh - 4rem);
+        .heroContent {
+            flex: 0 0 35%;
+        }
+        .imageBox {
+            flex: 0 0 65%;
+            overflow: hidden;
+            .heroImage {
+                display: block;
+                width: 100%;
+            }
+        }
     }
 }

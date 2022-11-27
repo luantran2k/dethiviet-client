@@ -2,6 +2,7 @@ import { Box, MenuItem, Toolbar } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { Stack } from "@mui/system";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import ultis from "../../Utils/ultis";
 import AppBarSearch from "../Search/AppBarSearch";
 import UserControl from "../UserControl";
 import "./style.scss";
@@ -9,20 +10,11 @@ import "./style.scss";
 export interface INavbarProps {}
 
 const tealNavBarPath = ["/exam/edit"];
-const checkTealNav = (locaitonPath: string) => {
-    const index = tealNavBarPath.findIndex((path) =>
-        locaitonPath.includes(path)
-    );
-    if (index !== -1) {
-        return true;
-    }
-    return false;
-};
 
 export default function Navbar(props: INavbarProps) {
     const location = useLocation();
     const navigate = useNavigate();
-    const isTealNav = checkTealNav(location.pathname);
+    const isTealNav = ultis.checkPathInArray(location.pathname, tealNavBarPath);
     return (
         <Box className={`app-bar ${isTealNav ? "teal-nav" : ""}`}>
             <Toolbar>

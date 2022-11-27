@@ -9,6 +9,11 @@ body {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
+.container {
+    max-width: 75rem;
+    margin: 0 auto;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -26,7 +31,11 @@ li::marker {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 0.35rem;
+    cursor: pointer;
+    &:hover {
+        width: 0.5rem;
+    }
 }
 
 ::-webkit-scrollbar-thumb {
