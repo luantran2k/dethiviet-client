@@ -23,7 +23,6 @@ export default function PopupMenu(props: IPopupMenuProps) {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
-        console.log(event.target);
         setAnchorEl(event.currentTarget);
     };
 

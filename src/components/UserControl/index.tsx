@@ -55,16 +55,21 @@ export default function UserControl(props: IUserControlProps) {
                     <Stack>
                         <MenuItem
                             onClick={() => {
-                                navigate("/profile");
+                                navigate(`/user/${userInfo?.id}/info`);
                             }}
                         >
                             Trang cá nhân
                         </MenuItem>
                         <MenuItem
                             onClick={async () => {
-                                await request.get("auth/signOut");
-                                dispatch(signOut());
-                                navigate(location.pathname || "/");
+                                try {
+                                    await request.get("auth/signOut");
+                                } catch (err) {
+                                    console.log(err);
+                                } finally {
+                                    dispatch(signOut());
+                                    navigate(location.pathname || "/");
+                                }
                             }}
                         >
                             Đăng xuất

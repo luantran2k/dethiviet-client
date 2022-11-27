@@ -1,9 +1,13 @@
+import { Star } from "@mui/icons-material";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { yellow } from "@mui/material/colors";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector, useFetch } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import IExam from "../../components/Exam/interfaces/IExam";
 import { BACKUP_AVATAR } from "../../const/const";
 import { User } from "../../redux/slices/appSlice";
+import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 
 export interface IDetailExam extends IExam {
@@ -16,25 +20,26 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
     const { examId } = useParams();
     const navigate = useNavigate();
     const userId = useAppSelector((state) => state.app.userInfo?.id);
-    const {
-        data: exam,
-        error,
-        loading,
-    } = useFetch<any, IDetailExam>(
-        "exams/" + examId + "?includeOwner=true",
-        {}
-    );
+    const [exam, setExam] = useState<IDetailExam | undefined>(undefined);
+    // const {
+    //     data: exam,
+    //     error,
+    //     loading,
+    // } = useFetch<any, IDetailExam>(
+    //     "exams/" + examId + "?includeOwner=true&userId=" + userId,
+    //     {}
+    //     );
+    //"exams/" + examId + "?includeOwner=true&userId=" + userId,
+    useEffect(() => {
+        const getExam = async () => {
+            const exam = await request.get<IDetailExam>(
+                "exams/" + examId + "?includeOwner=true&userId=" + userId
+            );
+            setExam(exam);
+        };
+        getExam();
+    }, []);
 
-    if (loading) {
-        return <Typography variant="h1">Đang tải dữ liệu</Typography>;
-    }
-    if (error) {
-        return (
-            <Typography variant="h1" color="red">
-                {error.message}
-            </Typography>
-        );
-    }
     if (exam) {
         return (
             <Box maxWidth="60rem" margin="0 auto">
@@ -76,6 +81,48 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                             Chỉnh sửa
                         </Button>
                     )}
+                    <Star
+                        style={{
+                            color: exam.isFavorited ? yellow[700] : "black",
+                            cursor: "pointer",
+                        }}
+                        onClick={async () => {
+                            if (!userId) {
+                                alert(
+                                    "Bạn cần đăng nhập để thực hiện chức năng này"
+                                );
+                                return;
+                            }
+                            if (exam.isFavorited) {
+                                const res = await request.delete(
+                                    `exams/${exam.id}/favorite?userId=${userId}`
+                                );
+                                if (res) {
+                                    setExam(
+                                        (preValue) =>
+                                            ({
+                                                ...preValue,
+                                                isFavorited: false,
+                                            } as IDetailExam)
+                                    );
+                                }
+                            } else {
+                                const res = await request.post(
+                                    `exams/${exam.id}/favorite?userId=${userId}`,
+                                    {}
+                                );
+                                if (res) {
+                                    setExam(
+                                        (preValue) =>
+                                            ({
+                                                ...preValue,
+                                                isFavorited: true,
+                                            } as IDetailExam)
+                                    );
+                                }
+                            }
+                        }}
+                    />
                     <Button variant="contained">Đánh giá</Button>
                     <Button variant="contained">
                         Thêm vào danh sách quan tâm

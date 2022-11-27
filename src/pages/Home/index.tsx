@@ -1,6 +1,8 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
+import CreateExamModal from "../../components/Exam/modal/create";
+import AppModal from "../../components/Modal";
 import styles from "./style.module.scss";
 export interface IHomePageProps {}
 
@@ -35,7 +37,15 @@ export default function HomePage(props: IHomePageProps) {
                         >
                             Tìm kiếm bài thi
                         </Button>
-                        <Button variant="outlined">Tạo bài thi mới</Button>
+                        <AppModal
+                            trigger={
+                                <Button variant="outlined">
+                                    Tạo bài thi mới
+                                </Button>
+                            }
+                        >
+                            <CreateExamModal />
+                        </AppModal>
                     </Stack>
                 </div>
                 <div className={styles.imageBox}>

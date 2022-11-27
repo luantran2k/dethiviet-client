@@ -7,7 +7,9 @@ export interface User {
     username: string;
     profileImg?: string;
     email?: string;
+    phone?: string;
     name?: string;
+    createAt?: string;
 }
 
 export interface AppSliceState {

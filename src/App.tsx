@@ -2,6 +2,12 @@ import { ContactPage } from "@mui/icons-material";
 import React, { Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useAppDispatch } from "./app/hooks";
+import ProfilePage from "./pages/Profile";
+import AccountSetting from "./pages/Profile/AccountSetting";
+import CompletedExams from "./pages/Profile/CompletedExams";
+import FavoriteExams from "./pages/Profile/FavoriteExams";
+import UserProfileInfo from "./pages/Profile/Info";
+import OwnExams from "./pages/Profile/OwnExams";
 import { setIsSignIn } from "./redux/slices/appSlice";
 import ultis from "./Utils/ultis";
 
@@ -100,6 +106,38 @@ function App() {
                                     </Suspense>
                                 }
                             ></Route>
+                        </Route>
+                        <Route path="user">
+                            <Route
+                                path=":userId"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <ProfilePage />
+                                    </Suspense>
+                                }
+                            >
+                                <Route
+                                    path="info"
+                                    element={<UserProfileInfo />}
+                                />
+                                <Route path="exams">
+                                    <Route path="own" element={<OwnExams />} />
+                                    <Route
+                                        path="completed"
+                                        element={<CompletedExams />}
+                                    />
+                                    <Route
+                                        path="favorite"
+                                        element={<FavoriteExams />}
+                                    />
+                                </Route>
+                                <Route
+                                    path="account-setting"
+                                    element={<AccountSetting />}
+                                />
+                            </Route>
                         </Route>
                     </Route>
 

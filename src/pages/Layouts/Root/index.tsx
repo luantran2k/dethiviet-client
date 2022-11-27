@@ -17,7 +17,10 @@ export default function Root(props: IRootProps, fitPageList: string[]) {
     return (
         <Box>
             <Navbar />
-            <Box height="calc(100vh - 4rem)" sx={{ overflowY: "auto" }}>
+            <Box
+                height="calc(100vh - 4rem)"
+                sx={{ overflowY: "auto", overflowX: "hidden" }}
+            >
                 <Box minHeight="calc(100vh - 8rem)">
                     <Outlet />
                 </Box>
