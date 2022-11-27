@@ -1,3 +1,4 @@
+import { AnswerType } from "./../../Answer/interfaces/IAnswer";
 import IMultipleChoiceQuestion from "./IMultipleChoice";
 import IMultiSelectQuestion from "./IMultiSelect";
 
@@ -12,4 +13,5 @@ export default interface IQuestion {
     questionAudio?: string;
     questionImages?: string[];
     explain?: string;
+    answers?: AnswerType[];
 }

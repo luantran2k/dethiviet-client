@@ -1,24 +1,20 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { questionSeletor } from "../../redux/selectors/examSeletors";
-import MultiSelectAnswer from "../Answer/MultiSelect";
-import OrderList from "../OrderList";
-import IMultiSelectQuestion from "./interfaces/IMultiSelect";
-import QuestionLayout from "./QuestionLayout";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { questionSeletor } from "../../../../redux/selectors/examSeletors";
+import MultiSelectAnswer from "../../../Answer/MultiSelect/NoDocument";
+import OrderList from "../../../OrderList";
+import IMultiSelectQuestion from "../../interfaces/IMultiSelect";
+import QuestionLayout from "../../QuestionLayout";
 
-export interface IMultiSelectQuestionProps {
-    questionId: number;
+export interface IMultiSelectQsNoDocumentProps {
+    question: IMultiSelectQuestion;
     partId: number;
 }
 
-export const MultiSelectQuestion = React.memo(
-    (props: IMultiSelectQuestionProps) => {
-        const { questionId, partId } = props;
+const MultiSelectQsNoDocument = React.memo(
+    (props: IMultiSelectQsNoDocumentProps) => {
+        const { question, partId } = props;
         const dispatch = useAppDispatch();
-        const question: IMultiSelectQuestion | undefined = useAppSelector(
-            (state) => questionSeletor(state, { questionId, partId })
-        );
-
         if (question === undefined) {
             return <></>;
         }
@@ -31,7 +27,7 @@ export const MultiSelectQuestion = React.memo(
                         ?.map((answerId, index) => (
                             <MultiSelectAnswer
                                 partId={partId}
-                                questionId={questionId}
+                                questionId={question.id}
                                 answerId={answerId}
                                 key={answerId}
                             />
@@ -41,3 +37,5 @@ export const MultiSelectQuestion = React.memo(
         );
     }
 );
+
+export default MultiSelectQsNoDocument;

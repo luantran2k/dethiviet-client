@@ -23,10 +23,10 @@ export default function EditExamPage(props: ICreateExamPageProps) {
     const [isPreview, setPreview] = React.useState(true);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const exam = useAppSelector((state) => state.exam) || " Bài kiểm tra";
     const handlePrint = useReactToPrint({
         content: () => paperGroupRef.current,
-        documentTitle: "Bai kiem tra",
-        // onAfterPrint: () => alert("Print success"),
+        documentTitle: exam.title,
     });
 
     //get Exan fron db if has examId
@@ -75,11 +75,24 @@ export default function EditExamPage(props: ICreateExamPageProps) {
             height="calc(100vh - 4rem)"
             flexGrow={1}
         >
-            {isPreview && (
+            {exam.documentUrl ? (
+                <object
+                    type="application/pdf"
+                    data="https://res.cloudinary.com/dm3xuympe/image/upload/v1669455597/dethiviet/exam/documents/m3e2us54jthlbfspeox4.pdf"
+                    style={{
+                        height: "100%",
+                        width: isPreview ? "60%" : "0",
+                        transition: "all 0.3s linear",
+                    }}
+                ></object>
+            ) : (
                 <Grid
                     item
-                    flexBasis={"60%"}
-                    sx={{ bgcolor: grey[300] }}
+                    flexBasis={isPreview ? "60%" : "0"}
+                    sx={{
+                        bgcolor: grey[300],
+                        transition: "all .3s ease-in-out",
+                    }}
                     className="page-area"
                     ref={pageAreaRef}
                     height="100%"

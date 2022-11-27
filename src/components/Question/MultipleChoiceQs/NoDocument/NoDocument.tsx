@@ -1,33 +1,27 @@
 import { RadioGroup } from "@mui/material";
-import React from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { questionSeletor } from "../../redux/selectors/examSeletors";
-import { updateCorrectAnswer } from "../../redux/slices/examSlice";
-import request from "../../Utils/request";
-import IAnswer from "../Answer/interfaces/IAnswer";
-import MultipleChoiceAnswer from "../Answer/MultipleChoice";
-import OrderList from "../OrderList";
-import QuestionLayout from "./QuestionLayout";
-export interface IQuestionProps {
-    questionId: number;
+import { useAppDispatch } from "../../../../app/hooks";
+import { updateCorrectAnswer } from "../../../../redux/slices/examSlice";
+import request from "../../../../Utils/request";
+import IAnswer from "../../../Answer/interfaces/IAnswer";
+import MultipleChoiceAnswerNoDocument from "../../../Answer/MultipleChoice/NoDocument";
+import OrderList from "../../../OrderList";
+import { QuestionType } from "../../interfaces/IQuestion";
+import QuestionLayout from "../../QuestionLayout";
+
+export interface IMultipleChoiceQsNoDocumentProps {
+    question: QuestionType;
     partId: number;
 }
 
-export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
-    const { questionId, partId } = props;
+export default function MultipleChoiceQsNoDocument(
+    props: IMultipleChoiceQsNoDocumentProps
+) {
     const dispatch = useAppDispatch();
-    const question = useAppSelector((state) =>
-        questionSeletor(state, { questionId, partId })
-    );
-
-    if (question === undefined) {
-        return <></>;
-    }
-
+    const { question, partId } = props;
     return (
         <QuestionLayout question={question} partId={partId}>
             <RadioGroup
-                name={`${partId}/${questionId}}`}
+                name={`${partId}/${question.id}}`}
                 onChange={async (e) => {
                     const oldAnswer: IAnswer | undefined =
                         question.answers?.find(
@@ -45,7 +39,7 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                             dispatch(
                                 updateCorrectAnswer({
                                     partId,
-                                    questionId,
+                                    questionId: question.id,
                                     answerId: Number(e.target.value),
                                 })
                             );
@@ -59,7 +53,7 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                             dispatch(
                                 updateCorrectAnswer({
                                     partId,
-                                    questionId,
+                                    questionId: question.id,
                                     answerId: updatedAnswer.id,
                                 })
                             );
@@ -71,15 +65,15 @@ export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
                     {question?.answers
                         ?.map((answer) => answer.id)
                         ?.map((answerId, index) => (
-                            <MultipleChoiceAnswer
+                            <MultipleChoiceAnswerNoDocument
                                 partId={partId}
-                                questionId={questionId}
+                                questionId={question.id}
                                 answerId={answerId}
-                                key={`${partId}/${questionId}/${answerId}`}
+                                key={`${partId}/${question.id}/${answerId}`}
                             />
                         ))}
                 </OrderList>
             </RadioGroup>
         </QuestionLayout>
     );
-});
+}

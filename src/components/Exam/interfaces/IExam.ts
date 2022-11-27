@@ -13,7 +13,7 @@ export default interface IExam {
     publishers?: string;
     type?: string;
     examName?: string;
-    documentName?: string;
+    documentUrl?: string;
     documentFile?: File;
     parts?: PartType[];
     createdAt?: string;

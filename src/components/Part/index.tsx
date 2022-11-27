@@ -24,7 +24,7 @@ import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
 import IQuestion from "../Question/interfaces/IQuestion";
 import { MultipleChoiceQuestion } from "../Question/MultipleChoiceQs";
-import { MultiSelectQuestion } from "../Question/MultiSelect";
+import MultiSelectQuestion from "../Question/MultiSelect";
 import UpdatePartModal from "./Modal/update";
 import styles from "./style.module.scss";
 export interface IPartProps {
@@ -34,7 +34,8 @@ export interface IPartProps {
 const renderQuestion = (
     questionType: string,
     questionId: number,
-    partId: number
+    partId: number,
+    hasDocument: boolean = false
 ) => {
     switch (questionType) {
         case QuestionTypeDatas.MultitpleChoice.value: {
@@ -43,6 +44,7 @@ const renderQuestion = (
                     key={questionId}
                     questionId={questionId}
                     partId={partId}
+                    hasDocument={hasDocument}
                 />
             );
         }
@@ -52,6 +54,7 @@ const renderQuestion = (
                     key={questionId}
                     questionId={questionId}
                     partId={partId}
+                    hasDocument={hasDocument}
                 />
             );
         }
@@ -66,6 +69,7 @@ export const Part = React.memo((props: IPartProps) => {
     const audioId = useId();
     const dispatch = useAppDispatch();
     const part = useAppSelector((state) => partSeletor(state, partId));
+    const documentUrl = useAppSelector((state) => state.exam.documentUrl);
     if (part === undefined) {
         return <></>;
     }
@@ -170,66 +174,70 @@ export const Part = React.memo((props: IPartProps) => {
                     </PopupMenu>
                 </Stack>
             </summary>
-            <AccordionDetails>
-                {part.partAudio !== null &&
-                    (part.partAudio === "loading" ? (
-                        <Typography my={1}>Đang xử lý</Typography>
-                    ) : (
-                        <Stack direction="row">
-                            <audio
-                                src={part.partAudio}
-                                controls
-                                style={{ flexGrow: 1, margin: "1rem 0" }}
-                            />
-                            <DeleteButton
-                                onClick={async () => {
+
+            {part.partAudio !== null &&
+                (part.partAudio === "loading" ? (
+                    <Typography my={1}>Đang xử lý</Typography>
+                ) : (
+                    <Stack direction="row">
+                        <audio
+                            src={part.partAudio}
+                            controls
+                            style={{ flexGrow: 1, margin: "1rem 0" }}
+                        />
+                        <DeleteButton
+                            onClick={async () => {
+                                dispatch(
+                                    updatePartField({
+                                        partId,
+                                        field: "partAudio",
+                                        value: "loading",
+                                    })
+                                );
+                                const res = await request.delete(
+                                    `parts/${part.id}/audio`
+                                );
+                                if (res) {
                                     dispatch(
                                         updatePartField({
                                             partId,
                                             field: "partAudio",
-                                            value: "loading",
+                                            value: null,
                                         })
                                     );
-                                    const res = await request.delete(
-                                        `parts/${part.id}/audio`
-                                    );
-                                    if (res) {
-                                        dispatch(
-                                            updatePartField({
-                                                partId,
-                                                field: "partAudio",
-                                                value: null,
-                                            })
-                                        );
-                                    }
-                                }}
-                            />
-                        </Stack>
-                    ))}
-                <ol style={{ paddingLeft: "3rem" }}>
-                    {part.questions?.map((question) =>
-                        renderQuestion(part.type, question.id, partId)
-                    )}
-                </ol>
-                <CardActions sx={{ justifyContent: "center" }}>
-                    <Button
-                        title="Thêm câu hỏi mới"
-                        variant="contained"
-                        onClick={async () => {
-                            const question = await request.post<IQuestion>(
-                                "questions",
-                                {
-                                    partId,
-                                    numberOfAnswers: part.numberOfAnswers,
                                 }
-                            );
-                            dispatch(createNewQuestion(question));
-                        }}
-                    >
-                        <Add />
-                    </Button>
-                </CardActions>
-            </AccordionDetails>
+                            }}
+                        />
+                    </Stack>
+                ))}
+            <ol style={{ paddingLeft: "3rem" }}>
+                {part.questions?.map((question) =>
+                    renderQuestion(
+                        part.type,
+                        question.id,
+                        partId,
+                        Boolean(documentUrl)
+                    )
+                )}
+            </ol>
+            <CardActions sx={{ justifyContent: "center" }}>
+                <Button
+                    title="Thêm câu hỏi mới"
+                    variant="contained"
+                    onClick={async () => {
+                        const question = await request.post<IQuestion>(
+                            "questions",
+                            {
+                                partId,
+                                numberOfAnswers: part.numberOfAnswers,
+                            }
+                        );
+                        dispatch(createNewQuestion(question));
+                    }}
+                >
+                    <Add />
+                </Button>
+            </CardActions>
         </details>
     );
 });

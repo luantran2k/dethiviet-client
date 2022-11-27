@@ -23,6 +23,7 @@ export default function PopupMenu(props: IPopupMenuProps) {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
+        console.log(event.target);
         setAnchorEl(event.currentTarget);
     };
 
@@ -38,11 +39,7 @@ export default function PopupMenu(props: IPopupMenuProps) {
             {trigger ? (
                 React.cloneElement(trigger, { onClick: handleClick })
             ) : (
-                <Button
-                    aria-describedby={id}
-                    sx={{ minHeight: 0, minWidth: 0, padding: 1 }}
-                    onClick={handleClick}
-                >
+                <Button onClick={handleClick}>
                     <MoreVert />
                 </Button>
             )}

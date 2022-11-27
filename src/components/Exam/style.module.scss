@@ -4,13 +4,12 @@
     background-color: white;
     margin-bottom: 1rem;
     border-radius: 0.4rem;
-    .part_summary {
-        list-style: none;
-        padding: 0.6rem 1rem;
-        border-bottom: 0.1rem solid $teal-400;
-        &::marker,
-        &::-webkit-details-marker {
-            display: none;
-        }
+}
+.part_summary {
+    list-style: none;
+    border-bottom: 0.1rem solid $teal-400;
+    &::marker,
+    &::-webkit-details-marker {
+        display: none;
     }
 }

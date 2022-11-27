@@ -20,10 +20,11 @@ import IQuestion from "./interfaces/IQuestion";
 export interface IQuestionMenuProps {
     question: IQuestion;
     partId: number;
+    isDocumentExam: boolean;
 }
 
 export default function QuestionMenu(props: IQuestionMenuProps) {
-    const { question, partId } = props;
+    const { question, partId, isDocumentExam } = props;
     const dispatch = useAppDispatch();
     const audioId = useId();
     const imageId = useId();
@@ -42,36 +43,40 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
             }}
         >
             <Stack direction="row">
-                <MenuItem
-                    title="Thêm mô tả"
-                    onClick={() => {
-                        dispatch(
-                            updateQuestionField({
-                                partId,
-                                questionId: question.id,
-                                field: "description",
-                                value: "",
-                            })
-                        );
-                    }}
-                >
-                    <Description />
-                </MenuItem>
-                <MenuItem
-                    title="Thêm giải thích"
-                    onClick={() => {
-                        dispatch(
-                            updateQuestionField({
-                                partId,
-                                questionId: question.id,
-                                field: "explain",
-                                value: "",
-                            })
-                        );
-                    }}
-                >
-                    <HistoryEdu />
-                </MenuItem>
+                {!isDocumentExam && (
+                    <MenuItem
+                        title="Thêm mô tả"
+                        onClick={() => {
+                            dispatch(
+                                updateQuestionField({
+                                    partId,
+                                    questionId: question.id,
+                                    field: "description",
+                                    value: "",
+                                })
+                            );
+                        }}
+                    >
+                        <Description />
+                    </MenuItem>
+                )}
+                {!isDocumentExam && (
+                    <MenuItem
+                        title="Thêm giải thích"
+                        onClick={() => {
+                            dispatch(
+                                updateQuestionField({
+                                    partId,
+                                    questionId: question.id,
+                                    field: "explain",
+                                    value: "",
+                                })
+                            );
+                        }}
+                    >
+                        <HistoryEdu />
+                    </MenuItem>
+                )}
 
                 <label
                     htmlFor={audioId}
@@ -108,7 +113,6 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
                                 audioFile,
                                 audioFile.name
                             );
-                            console.log(data);
                             const res = await request.patch<{
                                 url: string;
                             }>(`questions/${question.id}/audio`, data, {
@@ -128,50 +132,59 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
                     }}
                 />
 
-                <label
-                    htmlFor={imageId}
-                    style={{ display: "flex", cursor: "pointer" }}
-                >
-                    <MenuItem title="Thêm ảnh">
-                        <Image />
-                    </MenuItem>
-                </label>
-                <input
-                    type="file"
-                    id={imageId}
-                    accept="image/*"
-                    style={{
-                        visibility: "hidden",
-                        position: "absolute",
-                        width: 0,
-                        height: 0,
-                    }}
-                    onChange={async (e) => {
-                        const images: FileList | null = e.target.files;
-                        if (images) {
-                            const formData = new FormData();
-                            [...images].forEach((file) => {
-                                formData.append("questionImages", file);
-                            });
-                            const res = await request.post<{
-                                questionImages: string[];
-                            }>(`questions/${question.id}/image`, formData, {
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            });
-                            dispatch(
-                                updateQuestionField({
-                                    partId,
-                                    questionId: question.id,
-                                    field: "questionImages",
-                                    value: res.questionImages,
-                                })
-                            );
-                        }
-                    }}
-                    multiple
-                />
+                {!isDocumentExam && (
+                    <>
+                        <label
+                            htmlFor={imageId}
+                            style={{ display: "flex", cursor: "pointer" }}
+                        >
+                            <MenuItem title="Thêm ảnh">
+                                <Image />
+                            </MenuItem>
+                        </label>
+                        <input
+                            type="file"
+                            id={imageId}
+                            accept="image/*"
+                            style={{
+                                visibility: "hidden",
+                                position: "absolute",
+                                width: 0,
+                                height: 0,
+                            }}
+                            onChange={async (e) => {
+                                const images: FileList | null = e.target.files;
+                                if (images) {
+                                    const formData = new FormData();
+                                    [...images].forEach((file) => {
+                                        formData.append("questionImages", file);
+                                    });
+                                    const res = await request.post<{
+                                        questionImages: string[];
+                                    }>(
+                                        `questions/${question.id}/image`,
+                                        formData,
+                                        {
+                                            headers: {
+                                                "Content-Type":
+                                                    "multipart/form-data",
+                                            },
+                                        }
+                                    );
+                                    dispatch(
+                                        updateQuestionField({
+                                            partId,
+                                            questionId: question.id,
+                                            field: "questionImages",
+                                            value: res.questionImages,
+                                        })
+                                    );
+                                }
+                            }}
+                            multiple
+                        />
+                    </>
+                )}
 
                 <MenuItem
                     title="Xoá câu hỏi"

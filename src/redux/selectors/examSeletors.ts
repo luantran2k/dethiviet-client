@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import { AnswerType } from "../../components/Answer/interfaces/IAnswer";
 import { RootState } from "../store";
 
 const exam = (state: RootState) => state.exam;
@@ -41,7 +42,7 @@ export const questionSeletor = createSelector(
 export const answerSeletor = createSelector(
     parts,
     answerIdParam,
-    (parts, { partId, questionId, answerId }) =>
+    (parts, { partId, questionId, answerId }): AnswerType | undefined =>
         parts
             ?.find((part) => part.id === partId)
             ?.questions?.find((question) => question.id === questionId)

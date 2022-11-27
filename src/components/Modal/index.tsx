@@ -49,9 +49,18 @@ export default function AppModal(props: IAppModalComponentProps) {
         buttonTitle,
     } = props;
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    const childerWithSetOpenEvent = React.cloneElement(children, { setOpen });
+    const handleOpen = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        console.log(e.target);
+        setOpen(true);
+    };
+    const handleClose = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpen(false);
+    };
+    const childerWithSetOpenEvent = React.cloneElement(children, {
+        handleOpen,
+    });
     return (
         <>
             {trigger ? (

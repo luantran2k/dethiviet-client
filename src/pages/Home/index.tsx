@@ -1,5 +1,5 @@
-import { Box, Button } from "@mui/material";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import "./homePage.scss";
 export interface IHomePageProps {}
 
