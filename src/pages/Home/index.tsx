@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import "./homePage.scss";
+import styles from "./style.module.scss";
 export interface IHomePageProps {}
 
 export default function HomePage(props: IHomePageProps) {
     const navigate = useNavigate();
     return (
-        <Box className="home-page">
-            <h1>Home page</h1>
+        <Box className={styles.homePage}>
+            <h1 className={styles.red}>Home page</h1>
+            <img className={styles.heroImage} src="/image/homePage/hero.png" />
         </Box>
     );
 }

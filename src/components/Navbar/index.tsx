@@ -1,18 +1,30 @@
-import { AppBar, Box, MenuItem, Toolbar } from "@mui/material";
+import { Box, MenuItem, Toolbar } from "@mui/material";
+import { teal } from "@mui/material/colors";
 import { Stack } from "@mui/system";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { signOut } from "../../redux/slices/appSlice";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import AppBarSearch from "../Search/AppBarSearch";
 import UserControl from "../UserControl";
-import styles from "./style.module.scss";
+import "./style.scss";
 
 export interface INavbarProps {}
 
+const tealNavBarPath = ["/exam/edit"];
+const checkTealNav = (locaitonPath: string) => {
+    const index = tealNavBarPath.findIndex((path) =>
+        locaitonPath.includes(path)
+    );
+    if (index !== -1) {
+        return true;
+    }
+    return false;
+};
+
 export default function Navbar(props: INavbarProps) {
+    const location = useLocation();
     const navigate = useNavigate();
+    const isTealNav = checkTealNav(location.pathname);
     return (
-        <AppBar position="static">
+        <Box className={`app-bar ${isTealNav ? "teal-nav" : ""}`}>
             <Toolbar sx={{ alignItems: "center", bacgroundColor: "white" }}>
                 <Stack
                     direction="row"
@@ -22,32 +34,21 @@ export default function Navbar(props: INavbarProps) {
                 >
                     <Link to="/">
                         <img
-                            src="/image/logo/white_logo.png"
+                            src={`/image/logo/${
+                                isTealNav ? "white" : "teal"
+                            }_logo.png`}
                             style={{ height: "1.4rem" }}
                         />
                     </Link>
-                    <MenuItem
-                        onClick={() => navigate("/")}
-                        sx={{ textTransform: "uppercase" }}
-                    >
-                        Trang chủ
-                    </MenuItem>
-                    <MenuItem
-                        onClick={() => navigate("/exam")}
-                        sx={{ textTransform: "uppercase" }}
-                    >
-                        Đề thi
-                    </MenuItem>
-                    <MenuItem
-                        onClick={() => navigate("/about")}
-                        sx={{ textTransform: "uppercase" }}
-                    >
-                        Giới thiệu
-                    </MenuItem>
+                    <Stack direction="row" className="main-nav">
+                        <NavLink to="/">Trang chủ</NavLink>
+                        <NavLink to="/exam">Đề thi</NavLink>
+                        <NavLink to="/about">Giới thiệu</NavLink>
+                    </Stack>
                 </Stack>
                 <AppBarSearch />
                 <UserControl />
             </Toolbar>
-        </AppBar>
+        </Box>
     );
 }

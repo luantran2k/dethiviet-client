@@ -1,0 +1,40 @@
+@use "../../scss/variables/color" as color;
+.app-bar {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    .main-nav {
+        align-items: center;
+        font-weight: 500;
+        gap: 1rem;
+        a {
+            color: color.$gray-900;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            &.active {
+                color: color.$teal-800;
+                background-color: color.$teal-50;
+            }
+            &:hover {
+                color: color.$teal-400;
+            }
+        }
+    }
+    &.teal-nav {
+        background-color: color.$teal-500;
+        a {
+            color: white;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            &.active {
+                color: color.$teal-800;
+                background-color: color.$teal-50;
+            }
+            &:hover {
+                color: color.$teal-100;
+            }
+        }
+    }
+}
