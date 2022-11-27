@@ -7,8 +7,9 @@ export default function HomePage(props: IHomePageProps) {
     const navigate = useNavigate();
     return (
         <Box className={styles.homePage}>
-            <h1 className={styles.red}>Home page</h1>
+            <h2>ok</h2>
             <img className={styles.heroImage} src="/image/homePage/hero.png" />
+            <h2>ok</h2>
         </Box>
     );
 }

@@ -19,3 +19,24 @@ input[type="number"]::-webkit-outer-spin-button {
 li::marker {
     font-family: "Roboto", "Arial", sans-serif;
 }
+
+::-webkit-scrollbar-track {
+    background-color: $teal-100;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.44, $teal-400),
+        color-stop(0.72, $teal-600),
+        color-stop(0.86, $teal-800)
+    );
+}

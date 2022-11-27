@@ -25,7 +25,7 @@ export default function Navbar(props: INavbarProps) {
     const isTealNav = checkTealNav(location.pathname);
     return (
         <Box className={`app-bar ${isTealNav ? "teal-nav" : ""}`}>
-            <Toolbar sx={{ alignItems: "center", bacgroundColor: "white" }}>
+            <Toolbar>
                 <Stack
                     direction="row"
                     flexGrow={1}

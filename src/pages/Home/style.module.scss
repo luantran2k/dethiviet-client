@@ -1,6 +1,9 @@
 .homePage {
     width: 100%;
     .heroImage {
-        width: 100%;
+        display: block;
+        width: 80%;
+        margin: 1rem;
+        border: 2px solid black;
     }
 }
