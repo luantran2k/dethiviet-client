@@ -20,6 +20,7 @@ import PopupMenu from "../../components/PopupMenu";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import CarouselCard from "../../components/ExamCard/CarouselCard";
+import CreateExamButton from "../../components/Exam/Button/CreateExamButton";
 
 export interface IExamPageProps {}
 interface examsState {
@@ -51,35 +52,7 @@ export default function ExamPage(props: IExamPageProps) {
             }}
         >
             <Stack direction="row" marginBottom={6} spacing={2}>
-                {isSignIn ? (
-                    <PopupMenu
-                        trigger={
-                            <Button variant="contained">Tạo đề thi mới</Button>
-                        }
-                    >
-                        <Box>
-                            <AppModal
-                                trigger={<MenuItem>Tạo đề thi mới</MenuItem>}
-                            >
-                                <CreateExamModal />
-                            </AppModal>
-                            <MenuItem>Tạo đề thi từ đề thi đã có</MenuItem>
-                        </Box>
-                    </PopupMenu>
-                ) : (
-                    <Button
-                        onClick={() => {
-                            navigate("/signIn", {
-                                state: {
-                                    from: location.pathname,
-                                },
-                            });
-                        }}
-                        variant="outlined"
-                    >
-                        Đăng nhập để tạo đề thi
-                    </Button>
-                )}
+                <CreateExamButton />
                 <Button
                     variant="outlined"
                     onClick={() => {
@@ -90,7 +63,7 @@ export default function ExamPage(props: IExamPageProps) {
                 </Button>
             </Stack>
             <Typography variant="h5" fontWeight={600} color={grey[800]}>
-                Bài thi mới
+                Đề thi mới
             </Typography>
             <Box
                 sx={{
@@ -120,7 +93,7 @@ export default function ExamPage(props: IExamPageProps) {
                 </Swiper>
             </Box>
             <Typography variant="h5" fontWeight={600} color={grey[800]}>
-                Bài thi nổi bật của tháng
+                Đề thi được làm nhiều của tháng
             </Typography>
             <Box
                 sx={{

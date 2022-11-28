@@ -1,19 +1,25 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { LibraryAdd, MoreVert } from "@mui/icons-material";
+import { Box, MenuItem, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
-import { SwiperSlide } from "swiper/react";
+import { useAppDispatch } from "../../../app/hooks";
+import { BASE_URL } from "../../../const/const";
 import { IDetailExam } from "../../../pages/Exam/detail";
+import { addSelectedExam } from "../../../redux/slices/appSlice";
 import ultis from "../../../Utils/ultis";
+import PopupMenu from "../../PopupMenu";
 
 export interface ICarouselCardProps {
     exam: IDetailExam;
     boxShadow?: boolean;
     isClickCard?: boolean;
+    menuButton?: React.ReactElement;
 }
 
 export default function CarouselCard(props: ICarouselCardProps) {
-    const { exam, boxShadow, isClickCard } = props;
+    const { exam, boxShadow, isClickCard, menuButton } = props;
     const naviage = useNavigate();
+    const dispatch = useAppDispatch();
     return (
         <Box
             sx={{
@@ -32,20 +38,61 @@ export default function CarouselCard(props: ICarouselCardProps) {
         >
             <Stack height="100%">
                 <Box flex={1} sx={{ padding: "1rem" }}>
-                    <Typography
-                        variant="h6"
-                        onClick={() => {
-                            naviage("/exam/detail/" + exam.id);
-                        }}
-                        sx={{
-                            cursor: "pointer",
-                            "&:hover": {
-                                color: teal[700],
-                            },
-                        }}
-                    >
-                        {exam.title}
-                    </Typography>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h6"
+                            onClick={() => {
+                                naviage("/exam/detail/" + exam.id);
+                            }}
+                            title={exam.title}
+                            sx={{
+                                flex: 1,
+                                cursor: "pointer",
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                "&:hover": {
+                                    color: teal[700],
+                                },
+                            }}
+                        >
+                            {exam.title}
+                        </Typography>
+                        <PopupMenu
+                            trigger={<MoreVert sx={{ cursor: "pointer" }} />}
+                            popOverProps={{
+                                anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "right",
+                                },
+                                transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "right",
+                                },
+                            }}
+                        >
+                            <Box>
+                                <MenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        dispatch(addSelectedExam(exam));
+                                    }}
+                                >
+                                    Thêm vào danh sách chờ
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigator.clipboard.writeText(
+                                            `${BASE_URL}exam/detail/${exam.id}`
+                                        );
+                                    }}
+                                >
+                                    Chia sẻ
+                                </MenuItem>
+                            </Box>
+                        </PopupMenu>
+                    </Stack>
                     <Typography>Môn học: {exam.subjectName}</Typography>
                     <Typography>Lớp/Trình độ: {exam.grade}</Typography>
                     <Typography>

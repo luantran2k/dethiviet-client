@@ -1,5 +1,4 @@
 import { Alert, Button } from "@mui/material";
-import * as React from "react";
 import styles from "./style.module.scss";
 
 export interface IAppAlertProps {

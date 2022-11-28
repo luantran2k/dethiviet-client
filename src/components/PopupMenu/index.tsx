@@ -1,22 +1,16 @@
-import { MoreVert, Delete, Edit } from "@mui/icons-material";
-import {
-    Button,
-    MenuItem,
-    Popover,
-    PopoverProps,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { MoreVert } from "@mui/icons-material";
+import { Button, Popover, PopoverProps, SxProps, Theme } from "@mui/material";
 import * as React from "react";
 
 export interface IPopupMenuProps {
     children: React.ReactElement;
     trigger?: React.ReactElement;
     popOverProps?: Partial<PopoverProps>;
+    sx?: SxProps<Theme> | undefined;
 }
 
 export default function PopupMenu(props: IPopupMenuProps) {
-    const { children, trigger, popOverProps } = props;
+    const { children, trigger, popOverProps, sx } = props;
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
         null
     );
@@ -26,7 +20,8 @@ export default function PopupMenu(props: IPopupMenuProps) {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
         setAnchorEl(null);
     };
 
@@ -51,6 +46,7 @@ export default function PopupMenu(props: IPopupMenuProps) {
                     vertical: "bottom",
                     horizontal: "left",
                 }}
+                sx={sx}
                 {...popOverProps}
             >
                 {children}

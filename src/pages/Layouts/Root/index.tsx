@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { Outlet, useLocation } from "react-router-dom";
+import AppALert from "../../../components/AppAlert";
 import Navbar from "../../../components/Navbar";
 import ultis from "../../../Utils/ultis";
 
@@ -36,6 +37,7 @@ export default function Root(props: IRootProps, fitPageList: string[]) {
                     </Box>
                 )}
             </Box>
+            <AppALert />
         </Box>
     );
 }

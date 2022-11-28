@@ -2,7 +2,7 @@ import { User } from "./../redux/slices/appSlice";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const instance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
+    baseURL: import.meta.env.VITE_BASE_URL_API,
     timeout: 60000,
     headers: { "Content-Type": "application/json" },
 });

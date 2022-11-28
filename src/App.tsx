@@ -16,6 +16,7 @@ function App() {
     const ErrorPage = React.lazy(() => import("./pages/Error"));
     const NotFoundPage = React.lazy(() => import("./pages/Error/NotFound"));
     const ExamPage = React.lazy(() => import("./pages/Exam"));
+    const CreateExamPage = React.lazy(() => import("./pages/Exam/create"));
     const SearchExamPage = React.lazy(() => import("./pages/Exam/search"));
     const DetailExamPage = React.lazy(() => import("./pages/Exam/detail"));
     const HomePage = React.lazy(() => import("./pages/Home"));
@@ -94,6 +95,16 @@ function App() {
                                         fallback={<h4>Đang tải trang</h4>}
                                     >
                                         <SearchExamPage />
+                                    </Suspense>
+                                }
+                            />
+                            <Route
+                                path="create"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <CreateExamPage />
                                     </Suspense>
                                 }
                             />

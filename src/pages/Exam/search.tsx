@@ -1,33 +1,19 @@
-import {
-    Box,
-    Button,
-    Grid,
-    MenuItem,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
+import { Queue } from "@mui/icons-material";
+import { Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { FormEvent, memo, useEffect, useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useFetch } from "../../app/hooks";
 import { ExamFilter } from "../../components/Exam/interfaces/IExam";
-import CreateExamModal from "../../components/Exam/modal/create";
-import ExamCard, { IExamCard } from "../../components/ExamCard";
+import { IExamCard } from "../../components/ExamCard";
 import CarouselCard from "../../components/ExamCard/CarouselCard";
-import AppModal from "../../components/Modal";
-import PopupMenu from "../../components/PopupMenu";
+import ExamSelected from "../../components/ExamSelected";
 import ultis from "../../Utils/ultis";
 
 export interface ISearchExamPageProps {}
 
 export default function SearchExamPage(props: ISearchExamPageProps) {
     const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
-    const documentId = useId();
-    const dispatch = useAppDispatch();
-    const isSignIn = useAppSelector((state) => state.app.isSignIn);
-    const location = useLocation();
     const [examFilter, setExamFilter] = useState<ExamFilter>({
         page: 0,
         quantity: 24,

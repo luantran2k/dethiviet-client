@@ -1,4 +1,3 @@
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import {
     Backdrop,
     Box,
@@ -51,16 +50,12 @@ export default function AppModal(props: IAppModalComponentProps) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log(e.target);
         setOpen(true);
     };
     const handleClose = (e: React.MouseEvent) => {
         e.stopPropagation();
         setOpen(false);
     };
-    const childerWithSetOpenEvent = React.cloneElement(children, {
-        handleOpen,
-    });
     return (
         <>
             {trigger ? (
@@ -89,7 +84,7 @@ export default function AppModal(props: IAppModalComponentProps) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>{childerWithSetOpenEvent}</Box>
+                    <Box sx={style}>{children}</Box>
                 </Fade>
             </Modal>
         </>

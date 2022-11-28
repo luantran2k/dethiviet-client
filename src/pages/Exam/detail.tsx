@@ -30,7 +30,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
             setExam(exam);
         };
         getExam();
-    }, []);
+    }, [examId]);
 
     if (exam) {
         return (
@@ -117,7 +117,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                     />
                     <Button variant="contained">Đánh giá</Button>
                     <Button variant="contained">
-                        Thêm vào danh sách quan tâm
+                        Thêm vào danh sách đề thi mẫu
                     </Button>
                 </Stack>
             </Box>

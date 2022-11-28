@@ -32,7 +32,7 @@ export default function UserControl(props: IUserControlProps) {
                     }}
                     trigger={
                         <Box
-                            margin="1rem 2rem"
+                            margin="1rem 0 1rem 1rem"
                             height="2rem"
                             width="2rem"
                             borderRadius="50%"
@@ -85,6 +85,7 @@ export default function UserControl(props: IUserControlProps) {
                             },
                         });
                     }}
+                    sx={{ height: "100%" }}
                 >
                     Đăng nhập
                 </MenuItem>

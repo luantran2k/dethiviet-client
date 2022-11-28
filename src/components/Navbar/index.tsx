@@ -1,28 +1,28 @@
-import { Box, MenuItem, Toolbar } from "@mui/material";
-import { teal } from "@mui/material/colors";
+import { Box } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import ultis from "../../Utils/ultis";
+import ExamSelected from "../ExamSelected";
 import AppBarSearch from "../Search/AppBarSearch";
 import UserControl from "../UserControl";
 import "./style.scss";
 
 export interface INavbarProps {}
 
-const tealNavBarPath = ["/exam/edit"];
+export const tealNavBarPath = ["/exam/edit"];
 
 export default function Navbar(props: INavbarProps) {
     const location = useLocation();
-    const navigate = useNavigate();
     const isTealNav = ultis.checkPathInArray(location.pathname, tealNavBarPath);
     return (
         <Box className={`app-bar ${isTealNav ? "teal-nav" : ""}`}>
-            <Toolbar>
+            <Stack direction="row" sx={{ padding: "0 4rem" }}>
                 <Stack
                     direction="row"
                     flexGrow={1}
                     columnGap={2}
                     alignItems="center"
+                    height="4rem"
                 >
                     <Link to="/">
                         <img
@@ -39,8 +39,9 @@ export default function Navbar(props: INavbarProps) {
                     </Stack>
                 </Stack>
                 <AppBarSearch />
+                <ExamSelected />
                 <UserControl />
-            </Toolbar>
+            </Stack>
         </Box>
     );
 }
