@@ -7,7 +7,7 @@ export interface IFavoriteExamProps {}
 
 export default function FavoriteExam(props: IFavoriteExamProps) {
     const getExams = (userId: number) => {
-        return request.get<{ exams: IExam[] }>(
+        return request.get<any, { exams: IExam[] }>(
             `users/${userId}/exams/favorite`
         );
     };

@@ -11,15 +11,15 @@ import "swiper/css/navigation";
 import "./styles.scss";
 
 // import required modules
-import { grey, teal } from "@mui/material/colors";
+import { amber, grey, teal } from "@mui/material/colors";
 import { Pagination, Navigation } from "swiper";
-import CarouselCard from "../../components/ExamCard/CarouselCard";
 import { IDetailExam } from "./detail";
 import CreateExamModal from "../../components/Exam/modal/create";
 import AppModal from "../../components/Modal";
 import PopupMenu from "../../components/PopupMenu";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
+import CarouselCard from "../../components/ExamCard/CarouselCard";
 
 export interface IExamPageProps {}
 interface examsState {
@@ -45,9 +45,12 @@ export default function ExamPage(props: IExamPageProps) {
                 margin: "2rem auto",
                 padding: "2rem",
                 borderRadius: ".4rem",
+
+                boxShadow:
+                    "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
             }}
         >
-            <Stack direction="row" justifyContent="center" my={2} spacing={2}>
+            <Stack direction="row" marginBottom={6} spacing={2}>
                 {isSignIn ? (
                     <PopupMenu
                         trigger={
@@ -96,6 +99,7 @@ export default function ExamPage(props: IExamPageProps) {
                     padding: "1rem 2rem",
                     backgroundColor: teal[50],
                     borderRadius: ".4rem",
+                    marginBottom: "4rem",
                 }}
             >
                 <Swiper

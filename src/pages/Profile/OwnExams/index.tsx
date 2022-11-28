@@ -6,7 +6,9 @@ export interface IOwnExamsProps {}
 
 export default function OwnExams(props: IOwnExamsProps) {
     const getExams = (userId: number) => {
-        return request.get<{ exams: IExam[] }>(`users/${userId}/exams/own`);
+        return request.get<any, { exams: IExam[] }>(
+            `users/${userId}/exams/own`
+        );
     };
 
     return <ExamProfileOutlet getExams={getExams} title="Bài thi sở hữu" />;

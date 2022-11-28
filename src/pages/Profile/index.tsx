@@ -13,7 +13,7 @@ export default function ProfilePage(props: IProfilePageProps) {
     const { userId } = useParams();
     useEffect(() => {
         const getUserInfo = async () => {
-            const userInfo = await request.get("users/" + userId);
+            const userInfo = await request.get<any, User>("users/" + userId);
             setUserInfo(userInfo);
         };
         getUserInfo();

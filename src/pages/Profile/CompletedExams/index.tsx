@@ -11,7 +11,7 @@ export interface ICompletedExamsProps {}
 
 export default function CompletedExams(props: ICompletedExamsProps) {
     const getExams = (userId: number) => {
-        return request.get<{ exams: IExam[] }>(
+        return request.get<any, { exams: IExam[] }>(
             `users/${userId}/exams/completed`
         );
     };

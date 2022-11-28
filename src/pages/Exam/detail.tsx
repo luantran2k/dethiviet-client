@@ -22,15 +22,6 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
     const navigate = useNavigate();
     const userId = useAppSelector((state) => state.app.userInfo?.id);
     const [exam, setExam] = useState<IDetailExam | undefined>(undefined);
-    // const {
-    //     data: exam,
-    //     error,
-    //     loading,
-    // } = useFetch<any, IDetailExam>(
-    //     "exams/" + examId + "?includeOwner=true&userId=" + userId,
-    //     {}
-    //     );
-    //"exams/" + examId + "?includeOwner=true&userId=" + userId,
     useEffect(() => {
         const getExam = async () => {
             const exam = await request.get<any, IDetailExam>(
@@ -132,9 +123,5 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
             </Box>
         );
     }
-    return (
-        <Typography variant="h4" color="red">
-            Có lối xảy ra, vui lòng thử lại
-        </Typography>
-    );
+    return <Typography variant="h6">Đang tải dữ liệu</Typography>;
 }

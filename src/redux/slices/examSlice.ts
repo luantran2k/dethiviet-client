@@ -219,12 +219,13 @@ export const getExam = createAsyncThunk<
         state: RootState;
     }
 >("exams/get", async ({ examId, includePart }, { dispatch, getState }) => {
-    const exam: IExam = await request
-        .get<{ includePart: boolean }>("exams/" + examId, {
+    const exam = await request
+        .get<{ includePart: boolean }, IExam>("exams/" + examId, {
             includePart: true,
         })
         .catch((error) => console.log(error));
-    return exam;
+    if (exam) return exam;
+    return getState().exam;
 });
 
 export const updateQuestionFieldServer = createAsyncThunk<

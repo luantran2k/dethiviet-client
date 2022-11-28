@@ -36,8 +36,12 @@ export function useFetch<Filter, ResultData>(
             try {
                 setError(null);
                 setLoading(true);
-                const data = await request.get<Filter>(url, params, config);
-                setData(data);
+                const data = await request.get<Filter, ResultData>(
+                    url,
+                    params,
+                    config
+                );
+                if (data) setData(data);
             } catch (err: any) {
                 setError(err.response.data);
             } finally {

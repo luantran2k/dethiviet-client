@@ -9,7 +9,7 @@ import ultis from "../../../Utils/ultis";
 import styles from "./style.module.scss";
 
 export interface IExamProfileOutletProps {
-    getExams: (userId: number) => Promise<{ exams: IExam[] }>;
+    getExams: (userId: number) => Promise<{ exams: IExam[] } | undefined>;
     title: string;
 }
 
@@ -21,7 +21,7 @@ export default function ExamProfileOutlet(props: IExamProfileOutletProps) {
         const getExamsToState = async () => {
             if (userInfo) {
                 const res = await getExams(userInfo.id);
-                setExams(res.exams);
+                if (res) setExams(res.exams);
             }
         };
         getExamsToState();
