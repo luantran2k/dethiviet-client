@@ -22,11 +22,11 @@ export default function ExamCard(props: IExamCardProps) {
         <Box
             onMouseDown={(e) => {
                 if (e.button === 1) {
-                    window.open(location.pathname + "/detail/" + exam.id);
+                    window.open("/exam/detail/" + exam.id);
                 } else if (e.button === 0) {
-                    navigate("./detail/" + exam.id, {
+                    navigate("../detail/" + exam.id, {
                         state: {
-                            from: location.pathname + "/detail/" + exam.id,
+                            from: "/exam/detail/" + exam.id,
                         },
                     });
                 }
@@ -37,7 +37,8 @@ export default function ExamCard(props: IExamCardProps) {
                 flexDirection: "column",
                 alignItems: "start",
                 borderRadius: "1rem",
-                boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+                boxShadow:
+                    "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
             }}
         >
             <Typography

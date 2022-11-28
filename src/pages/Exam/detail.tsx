@@ -12,6 +12,7 @@ import ultis from "../../Utils/ultis";
 
 export interface IDetailExam extends IExam {
     owner: User;
+    completedCount?: number;
 }
 
 export interface IDetailExamPageProps {}
@@ -32,7 +33,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
     //"exams/" + examId + "?includeOwner=true&userId=" + userId,
     useEffect(() => {
         const getExam = async () => {
-            const exam = await request.get<IDetailExam>(
+            const exam = await request.get<any, IDetailExam>(
                 "exams/" + examId + "?includeOwner=true&userId=" + userId
             );
             setExam(exam);

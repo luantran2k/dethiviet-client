@@ -42,6 +42,7 @@ export function SmallExamCardList({ exams }: { exams: IExam[] }) {
                 flexWrap: "wrap",
                 gap: "3.3333%",
                 marginTop: "1rem",
+                rowGap: "1.4rem",
             }}
         >
             {exams.map((exam) => (
