@@ -60,7 +60,7 @@ export default function AppBarSearch(props: IAppBarSearchProps) {
                 inputProps={{ "aria-label": "search" }}
                 onKeyUp={(e) => {
                     if (e.key === "Enter" && e.currentTarget.value !== "") {
-                        navigate("/exam?title=" + e.currentTarget.value);
+                        navigate("/exam/search?title=" + e.currentTarget.value);
                     }
                 }}
             />

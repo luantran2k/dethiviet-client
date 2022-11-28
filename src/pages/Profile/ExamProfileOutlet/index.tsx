@@ -5,6 +5,7 @@ import { useUserInfo } from "..";
 import IExam from "../../../components/Exam/interfaces/IExam";
 import { SmallExamCardList } from "../../../components/ExamCard/SmallExamCard";
 import request from "../../../Utils/request";
+import ultis from "../../../Utils/ultis";
 import styles from "./style.module.scss";
 
 export interface IExamProfileOutletProps {
@@ -26,7 +27,7 @@ export default function ExamProfileOutlet(props: IExamProfileOutletProps) {
         getExamsToState();
     }, [userInfo]);
 
-    if (!exams) {
+    if (!exams || ultis.checkEmptyArray(exams)) {
         return (
             <div className={styles.examProfileOutlet}>
                 <Typography

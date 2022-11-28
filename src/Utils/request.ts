@@ -82,16 +82,16 @@ export const removeToken = () => {
 };
 
 const request = {
-    get: async <Filter>(
+    get: async <Filter, ResultData>(
         url: string,
         params?: Filter,
         config?: AxiosRequestConfig<any> | undefined
     ) => {
         const response = await instance.get(url, { params, ...config });
         if (response.data) {
-            return response.data;
+            return response.data as ResultData;
         }
-        return response;
+        return undefined;
     },
     post: async <ResultData>(
         url: string,
