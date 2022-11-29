@@ -38,7 +38,7 @@ const renderQuestion = (
     hasDocument: boolean = false
 ) => {
     switch (questionType) {
-        case QuestionTypeDatas.MultitpleChoice.value: {
+        case QuestionTypeDatas.MultipleChoice.value: {
             return (
                 <MultipleChoiceQuestion
                     key={questionId}

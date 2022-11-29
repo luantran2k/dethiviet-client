@@ -48,7 +48,7 @@ const QuestionPreview = memo((props: IQuestionPreviewProps) => {
                         question.answers
                     );
                     switch (type) {
-                        case QuestionTypeDatas.MultitpleChoice.value: {
+                        case QuestionTypeDatas.MultipleChoice.value: {
                             return (
                                 <MultipleChoiceAnswerPreview
                                     key={`${partId}/${question.id}/${answer.id}`}

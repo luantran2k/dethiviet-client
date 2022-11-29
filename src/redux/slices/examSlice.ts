@@ -149,7 +149,7 @@ const examSlice = createSlice({
             const type = examUltis.getPart(state, partId)?.type;
             const question = examUltis.getQuestion(state, partId, questionId);
 
-            if (type === QuestionTypeDatas.MultitpleChoice.value) {
+            if (type === QuestionTypeDatas.MultipleChoice.value) {
                 const oldAnswer = question?.answers?.find(
                     (answer) => answer.isTrue === true
                 );

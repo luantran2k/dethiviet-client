@@ -31,7 +31,6 @@ interface examsState {
 export default function ExamPage(props: IExamPageProps) {
     const [exams, setExams] = useState<examsState>();
     const navigate = useNavigate();
-    const isSignIn = useAppSelector((state) => state.app.isSignIn);
     useEffect(() => {
         const getExams = async () => {
             const res = await request.get<any, examsState>("exams/index");
@@ -46,7 +45,6 @@ export default function ExamPage(props: IExamPageProps) {
                 margin: "2rem auto",
                 padding: "2rem",
                 borderRadius: ".4rem",
-
                 boxShadow:
                     "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
             }}
@@ -73,6 +71,8 @@ export default function ExamPage(props: IExamPageProps) {
                     backgroundColor: teal[50],
                     borderRadius: ".4rem",
                     marginBottom: "4rem",
+                    boxShadow:
+                        "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
                 }}
             >
                 <Swiper
@@ -102,6 +102,8 @@ export default function ExamPage(props: IExamPageProps) {
                     padding: "1rem 2rem",
                     backgroundColor: teal[50],
                     borderRadius: ".4rem",
+                    boxShadow:
+                        "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
                 }}
             >
                 <Swiper

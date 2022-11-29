@@ -1,9 +1,9 @@
 const QuestionTypeDatas = {
-    MultitpleChoice: {
+    MultipleChoice: {
         value: "MultipleChoice",
         label: "Chọn đáp án đúng nhất",
     },
-    MultitpleChoiceParagraph: {
+    MultipleChoiceParagraph: {
         value: "MultipleChoiceParagraph",
         label: "Chọn đáp án thích hợp vào chỗ trống",
     },

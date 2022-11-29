@@ -30,7 +30,7 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
     } = useForm<PartPayLoad>();
     const dispatch = useAppDispatch();
     const [type, setType] = React.useState(
-        QuestionTypeDatas.MultitpleChoice.value
+        QuestionTypeDatas.MultipleChoice.value
     );
 
     const onSubmit: SubmitHandler<PartPayLoad> = async (data) => {
@@ -106,7 +106,7 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
                     <TextField
                         fullWidth
                         select
-                        defaultValue={QuestionTypeDatas.MultitpleChoice.value}
+                        defaultValue={QuestionTypeDatas.MultipleChoice.value}
                         {...register("type")}
                         onChange={(e) => {
                             setType(e.target.value);
@@ -148,9 +148,9 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
                 marginY={2}
             >
                 {Boolean(
-                    type === QuestionTypeDatas.MultitpleChoice.value ||
+                    type === QuestionTypeDatas.MultipleChoice.value ||
                         type ===
-                            QuestionTypeDatas.MultitpleChoiceParagraph.value ||
+                            QuestionTypeDatas.MultipleChoiceParagraph.value ||
                         type === QuestionTypeDatas.MultiSelect.value
                 ) && (
                     <Grid item xs={6}>

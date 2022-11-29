@@ -1,16 +1,7 @@
-import {
-    Box,
-    Button,
-    Grid,
-    MenuItem,
-    TextField,
-    Typography,
-} from "@mui/material";
-import * as React from "react";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import QuestionTypeDatas from "../../../const/QuestionTypes";
-import { createPart, updatePart } from "../../../redux/slices/examSlice";
+import { updatePart } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import { AppModalProps } from "../../Modal";

@@ -1,7 +1,7 @@
 import { PartType } from "../../Part/interfaces/IPart";
 
 export default interface IExam {
-    id?: number;
+    id: number;
     title?: string;
     description?: string;
     ownerId?: number;

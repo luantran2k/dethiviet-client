@@ -24,7 +24,7 @@ export const createEmptyAnswer = (
     answerId: number
 ) => {
     switch (answerType) {
-        case QuestionTypeDatas.MultitpleChoice.value: {
+        case QuestionTypeDatas.MultipleChoice.value: {
             const newAnswer: IMultipleChoiceAnswer = {
                 id: answerId,
                 value: "",
@@ -54,7 +54,7 @@ export const createEmptyAnswer = (
 //     const { partId, questionId, answerId, isTrue, value } = payload;
 //     if (question === undefined || type === undefined) return undefined;
 //     switch (type) {
-//         case QuestionTypeDatas.MultitpleChoice.value: {
+//         case QuestionTypeDatas.MultipleChoice.value: {
 //             const oldAnswer = question?.answers?.find(
 //                 (answer) => answer.isTrue === true
 //             );

@@ -1,9 +1,8 @@
-import { direction } from "./../../const/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuid } from "uuid";
 import IExam from "../../components/Exam/interfaces/IExam";
 import request, { removeToken, saveRefreshToken } from "../../Utils/request";
 import { RootState } from "../store";
-import { v4 as uuid } from "uuid";
 
 export interface User {
     id: number;
@@ -27,7 +26,6 @@ export interface AppSliceState {
     isSignIn: boolean;
     isLoading?: boolean;
     userInfo?: User;
-    examsSelected: IExam[];
     alerts: Alert[];
 }
 
@@ -37,7 +35,6 @@ const initialState: AppSliceState = {
     userInfo: localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user")!)
         : undefined,
-    examsSelected: JSON.parse(localStorage.getItem("examsSelected") || "[]"),
     alerts: [],
 };
 
@@ -64,34 +61,6 @@ const appSlice = createSlice({
                 (alert) => alert.id === action.payload
             );
             if (alertIndex !== -1) state.alerts.splice(alertIndex, 1);
-        },
-        addSelectedExam: (state, action: PayloadAction<IExam>) => {
-            const examIndex = state.examsSelected.findIndex(
-                (exam) => exam.id === action.payload.id
-            );
-            if (examIndex === -1) {
-                state.examsSelected.push(action.payload);
-                localStorage.setItem(
-                    "examsSelected",
-                    JSON.stringify(state.examsSelected)
-                );
-            }
-        },
-        removeSelectedExam: (state, action: PayloadAction<number>) => {
-            const examIndex = state.examsSelected.findIndex(
-                (exam) => exam.id === action.payload
-            );
-            if (examIndex !== -1) {
-                state.examsSelected.splice(examIndex, 1);
-                localStorage.setItem(
-                    "examsSelected",
-                    JSON.stringify(state.examsSelected)
-                );
-            }
-        },
-        removeAllSelectedExam: (state) => {
-            state.examsSelected = [];
-            localStorage.removeItem("examsSelected");
         },
     },
     extraReducers: (builder) => {
@@ -169,14 +138,6 @@ export const sendAlert = createAsyncThunk(
     }
 );
 
-export const {
-    setIsSignIn,
-    signOut,
-    addSelectedExam,
-    removeSelectedExam,
-    removeAllSelectedExam,
-    addAlert,
-    removeAlert,
-} = appSlice.actions;
+export const { setIsSignIn, signOut, addAlert, removeAlert } = appSlice.actions;
 
 export default appSlice;

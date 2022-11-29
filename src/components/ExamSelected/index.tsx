@@ -5,9 +5,9 @@ import { Stack } from "@mui/system";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-    removeAllSelectedExam,
     removeSelectedExam,
-} from "../../redux/slices/appSlice";
+    removeAllSelectedExam,
+} from "../../redux/slices/createExamSlice";
 import ultis from "../../Utils/ultis";
 import CreateExamButton from "../Exam/Button/CreateExamButton";
 import { tealNavBarPath } from "../Navbar";
@@ -16,7 +16,7 @@ import PopupMenu from "../PopupMenu";
 export interface IExamSelectedProps {}
 
 export default function ExamSelected(props: IExamSelectedProps) {
-    const exams = useAppSelector((state) => state.app.examsSelected);
+    const exams = useAppSelector((state) => state.createExam.examsSelected);
     const location = useLocation();
     const isTealNav = ultis.checkPathInArray(location.pathname, tealNavBarPath);
     const dispatch = useAppDispatch();
@@ -38,8 +38,8 @@ export default function ExamSelected(props: IExamSelectedProps) {
                                 backgroundColor: isTealNav
                                     ? "white"
                                     : teal[600],
-                                width: "1.8rem",
-                                height: "1.8rem",
+                                width: "1.4rem",
+                                height: "1.4rem",
                                 borderRadius: "50%",
                                 position: "absolute",
                                 bottom: "0",
@@ -48,7 +48,7 @@ export default function ExamSelected(props: IExamSelectedProps) {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 zIndex: 2,
-                                transform: "translate(0, -20%)",
+                                transform: "translate(-10%, -50%)",
                             }}
                         >
                             {exams.length}
@@ -94,6 +94,7 @@ export default function ExamSelected(props: IExamSelectedProps) {
                     {!ultis.checkEmptyArray(exams) ? (
                         exams.map((exam) => (
                             <Stack
+                                key={exam.id}
                                 direction="row"
                                 alignItems="center"
                                 width="100%"
