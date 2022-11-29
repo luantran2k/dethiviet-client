@@ -1,10 +1,15 @@
-import { MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import { teal } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CenterMessage from "../../components/CenterMessage";
 import IExam from "../../components/Exam/interfaces/IExam";
+import PartsTemp from "../../components/Part/Modal/createAuto";
 import QuestionTypeDatas from "../../const/QuestionTypes";
+import {
+    addPartTemp,
+    removeAllPartsTemp,
+} from "../../redux/slices/createExamSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 
@@ -61,8 +66,12 @@ const getExamDataInfos = (exams: IExam[]) => {
 export default function CreateExamPage(props: ICreateExamPageProps) {
     const dispatch = useAppDispatch();
     const exams = useAppSelector((state) => state.createExam.examsSelected);
+    const parts = useAppSelector((state) => state.createExam.parts);
     const [examDataInfos, setExamDataInfos] = useState<ExamDataInfo[]>();
     const [examDataInfo, setExamDataInfo] = useState<ExamDataInfo>();
+    const questionTypes =
+        examDataInfo?.questionInfos?.map((questionInfo) => questionInfo.type) ||
+        [];
 
     useEffect(() => {
         const getExamInfoFromServer = async (examDataInfo: ExamDataInfo) => {
@@ -111,41 +120,73 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
     }
 
     return (
-        <Box maxWidth={"60rem"} margin="2rem auto">
-            <TextField
-                select
-                label="Môn học"
-                value={
-                    examDataInfos.some(
-                        (exam) => exam.subjectName === examDataInfo.subjectName
-                    )
-                        ? examDataInfo.subjectName
-                        : examDataInfos[0].subjectName
-                }
-                onChange={(e) => {
-                    const examDataInfo = examDataInfos.find(
-                        (examInfo) => examInfo.subjectName === e.target.value
-                    );
-                    if (examDataInfo) {
-                        setExamDataInfo(examDataInfo);
-                    }
+        <Stack
+            flexDirection="row"
+            maxWidth={"68rem"}
+            minHeight="calc(100vh - 10rem)"
+            margin="2rem auto"
+            borderRadius=".4rem"
+            boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
+        >
+            <Stack
+                spacing={1}
+                padding="2rem"
+                bgcolor={teal[50]}
+                flex="0  0 30%"
+                sx={{
+                    span: {
+                        fontWeight: "bold",
+                        color: teal[900],
+                    },
+                    ".MuiTypography-root": {
+                        fontSize: "1.1rem",
+                    },
                 }}
-                sx={{ width: "12rem" }}
             >
-                {examDataInfos.map((examDataInfo, index) => (
-                    <MenuItem
-                        key={index}
-                        defaultChecked={index === 0 ? true : false}
-                        value={examDataInfo.subjectName}
-                    >
-                        {examDataInfo.subjectName}
-                    </MenuItem>
-                ))}
-            </TextField>
-
-            <Stack>
+                <TextField
+                    select
+                    fullWidth
+                    label="Môn học"
+                    value={
+                        examDataInfos.some(
+                            (exam) =>
+                                exam.subjectName === examDataInfo.subjectName
+                        )
+                            ? examDataInfo.subjectName
+                            : examDataInfos[0].subjectName
+                    }
+                    onChange={(e) => {
+                        const examDataInfo = examDataInfos.find(
+                            (examInfo) =>
+                                examInfo.subjectName === e.target.value
+                        );
+                        if (!ultis.checkEmptyArray(parts)) {
+                            const isAllow = confirm(
+                                "Thay đổi sẽ bỏ hết tất cả các phần đã được tạo, bạn có muốn tiếp tục ?"
+                            );
+                            if (isAllow) {
+                                setExamDataInfo(examDataInfo);
+                                dispatch(removeAllPartsTemp());
+                            }
+                            return;
+                        } else {
+                            setExamDataInfo(examDataInfo);
+                        }
+                    }}
+                >
+                    {examDataInfos.map((examDataInfo, index) => (
+                        <MenuItem
+                            key={index}
+                            defaultChecked={index === 0 ? true : false}
+                            value={examDataInfo.subjectName}
+                        >
+                            {examDataInfo.subjectName}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <Typography>
-                    Số bài thi: {examDataInfo.numberOfExams}
+                    <span>Số bài thi: </span>
+                    {examDataInfo.numberOfExams}
                 </Typography>
                 {ultis.checkEmptyArray(examDataInfo.questionInfos) ? (
                     <Typography>Đề không có câu hỏi nào</Typography>
@@ -153,7 +194,7 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
                     examDataInfo.questionInfos?.map((questionInfo, index) => (
                         <Stack key={index}>
                             <Typography>
-                                Loại câu hỏi:{" "}
+                                <span>Loại câu hỏi: </span>
                                 {
                                     QuestionTypeDatas[
                                         questionInfo.type as keyof typeof QuestionTypeDatas
@@ -161,13 +202,43 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
                                 }
                             </Typography>
                             <Typography>
-                                Số lượng câu hỏi:{" "}
+                                <span>Số lượng câu hỏi: </span>
                                 {questionInfo.questions.length}
                             </Typography>
                         </Stack>
                     ))
                 )}
             </Stack>
-        </Box>
+            <Stack
+                flex="1"
+                sx={{
+                    padding: "2rem",
+                    overflowY: "auto",
+                }}
+            >
+                <Typography variant="h5" marginBottom={2}>
+                    Tạo phần thi
+                </Typography>
+                <PartsTemp questionTypes={questionTypes} />
+                <Stack
+                    spacing={2}
+                    direction="row"
+                    marginTop="1rem"
+                    justifyContent="flex-end"
+                >
+                    <Button
+                        variant="contained"
+                        onClick={() => {
+                            dispatch(addPartTemp());
+                        }}
+                    >
+                        Thêm phần
+                    </Button>
+                    <Button variant="outlined" onClick={() => {}}>
+                        Tạo bài thi
+                    </Button>
+                </Stack>
+            </Stack>
+        </Stack>
     );
 }
