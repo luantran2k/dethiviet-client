@@ -27,22 +27,23 @@ interface ExamDataInfo {
     questionInfos?: QuestionInfo[];
 }
 
-const getExamDataInfos = (exams: IExam[]) => {
-    const examDataInfos = exams.reduce((preValue, curValue) => {
+const getExamDataInfos = (exams: IExam[]): ExamDataInfo[] => {
+    const examDataInfos = exams.reduce((preValue, curValue: IExam) => {
         const indexOfSubjectName = preValue.findIndex(
             (examDataInfo) => examDataInfo.subjectName === curValue.subjectName
         );
         if (indexOfSubjectName === -1) {
-            return [
+            const res = [
                 ...preValue,
                 {
-                    subjectName: curValue.subjectName as string,
+                    subjectName: curValue.subjectName!,
                     numberOfExams: 1,
-                    examIds: [curValue.id],
+                    examIds: [curValue.id!],
                 },
             ];
+            return res;
         }
-        preValue[indexOfSubjectName].examIds.push(curValue.id);
+        preValue[indexOfSubjectName].examIds.push(curValue.id!);
         preValue[indexOfSubjectName].numberOfExams += 1;
         return preValue;
     }, [] as ExamDataInfo[]);
