@@ -19,6 +19,7 @@ const MultipleChoiceAnswerNoDocument = React.memo(
         const answer = useAppSelector((state) =>
             answerSeletor(state, { partId, questionId, answerId })
         );
+        const isOriginal = useAppSelector((state) => state.exam.isOriginal);
         if (answer === undefined) {
             return <></>;
         }
@@ -58,19 +59,23 @@ const MultipleChoiceAnswerNoDocument = React.memo(
                         }}
                     />
                 </li>
-                <DeleteButton
-                    onClick={async () => {
-                        const res = await request.delete("answers/" + answerId);
-                        if (res)
-                            dispatch(
-                                deleteAnswer({
-                                    partId,
-                                    questionId,
-                                    answerId,
-                                })
+                {isOriginal && (
+                    <DeleteButton
+                        onClick={async () => {
+                            const res = await request.delete(
+                                "answers/" + answerId
                             );
-                    }}
-                />
+                            if (res)
+                                dispatch(
+                                    deleteAnswer({
+                                        partId,
+                                        questionId,
+                                        answerId,
+                                    })
+                                );
+                        }}
+                    />
+                )}
             </Stack>
         );
     }

@@ -1,7 +1,7 @@
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { teal } from "@mui/material/colors";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { createNewAnswer } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import IQuestion from "../../Question/interfaces/IQuestion";
@@ -18,6 +18,7 @@ export interface IAddNewAnswerButtonProps {
 export default function AddNewAnswerButton(props: IAddNewAnswerButtonProps) {
     const { question, partId, hasDocument, type = "multipleChoiceAs" } = props;
     const dispatch = useAppDispatch();
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
 
     const handleClick = async () => {
         const answer = await request.post<IAnswer>("answers", {
@@ -31,6 +32,10 @@ export default function AddNewAnswerButton(props: IAddNewAnswerButtonProps) {
             })
         );
     };
+
+    if (!isOriginal) {
+        return <></>;
+    }
 
     return (
         <>

@@ -6,7 +6,7 @@ import {
     Delete,
 } from "@mui/icons-material";
 import { Box } from "@mui/material";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { deleteAnswer } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import styles from "./style.module.scss";
@@ -21,6 +21,7 @@ export interface IDeleteAnswerButtonProps {
 export default function DeleteAnswerButton(props: IDeleteAnswerButtonProps) {
     const { partId, questionId, answerId, type = "multipleChoiceAs" } = props;
     const dispatch = useAppDispatch();
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
 
     const handleClick = async () => {
         const res = await request.delete("answers/" + answerId);
@@ -33,6 +34,11 @@ export default function DeleteAnswerButton(props: IDeleteAnswerButtonProps) {
                 })
             );
     };
+
+    if (!isOriginal) {
+        return <></>;
+    }
+
     return (
         <Box
             className={`${styles.deleteAnswerButton} ${styles[type]}`}

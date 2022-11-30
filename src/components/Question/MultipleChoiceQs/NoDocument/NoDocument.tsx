@@ -1,5 +1,5 @@
 import { RadioGroup } from "@mui/material";
-import { useAppDispatch } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { updateCorrectAnswer } from "../../../../redux/slices/examSlice";
 import request from "../../../../Utils/request";
 import IAnswer from "../../../Answer/interfaces/IAnswer";
@@ -18,6 +18,7 @@ export default function MultipleChoiceQsNoDocument(
 ) {
     const dispatch = useAppDispatch();
     const { question, partId } = props;
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
     return (
         <QuestionLayout question={question} partId={partId}>
             <RadioGroup

@@ -34,6 +34,7 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
     const { question, partId, children } = props;
     const dispatch = useAppDispatch();
     const documentUrl = useAppSelector((state) => state.exam.documentUrl);
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
     if (!question) {
         return <></>;
     }
@@ -42,41 +43,55 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
             <Stack marginY={2}>
                 <Box sx={{ width: "100%" }}>
                     <Stack direction="row" alignItems="center" width="100%">
-                        {!documentUrl && (
-                            <TextField
-                                label="Tiêu đề"
-                                key={question.id}
-                                defaultValue={question.title}
-                                multiline
-                                maxRows={4}
-                                placeholder="Nhập câu hỏi"
-                                onChange={(e) => {
-                                    if (e.target.value !== question.title)
-                                        dispatch(
-                                            updateQuestionField({
-                                                partId,
-                                                questionId: question.id,
-                                                field: "title",
-                                                value: e.target.value,
-                                            })
+                        {!documentUrl &&
+                            (isOriginal ? (
+                                <TextField
+                                    label="Tiêu đề"
+                                    key={question.id}
+                                    defaultValue={question.title}
+                                    multiline
+                                    maxRows={4}
+                                    placeholder="Nhập câu hỏi"
+                                    onChange={(e) => {
+                                        if (e.target.value !== question.title)
+                                            dispatch(
+                                                updateQuestionField({
+                                                    partId,
+                                                    questionId: question.id,
+                                                    field: "title",
+                                                    value: e.target.value,
+                                                })
+                                            );
+                                    }}
+                                    onBlur={(e) => {
+                                        request.patch(
+                                            "questions/" + question.id,
+                                            {
+                                                title: question.title,
+                                            }
                                         );
-                                }}
-                                onBlur={(e) => {
-                                    request.patch("questions/" + question.id, {
-                                        title: question.title,
-                                    });
-                                }}
-                                variant="outlined"
-                                sx={{ scrollbarWidth: 0 }}
-                                fullWidth
+                                    }}
+                                    variant="outlined"
+                                    sx={{ scrollbarWidth: 0 }}
+                                    fullWidth
+                                />
+                            ) : (
+                                <Typography
+                                    variant="body1"
+                                    fontSize="1.1rem"
+                                    fontWeight="500"
+                                >
+                                    {question.title}
+                                </Typography>
+                            ))}
+                        {documentUrl && <Box flex={1}>{children}</Box>}
+                        {isOriginal && (
+                            <QuestionMenu
+                                question={question}
+                                partId={partId}
+                                isDocumentExam={documentUrl ? true : false}
                             />
                         )}
-                        {documentUrl && <Box flex={1}>{children}</Box>}
-                        <QuestionMenu
-                            question={question}
-                            partId={partId}
-                            isDocumentExam={documentUrl ? true : false}
-                        />
                     </Stack>
                 </Box>
                 {question.description !== null && (
@@ -108,29 +123,31 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                 );
                             }}
                         />
-                        <PopupMenu>
-                            <Button
-                                sx={{
-                                    opacity: 0.2,
-                                    "&:hover": {
-                                        opacity: 1,
-                                    },
-                                    transition: "all 0.6s",
-                                }}
-                                onClick={() => {
-                                    dispatch(
-                                        updateQuestionFieldServer({
-                                            partId,
-                                            questionId: question.id,
-                                            field: "description",
-                                            value: null,
-                                        })
-                                    );
-                                }}
-                            >
-                                <Delete />
-                            </Button>
-                        </PopupMenu>
+                        {isOriginal && (
+                            <PopupMenu>
+                                <Button
+                                    sx={{
+                                        opacity: 0.2,
+                                        "&:hover": {
+                                            opacity: 1,
+                                        },
+                                        transition: "all 0.6s",
+                                    }}
+                                    onClick={() => {
+                                        dispatch(
+                                            updateQuestionFieldServer({
+                                                partId,
+                                                questionId: question.id,
+                                                field: "description",
+                                                value: null,
+                                            })
+                                        );
+                                    }}
+                                >
+                                    <Delete />
+                                </Button>
+                            </PopupMenu>
+                        )}
                     </Stack>
                 )}
                 {question.questionAudio !== null &&
@@ -143,31 +160,33 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                 controls
                                 style={{ flexGrow: 1, margin: "1rem 0" }}
                             />
-                            <DeleteButton
-                                onClick={async () => {
-                                    dispatch(
-                                        updateQuestionField({
-                                            partId,
-                                            questionId: question.id,
-                                            field: "questionAudio",
-                                            value: "loading",
-                                        })
-                                    );
-                                    const res = await request.delete(
-                                        `questions/${question.id}/audio`
-                                    );
-                                    if (res) {
+                            {isOriginal && (
+                                <DeleteButton
+                                    onClick={async () => {
                                         dispatch(
                                             updateQuestionField({
                                                 partId,
                                                 questionId: question.id,
                                                 field: "questionAudio",
-                                                value: null,
+                                                value: "loading",
                                             })
                                         );
-                                    }
-                                }}
-                            />
+                                        const res = await request.delete(
+                                            `questions/${question.id}/audio`
+                                        );
+                                        if (res) {
+                                            dispatch(
+                                                updateQuestionField({
+                                                    partId,
+                                                    questionId: question.id,
+                                                    field: "questionAudio",
+                                                    value: null,
+                                                })
+                                            );
+                                        }
+                                    }}
+                                />
+                            )}
                         </Stack>
                     ))}
                 {!ultis.checkEmptyArray(question.questionImages) && (
@@ -184,40 +203,44 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                         xs={6}
                                         sx={{ position: "relative" }}
                                     >
-                                        <Cancel
-                                            sx={{
-                                                color: "red",
-                                                position: "absolute",
-                                                right: "1rem",
-                                                top: "1rem",
-                                                cursor: "pointer",
-                                                opacity: 0.2,
-                                                transition: "all 0.2s linear",
-                                                "&:hover": {
-                                                    transform: "scale(1.8)",
-                                                    opacity: 1,
-                                                },
-                                                "&:active": {
-                                                    color: "black",
-                                                },
-                                            }}
-                                            onClick={async () => {
-                                                const res =
-                                                    await request.delete<{
-                                                        questionImages: string[];
-                                                    }>(
-                                                        `questions/${question.id}/image?url=${url}`
+                                        {isOriginal && (
+                                            <Cancel
+                                                sx={{
+                                                    color: "red",
+                                                    position: "absolute",
+                                                    right: "1rem",
+                                                    top: "1rem",
+                                                    cursor: "pointer",
+                                                    opacity: 0.2,
+                                                    transition:
+                                                        "all 0.2s linear",
+                                                    "&:hover": {
+                                                        transform: "scale(1.8)",
+                                                        opacity: 1,
+                                                    },
+                                                    "&:active": {
+                                                        color: "black",
+                                                    },
+                                                }}
+                                                onClick={async () => {
+                                                    const res =
+                                                        await request.delete<{
+                                                            questionImages: string[];
+                                                        }>(
+                                                            `questions/${question.id}/image?url=${url}`
+                                                        );
+                                                    dispatch(
+                                                        updateQuestionField({
+                                                            partId,
+                                                            questionId:
+                                                                question.id,
+                                                            field: "questionImages",
+                                                            value: res.questionImages,
+                                                        })
                                                     );
-                                                dispatch(
-                                                    updateQuestionField({
-                                                        partId,
-                                                        questionId: question.id,
-                                                        field: "questionImages",
-                                                        value: res.questionImages,
-                                                    })
-                                                );
-                                            }}
-                                        />
+                                                }}
+                                            />
+                                        )}
                                         <img
                                             src={url}
                                             loading="lazy"
@@ -267,31 +290,33 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                 );
                             }}
                         />
-                        <Button
-                            sx={{
-                                opacity: 0.2,
-                                "&:hover": {
-                                    opacity: 1,
-                                },
-                                transition: "all 0.6s",
-                            }}
-                            onClick={() => {
-                                dispatch(
-                                    updateQuestionFieldServer({
-                                        partId,
-                                        questionId: question.id,
-                                        field: "explain",
-                                        value: null,
-                                    })
-                                );
-                            }}
-                        >
-                            <Delete />
-                        </Button>
+                        {isOriginal && (
+                            <Button
+                                sx={{
+                                    opacity: 0.2,
+                                    "&:hover": {
+                                        opacity: 1,
+                                    },
+                                    transition: "all 0.6s",
+                                }}
+                                onClick={() => {
+                                    dispatch(
+                                        updateQuestionFieldServer({
+                                            partId,
+                                            questionId: question.id,
+                                            field: "explain",
+                                            value: null,
+                                        })
+                                    );
+                                }}
+                            >
+                                <Delete />
+                            </Button>
+                        )}
                     </Stack>
                 )}
             </Stack>
-            {!documentUrl && (
+            {!documentUrl && isOriginal && (
                 <AddNewAnswerButton
                     question={question}
                     partId={partId}

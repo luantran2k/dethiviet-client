@@ -9,6 +9,7 @@ export interface IExamProps {}
 
 const Exam = (props: IExamProps) => {
     const partIds = useAppSelector(partsSelector)?.map((part) => part.id);
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
 
     return (
         <Box sx={{ maxWidth: "60rem", margin: "0 auto" }}>

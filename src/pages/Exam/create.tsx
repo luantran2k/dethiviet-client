@@ -266,8 +266,17 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
             };
             exams.push(newExam);
         }
+        if (exams.length > 1) {
+        }
+
         const payload = {
-            exams,
+            exams:
+                exams.length > 1
+                    ? exams.map((exam, index) => ({
+                          ...exam,
+                          title: exam.title + " " + (index + 1),
+                      }))
+                    : exams,
         };
         const result = await request.post<{ exams: IExam[] }>(
             "exams/create-auto",

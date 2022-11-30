@@ -69,6 +69,7 @@ export const Part = React.memo((props: IPartProps) => {
     const audioId = useId();
     const dispatch = useAppDispatch();
     const part = useAppSelector((state) => partSeletor(state, partId));
+    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
     const documentUrl = useAppSelector((state) => state.exam.documentUrl);
     if (part === undefined) {
         return <></>;
@@ -82,96 +83,101 @@ export const Part = React.memo((props: IPartProps) => {
                     sx={{ width: "100%" }}
                 >
                     <Typography variant="h6">{part.title}</Typography>
-                    <PopupMenu>
-                        <Stack direction="row">
-                            <AppModal
-                                trigger={
-                                    <MenuItem>
-                                        <Edit />
-                                    </MenuItem>
-                                }
-                            >
-                                <UpdatePartModal partId={partId} />
-                            </AppModal>
-                            <label
-                                htmlFor={audioId}
-                                style={{ display: "flex", cursor: "pointer" }}
-                            >
-                                <MenuItem title="Thêm âm thanh">
-                                    <AudioFile />
-                                </MenuItem>
-                            </label>
-                            <input
-                                type="file"
-                                id={audioId}
-                                accept="audio/*"
-                                style={{
-                                    visibility: "hidden",
-                                    position: "absolute",
-                                    width: 0,
-                                    height: 0,
-                                }}
-                                onChange={async (e) => {
-                                    if (e.target.files?.[0]) {
-                                        const audioFile = e.target.files[0];
-                                        dispatch(
-                                            updatePartField({
-                                                partId,
-                                                field: "partAudio",
-                                                value: "loading",
-                                            })
-                                        );
-                                        const data = new FormData();
-                                        data.append(
-                                            "partAudio",
-                                            audioFile,
-                                            audioFile.name
-                                        );
-                                        const res = await request.patch<{
-                                            url: string;
-                                        }>(`parts/${part.id}/audio`, data, {
-                                            headers: {
-                                                "Content-Type":
-                                                    "multipart/form-data",
-                                            },
-                                        });
-                                        dispatch(
-                                            updatePartField({
-                                                partId,
-                                                field: "partAudio",
-                                                value: res.url,
-                                            })
-                                        );
+                    {isOriginal && (
+                        <PopupMenu>
+                            <Stack direction="row">
+                                <AppModal
+                                    trigger={
+                                        <MenuItem>
+                                            <Edit />
+                                        </MenuItem>
                                     }
-                                }}
-                            />
-                            <MenuItem
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (
-                                        confirm(
-                                            "Bạn có chắc chắn muốn xoá phần này không"
-                                        )
-                                    )
-                                        request
-                                            .delete("parts/" + partId)
-                                            .then((res) => {
-                                                if (res) {
-                                                    dispatch(
-                                                        deletePart(partId)
-                                                    );
-                                                } else {
-                                                    alert(
-                                                        "Xoá phần không thành công"
-                                                    );
-                                                }
+                                >
+                                    <UpdatePartModal partId={partId} />
+                                </AppModal>
+                                <label
+                                    htmlFor={audioId}
+                                    style={{
+                                        display: "flex",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    <MenuItem title="Thêm âm thanh">
+                                        <AudioFile />
+                                    </MenuItem>
+                                </label>
+                                <input
+                                    type="file"
+                                    id={audioId}
+                                    accept="audio/*"
+                                    style={{
+                                        visibility: "hidden",
+                                        position: "absolute",
+                                        width: 0,
+                                        height: 0,
+                                    }}
+                                    onChange={async (e) => {
+                                        if (e.target.files?.[0]) {
+                                            const audioFile = e.target.files[0];
+                                            dispatch(
+                                                updatePartField({
+                                                    partId,
+                                                    field: "partAudio",
+                                                    value: "loading",
+                                                })
+                                            );
+                                            const data = new FormData();
+                                            data.append(
+                                                "partAudio",
+                                                audioFile,
+                                                audioFile.name
+                                            );
+                                            const res = await request.patch<{
+                                                url: string;
+                                            }>(`parts/${part.id}/audio`, data, {
+                                                headers: {
+                                                    "Content-Type":
+                                                        "multipart/form-data",
+                                                },
                                             });
-                                }}
-                            >
-                                <Delete />
-                            </MenuItem>
-                        </Stack>
-                    </PopupMenu>
+                                            dispatch(
+                                                updatePartField({
+                                                    partId,
+                                                    field: "partAudio",
+                                                    value: res.url,
+                                                })
+                                            );
+                                        }
+                                    }}
+                                />
+                                <MenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (
+                                            confirm(
+                                                "Bạn có chắc chắn muốn xoá phần này không"
+                                            )
+                                        )
+                                            request
+                                                .delete("parts/" + partId)
+                                                .then((res) => {
+                                                    if (res) {
+                                                        dispatch(
+                                                            deletePart(partId)
+                                                        );
+                                                    } else {
+                                                        alert(
+                                                            "Xoá phần không thành công"
+                                                        );
+                                                    }
+                                                });
+                                    }}
+                                >
+                                    <Delete />
+                                </MenuItem>
+                            </Stack>
+                        </PopupMenu>
+                    )}
                 </Stack>
             </summary>
 
@@ -220,24 +226,26 @@ export const Part = React.memo((props: IPartProps) => {
                     )
                 )}
             </ol>
-            <CardActions sx={{ justifyContent: "center" }}>
-                <Button
-                    title="Thêm câu hỏi mới"
-                    variant="contained"
-                    onClick={async () => {
-                        const question = await request.post<IQuestion>(
-                            "questions",
-                            {
-                                partId,
-                                numberOfAnswers: part.numberOfAnswers,
-                            }
-                        );
-                        dispatch(createNewQuestion(question));
-                    }}
-                >
-                    <Add />
-                </Button>
-            </CardActions>
+            {isOriginal && (
+                <CardActions sx={{ justifyContent: "center" }}>
+                    <Button
+                        title="Thêm câu hỏi mới"
+                        variant="contained"
+                        onClick={async () => {
+                            const question = await request.post<IQuestion>(
+                                "questions",
+                                {
+                                    partId,
+                                    numberOfAnswers: part.numberOfAnswers,
+                                }
+                            );
+                            dispatch(createNewQuestion(question));
+                        }}
+                    >
+                        <Add />
+                    </Button>
+                </CardActions>
+            )}
         </details>
     );
 });

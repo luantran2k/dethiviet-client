@@ -4,6 +4,7 @@ import {
     FormControlLabel,
     Stack,
     TextField,
+    Typography,
 } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
@@ -27,6 +28,7 @@ const MultiSelectAnswerNoDocument = React.memo(
     (props: IMultiSelectAnswerNoDocumentProps) => {
         const { partId, questionId, answerId } = props;
         const dispatch = useAppDispatch();
+        const isOriginal = useAppSelector((state) => state.exam.isOriginal);
         const answer = useAppSelector((state) =>
             answerSeletor(state, { partId, questionId, answerId })
         );
@@ -35,72 +37,84 @@ const MultiSelectAnswerNoDocument = React.memo(
         }
         return (
             <Stack direction="row" alignItems="center">
-                <FormControlLabel
-                    value={answer.id}
-                    checked={answer.isTrue}
-                    control={
-                        <Checkbox
-                            onChange={async () => {
-                                const res = await request.patch(
-                                    "answers/" + answer.id,
-                                    {
-                                        isTrue: !answer.isTrue,
-                                    }
-                                );
-                                if (res)
+                {isOriginal ? (
+                    <FormControlLabel
+                        value={answer.id}
+                        checked={answer.isTrue}
+                        control={
+                            <Checkbox
+                                onChange={async () => {
+                                    const res = await request.patch(
+                                        "answers/" + answer.id,
+                                        {
+                                            isTrue: !answer.isTrue,
+                                        }
+                                    );
+                                    if (res)
+                                        dispatch(
+                                            updateCorrectAnswer({
+                                                partId,
+                                                questionId,
+                                                answerId: answerId,
+                                            })
+                                        );
+                                }}
+                            />
+                        }
+                        label={""}
+                        sx={{ margin: 0 }}
+                    />
+                ) : (
+                    <Checkbox checked={answer.isTrue} />
+                )}
+                <li style={{ flexGrow: 1 }}>
+                    {isOriginal ? (
+                        <TextField
+                            variant="standard"
+                            defaultValue={answer.value}
+                            fullWidth
+                            placeholder="Nhập đáp án"
+                            onChange={(e) => {
+                                if (e.target.value !== answer.value)
                                     dispatch(
-                                        updateCorrectAnswer({
+                                        updateAnswer({
                                             partId,
                                             questionId,
-                                            answerId: answerId,
+                                            answerId,
+                                            value: e.target.value,
                                         })
                                     );
                             }}
+                            onBlur={() => {
+                                request.patch("answers/" + answerId, {
+                                    value: answer.value,
+                                });
+                            }}
+                            InputProps={{
+                                disableUnderline: true,
+                            }}
                         />
-                    }
-                    label={""}
-                    sx={{ margin: 0 }}
-                />
-                <li style={{ flexGrow: 1 }}>
-                    <TextField
-                        variant="standard"
-                        defaultValue={answer.value}
-                        fullWidth
-                        placeholder="Nhập đáp án"
-                        onChange={(e) => {
-                            if (e.target.value !== answer.value)
+                    ) : (
+                        <Typography>{answer.value}</Typography>
+                    )}
+                </li>
+                {isOriginal && (
+                    <DeleteButton
+                        onClick={async () => {
+                            const res = await request.delete(
+                                "answers/" + answerId
+                            );
+                            if (res)
                                 dispatch(
-                                    updateAnswer({
+                                    deleteAnswer({
                                         partId,
                                         questionId,
                                         answerId,
-                                        value: e.target.value,
                                     })
                                 );
                         }}
-                        onBlur={() => {
-                            request.patch("answers/" + answerId, {
-                                value: answer.value,
-                            });
-                        }}
-                        InputProps={{
-                            disableUnderline: true,
-                        }}
                     />
-                </li>
-                <DeleteButton
-                    onClick={async () => {
-                        const res = await request.delete("answers/" + answerId);
-                        if (res)
-                            dispatch(
-                                deleteAnswer({
-                                    partId,
-                                    questionId,
-                                    answerId,
-                                })
-                            );
-                    }}
-                />
+                )}
             </Stack>
         );
     }
