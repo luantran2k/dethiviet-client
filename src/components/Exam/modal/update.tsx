@@ -12,22 +12,23 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames, { ISubject } from "../../../const/SubjectNames";
-import { saveExam, updateExam } from "../../../redux/slices/examSlice";
+import { saveExam } from "../../../redux/slices/examSlice";
 import ultis from "../../../Utils/ultis";
 import IExam from "../interfaces/IExam";
 
 export interface IUpdateExamModalProps {
-    setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+    submitAction?: (data: IExam) => void;
+    defaultValueProp?: IExam;
 }
 
 export default function UpdateExamModal(props: IUpdateExamModalProps) {
-    const { setOpen } = props;
+    const { submitAction, defaultValueProp } = props;
     const dispatch = useAppDispatch();
     const exam = useAppSelector((state) => state.exam);
     const subjectList: ISubject[] = SubjectNames.map((category) =>
@@ -42,6 +43,20 @@ export default function UpdateExamModal(props: IUpdateExamModalProps) {
         label: GradeData[key as keyof typeof GradeData] as string,
         value: key,
     }));
+    const defaultValues = defaultValueProp
+        ? defaultValueProp
+        : {
+              title: exam.title,
+              description: exam.description,
+              subjectName: exam.subjectName || "Khác",
+              grade: exam.grade || "unknown",
+              date: exam.date,
+              duration: exam.duration,
+              publishers: exam.publishers,
+              examName: exam.examName,
+              type: exam.type || "unOfficial",
+              isPublic: exam.isPublic === true ? true : false,
+          };
     const {
         register,
         handleSubmit,
@@ -50,28 +65,16 @@ export default function UpdateExamModal(props: IUpdateExamModalProps) {
         formState: { errors },
         setValue,
     } = useForm<IExam>({
-        defaultValues: {
-            title: exam.title,
-            description: exam.description,
-            subjectName: exam.subjectName || "Khác",
-            grade: exam.grade || "unknown",
-            date: exam.date,
-            duration: exam.duration,
-            publishers: exam.publishers,
-            examName: exam.examName,
-            type: exam.type,
-            isPublic: exam.isPublic === true ? true : false,
-        },
+        defaultValues,
     });
-
     const onSubmit: SubmitHandler<IExam> = async (data) => {
         const newExam: IExam = data;
         newExam.isPublic =
             data.isPublic === true || data?.isPublic === "true" ? true : false;
-        dispatch(saveExam({ id: exam.id, ...newExam }));
-        if (setOpen) {
-            setOpen(false);
+        if (submitAction) {
+            return submitAction(data);
         }
+        dispatch(saveExam({ id: exam.id, ...newExam }));
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

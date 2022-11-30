@@ -36,6 +36,7 @@ export default function PartsTemp(props: IPartsTempProps) {
                             }
                         />
                         <Button
+                            variant="outlined"
                             onClick={() =>
                                 dispatch(removePartTemp(part.clientId))
                             }
@@ -46,7 +47,7 @@ export default function PartsTemp(props: IPartsTempProps) {
 
                     <Stack direction="row" justifyContent="space-between">
                         <TextField
-                            sx={{ flex: "0 0 50%" }}
+                            sx={{ flex: "0 0 58%" }}
                             label="Loại câu hỏi"
                             select
                             defaultValue={questionTypes[0]}

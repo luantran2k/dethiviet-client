@@ -11,11 +11,15 @@ interface PartTemp extends Partial<IPart> {
 export interface CreateExamSliceState {
     examsSelected: IExam[];
     parts: PartTemp[];
+    numberOfExams: number;
+    examToCreateInfo: IExam;
 }
 
 const initialState: CreateExamSliceState = {
     examsSelected: JSON.parse(localStorage.getItem("examsSelected") || "[]"),
     parts: [],
+    numberOfExams: 1,
+    examToCreateInfo: {},
 };
 
 const createExamSlice = createSlice({
@@ -47,6 +51,7 @@ const createExamSlice = createSlice({
             }
         },
         removeAllSelectedExam: (state) => {
+            state.examsSelected = [];
             localStorage.removeItem("examsSelected");
         },
         addPartTemp: (state) => {
@@ -79,6 +84,12 @@ const createExamSlice = createSlice({
         removeAllPartsTemp: (state) => {
             state.parts = [];
         },
+        updateNumberOfExams: (state, action: PayloadAction<number>) => {
+            state.numberOfExams = action.payload;
+        },
+        updateExamToCreateInfo: (state, action: PayloadAction<IExam>) => {
+            state.examToCreateInfo = action.payload;
+        },
     },
 });
 
@@ -90,6 +101,8 @@ export const {
     updateFieldPartTemp,
     removePartTemp,
     removeAllPartsTemp,
+    updateNumberOfExams,
+    updateExamToCreateInfo,
 } = createExamSlice.actions;
 
 export default createExamSlice;

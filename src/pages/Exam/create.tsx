@@ -1,14 +1,21 @@
+import { Edit } from "@mui/icons-material";
 import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CenterMessage from "../../components/CenterMessage";
+import ExamInfo from "../../components/Exam/Info";
 import IExam from "../../components/Exam/interfaces/IExam";
+import CreateExamModal from "../../components/Exam/modal/create";
+import UpdateExamModal from "../../components/Exam/modal/update";
+import AppModal from "../../components/Modal";
 import PartsTemp from "../../components/Part/Modal/createAuto";
 import QuestionTypeDatas from "../../const/QuestionTypes";
 import {
     addPartTemp,
     removeAllPartsTemp,
+    updateExamToCreateInfo,
+    updateNumberOfExams,
 } from "../../redux/slices/createExamSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
@@ -66,8 +73,12 @@ const getExamDataInfos = (exams: IExam[]): ExamDataInfo[] => {
 
 export default function CreateExamPage(props: ICreateExamPageProps) {
     const dispatch = useAppDispatch();
-    const exams = useAppSelector((state) => state.createExam.examsSelected);
-    const parts = useAppSelector((state) => state.createExam.parts);
+    const {
+        examsSelected: exams,
+        parts,
+        numberOfExams,
+        examToCreateInfo,
+    } = useAppSelector((state) => state.createExam);
     const [examDataInfos, setExamDataInfos] = useState<ExamDataInfo[]>();
     const [examDataInfo, setExamDataInfo] = useState<ExamDataInfo>();
     const questionTypes =
@@ -111,6 +122,10 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
             setExamDataInfo(subjectNameSelectedFind);
         }
     }, [examDataInfo]);
+
+    const handleSubmitAciton = (exam: IExam) => {
+        dispatch(updateExamToCreateInfo(exam));
+    };
 
     if (
         ultis.checkEmptyArray(examDataInfos) ||
@@ -217,6 +232,40 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
                     overflowY: "auto",
                 }}
             >
+                <ExamInfo
+                    exam={examToCreateInfo}
+                    editModal={
+                        <AppModal
+                            trigger={
+                                <Button
+                                    sx={{
+                                        alignSelf: "center",
+                                        marginTop: "1rem",
+                                    }}
+                                    variant="contained"
+                                >
+                                    <Edit />
+                                </Button>
+                            }
+                        >
+                            <UpdateExamModal
+                                submitAction={handleSubmitAciton}
+                                defaultValueProp={
+                                    ultis.isEmptyObject(examToCreateInfo)
+                                        ? {
+                                              isPublic: true,
+                                              subjectName: "Khác",
+                                              duration: 45,
+                                              date: null,
+                                              grade: "unknown",
+                                              type: "unOfficial",
+                                          }
+                                        : examToCreateInfo
+                                }
+                            />
+                        </AppModal>
+                    }
+                />
                 <Typography variant="h5" marginBottom={2}>
                     Tạo phần thi
                 </Typography>
@@ -224,9 +273,20 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
                 <Stack
                     spacing={2}
                     direction="row"
-                    marginTop="1rem"
+                    marginTop="4rem"
                     justifyContent="flex-end"
                 >
+                    <TextField
+                        type="number"
+                        label="Số lượng bài thi"
+                        size="small"
+                        defaultValue={numberOfExams}
+                        onChange={(e) =>
+                            dispatch(
+                                updateNumberOfExams(Number(e.target.value))
+                            )
+                        }
+                    />
                     <Button
                         variant="contained"
                         onClick={() => {

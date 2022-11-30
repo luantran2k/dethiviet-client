@@ -4,6 +4,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     Box,
+    Button,
     Hidden,
     Stack,
     Typography,
@@ -13,41 +14,33 @@ import * as React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { GradeData } from "../../const/GradeData";
 import AppModal from "../Modal";
+import IExam from "./interfaces/IExam";
 import UpdateExamModal from "./modal/update";
 import styles from "./style.module.scss";
 
-export interface IExamInfoProps {}
+export interface IExamInfoProps {
+    exam?: IExam;
+    editModal: React.ReactElement;
+}
 
 export default function ExamInfo(props: IExamInfoProps) {
-    const exam = useAppSelector((state) => state.exam);
+    const { exam = useAppSelector((state) => state.exam), editModal } = props;
+
     return (
-        <>
-            <Stack direction="row">
-                <Typography variant="h5" marginBottom={4} flex={1}>
-                    {exam.title}
-                </Typography>
-                <AppModal
-                    trigger={
-                        <Edit
-                            sx={{
-                                color: teal[300],
-                            }}
-                        />
-                    }
-                >
-                    <UpdateExamModal />
-                </AppModal>
-            </Stack>
-            <Box mb={2}>
-                <Accordion>
-                    <AccordionSummary className={styles.part_summary}>
-                        <Stack direction={"row"} width="100%">
-                            <Typography variant="h6" flexGrow={1}>
-                                Thông tin bài kiểm tra
-                            </Typography>
-                        </Stack>
-                    </AccordionSummary>
-                    <AccordionDetails>
+        <Box mb={2}>
+            <Accordion>
+                <AccordionSummary className={styles.part_summary}>
+                    <Stack direction={"row"} width="100%">
+                        <Typography variant="h6" flexGrow={1}>
+                            Thông tin bài kiểm tra
+                        </Typography>
+                    </Stack>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Stack>
+                        {exam.title && (
+                            <Typography>Tiêu đề: {exam.title}</Typography>
+                        )}
                         {exam.subjectName !== "Khác" &&
                             exam.grade !== undefined && (
                                 <Typography>
@@ -102,9 +95,28 @@ export default function ExamInfo(props: IExamInfoProps) {
                         {exam.description && (
                             <Typography>Mô tả: {exam.description}</Typography>
                         )}
-                    </AccordionDetails>
-                </Accordion>
-            </Box>
-        </>
+                        {editModal ? (
+                            editModal
+                        ) : (
+                            <AppModal
+                                trigger={
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            alignSelf: "center",
+                                            marginTop: "1rem",
+                                        }}
+                                    >
+                                        <Edit />
+                                    </Button>
+                                }
+                            >
+                                <UpdateExamModal />
+                            </AppModal>
+                        )}
+                    </Stack>
+                </AccordionDetails>
+            </Accordion>
+        </Box>
     );
 }

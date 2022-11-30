@@ -3,10 +3,10 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { yellow } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import IExam from "../../components/Exam/interfaces/IExam";
 import { BACKUP_AVATAR } from "../../const/const";
-import { User } from "../../redux/slices/appSlice";
+import { sendAlert, User } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 
@@ -20,6 +20,7 @@ export interface IDetailExamPageProps {}
 export default function DetailExamPage(props: IDetailExamPageProps) {
     const { examId } = useParams();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.app.userInfo?.id);
     const [exam, setExam] = useState<IDetailExam | undefined>(undefined);
     useEffect(() => {
@@ -80,8 +81,13 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                         }}
                         onClick={async () => {
                             if (!userId) {
-                                alert(
-                                    "Bạn cần đăng nhập để thực hiện chức năng này"
+                                dispatch(
+                                    sendAlert({
+                                        message:
+                                            "Bạn cần đăng nhập để thực hiện chức năng này",
+                                        time: 3,
+                                        severity: "warning",
+                                    })
                                 );
                                 return;
                             }

@@ -1,4 +1,4 @@
-import { Cancel, ConstructionOutlined } from "@mui/icons-material";
+import { Cancel } from "@mui/icons-material";
 import {
     Autocomplete,
     Button,
@@ -15,21 +15,26 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useId, useState } from "react";
-import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames from "../../../const/SubjectNames";
-import examSlice, { createExam } from "../../../redux/slices/examSlice";
+import { createExam } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import IExam from "../interfaces/IExam";
 import styles from "./create.module.scss";
 
-export interface ICreateExamModalProps {}
+export interface ICreateExamModalProps {
+    submitAction?: (data: IExam) => void;
+    upLoadFile?: boolean;
+    submitText?: string;
+}
 
 export default function CreateExamModal(props: ICreateExamModalProps) {
+    const { submitAction, upLoadFile = true, submitText } = props;
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const userId = useAppSelector((state) => state.app.userInfo?.id);
@@ -72,11 +77,9 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
         newExam.isPublic =
             data.isPublic === true || data?.isPublic === "true" ? true : false;
 
-        // if (newExam.documentFile) {
-        //     console.log(newExam.documentFile);
-        // } else {
-        //     console.log("khong co file");
-        // }
+        if (submitAction) {
+            return submitAction(data);
+        }
         const exam = await request.post<IExam>(
             "exams",
             {
@@ -315,49 +318,54 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} position="relative">
-                    <label className={styles.fileLabel} htmlFor="documentFile">
-                        {documentFileState?.name ||
-                            "File tài liệu (Không cần nếu tạo mới hoàn toàn)"}
-                    </label>
-                    <input
-                        type="file"
-                        id="documentFile"
-                        className={styles.fileUpload}
-                        accept="application/pdf"
-                        onChange={(e) => {
-                            if (e.target.files?.[0]) {
-                                setDocumentFileState(e.target.files[0]);
-                                setValue("documentFile", e.target.files[0]);
-                            }
-                        }}
-                    />
-                    {documentFileState && (
-                        <Cancel
-                            sx={{
-                                color: "red",
-                                position: "absolute",
-                                bottom: 0,
-                                left: "50%",
-                                opacity: 0.2,
-                                transition: "all 0.2s ease",
-                                cursor: "pointer",
-                                "&:hover": {
-                                    opacity: 1,
-                                    transform: "scale(1.2)",
-                                },
-                            }}
-                            onClick={() => {
-                                setDocumentFileState(undefined);
-                                setValue("documentFile", undefined);
+                {upLoadFile && (
+                    <Grid item xs={12} position="relative">
+                        <label
+                            className={styles.fileLabel}
+                            htmlFor="documentFile"
+                        >
+                            {documentFileState?.name ||
+                                "File tài liệu (Không cần nếu tạo mới hoàn toàn)"}
+                        </label>
+                        <input
+                            type="file"
+                            id="documentFile"
+                            className={styles.fileUpload}
+                            accept="application/pdf"
+                            onChange={(e) => {
+                                if (e.target.files?.[0]) {
+                                    setDocumentFileState(e.target.files[0]);
+                                    setValue("documentFile", e.target.files[0]);
+                                }
                             }}
                         />
-                    )}
-                </Grid>
+                        {documentFileState && (
+                            <Cancel
+                                sx={{
+                                    color: "red",
+                                    position: "absolute",
+                                    bottom: 0,
+                                    left: "50%",
+                                    opacity: 0.2,
+                                    transition: "all 0.2s ease",
+                                    cursor: "pointer",
+                                    "&:hover": {
+                                        opacity: 1,
+                                        transform: "scale(1.2)",
+                                    },
+                                }}
+                                onClick={() => {
+                                    setDocumentFileState(undefined);
+                                    setValue("documentFile", undefined);
+                                }}
+                            />
+                        )}
+                    </Grid>
+                )}
             </Grid>
             <CardActions sx={{ justifyContent: "center" }}>
                 <Button type="submit" variant="contained">
-                    Tạo
+                    {submitText || "Tạo"}
                 </Button>
             </CardActions>
         </form>

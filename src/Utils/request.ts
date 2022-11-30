@@ -1,5 +1,8 @@
-import { User } from "./../redux/slices/appSlice";
+import { sendAlert, User } from "./../redux/slices/appSlice";
 import axios, { AxiosRequestConfig } from "axios";
+import { store } from "../redux/store";
+
+const { dispatch } = store;
 
 export const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL_API,
@@ -23,7 +26,9 @@ instance.interceptors.request.use(
         }
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        return Promise.reject(error);
+    }
 );
 
 instance.interceptors.response.use(
@@ -34,7 +39,7 @@ instance.interceptors.response.use(
         if (
             error.config &&
             error.config.url.indexOf("/refreshToken") === -1 &&
-            error.response.status === 401
+            error.response?.status === 401
         ) {
             const newTokens = await refreshToken();
             if (newTokens) {
@@ -45,6 +50,9 @@ instance.interceptors.response.use(
                 });
             }
         }
+        dispatch(
+            sendAlert({ message: error.message, severity: "error", time: 5 })
+        );
         return Promise.reject(error);
     }
 );

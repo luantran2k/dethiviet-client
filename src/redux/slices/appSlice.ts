@@ -17,6 +17,7 @@ export interface User {
 export interface AlertPayload {
     message: string;
     severity?: "error" | "info" | "success" | "warning";
+    time?: number;
 }
 export interface Alert extends AlertPayload {
     id: string;
@@ -128,11 +129,12 @@ export const sendAlert = createAsyncThunk(
     "sendAlert",
     async (alert: AlertPayload, { dispatch, getState }) => {
         const id = uuid();
+        const displayTime = alert.time || 10;
         dispatch(addAlert({ ...alert, id }));
         await new Promise((resolve) => {
-            setTimeout(() => {
+            return setTimeout(() => {
                 resolve("resolved");
-            }, 10 * 1000);
+            }, displayTime * 1000);
         });
         dispatch(removeAlert(id));
     }

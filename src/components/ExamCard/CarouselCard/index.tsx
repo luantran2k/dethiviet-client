@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { BASE_URL } from "../../../const/const";
 import { IDetailExam } from "../../../pages/Exam/detail";
+import { sendAlert } from "../../../redux/slices/appSlice";
 import { addSelectedExam } from "../../../redux/slices/createExamSlice";
 import ultis from "../../../Utils/ultis";
 import PopupMenu from "../../PopupMenu";
@@ -85,6 +86,12 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                         e.stopPropagation();
                                         navigator.clipboard.writeText(
                                             `${BASE_URL}exam/detail/${exam.id}`
+                                        );
+                                        dispatch(
+                                            sendAlert({
+                                                message: "Đã copy đường đẫn",
+                                                time: 3,
+                                            })
                                         );
                                     }}
                                 >
