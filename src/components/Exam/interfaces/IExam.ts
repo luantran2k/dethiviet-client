@@ -16,6 +16,7 @@ export default interface IExam {
     documentUrl?: string;
     documentFile?: File;
     isFavorited?: boolean;
+    isOriginal?: boolean;
     parts?: PartType[];
     createdAt?: string;
     updatedAt?: string;

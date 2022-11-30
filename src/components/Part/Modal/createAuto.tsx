@@ -1,12 +1,15 @@
 import { Delete } from "@mui/icons-material";
 import { Button, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
+import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import QuestionTypeDatas from "../../../const/QuestionTypes";
 import {
     removePartTemp,
     updateFieldPartTemp,
 } from "../../../redux/slices/createExamSlice";
+import ultis from "../../../Utils/ultis";
+import TextFieldValidated from "../../ValidateInput/TextFieldValidated";
 
 export interface IPartsTempProps {
     questionTypes: string[];
@@ -22,24 +25,30 @@ export default function PartsTemp(props: IPartsTempProps) {
                 <Stack spacing={2} key={part.clientId}>
                     <Stack spacing={1} direction="row">
                         {" "}
-                        <TextField
-                            fullWidth
+                        <TextFieldValidated
                             label="Tiêu đề"
-                            onChange={(e) =>
+                            defaultValue={part.title}
+                            onChange={(e) => {
                                 dispatch(
                                     updateFieldPartTemp({
                                         clientId: part.clientId,
                                         field: "title",
                                         value: e.target.value,
                                     })
-                                )
-                            }
+                                );
+                            }}
+                            options={{
+                                required: true,
+                                minLength: 5,
+                                maxLength: 100,
+                            }}
                         />
                         <Button
                             variant="outlined"
                             onClick={() =>
                                 dispatch(removePartTemp(part.clientId))
                             }
+                            sx={{ alignSelf: "flex-start", height: "3.5rem" }}
                         >
                             <Delete />
                         </Button>
@@ -71,10 +80,12 @@ export default function PartsTemp(props: IPartsTempProps) {
                                 </MenuItem>
                             ))}
                         </TextField>
-                        <TextField
+                        <TextFieldValidated
                             sx={{ flex: "0 0 20%" }}
                             type="number"
                             label="Số lượng câu hỏi"
+                            defaultValue={part.numberOfQuestions}
+                            options={{ required: true, min: 2 }}
                             onChange={(e) =>
                                 dispatch(
                                     updateFieldPartTemp({
@@ -85,10 +96,12 @@ export default function PartsTemp(props: IPartsTempProps) {
                                 )
                             }
                         />
-                        <TextField
+                        <TextFieldValidated
                             sx={{ flex: "0 0 20%" }}
                             type="number"
                             label="Tổng số điểm"
+                            options={{ required: true }}
+                            defaultValue={part.totalPoints}
                             onChange={(e) =>
                                 dispatch(
                                     updateFieldPartTemp({

@@ -1,7 +1,10 @@
 import { Edit } from "@mui/icons-material";
 import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
+import { display } from "@mui/system";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { stringify } from "uuid";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CenterMessage from "../../components/CenterMessage";
 import ExamInfo from "../../components/Exam/Info";
@@ -9,10 +12,13 @@ import IExam from "../../components/Exam/interfaces/IExam";
 import CreateExamModal from "../../components/Exam/modal/create";
 import UpdateExamModal from "../../components/Exam/modal/update";
 import AppModal from "../../components/Modal";
+import IPart from "../../components/Part/interfaces/IPart";
 import PartsTemp from "../../components/Part/Modal/createAuto";
 import QuestionTypeDatas from "../../const/QuestionTypes";
+import { sendAlert } from "../../redux/slices/appSlice";
 import {
     addPartTemp,
+    PartTemp,
     removeAllPartsTemp,
     updateExamToCreateInfo,
     updateNumberOfExams,
@@ -23,7 +29,7 @@ import ultis from "../../Utils/ultis";
 export interface ICreateExamPageProps {}
 
 export interface QuestionInfo {
-    questions: { id: number }[];
+    questions: number[];
     type: string;
 }
 
@@ -73,12 +79,14 @@ const getExamDataInfos = (exams: IExam[]): ExamDataInfo[] => {
 
 export default function CreateExamPage(props: ICreateExamPageProps) {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const {
         examsSelected: exams,
         parts,
         numberOfExams,
         examToCreateInfo,
     } = useAppSelector((state) => state.createExam);
+    const userId = useAppSelector((state) => state.app.userInfo?.id);
     const [examDataInfos, setExamDataInfos] = useState<ExamDataInfo[]>();
     const [examDataInfo, setExamDataInfo] = useState<ExamDataInfo>();
     const questionTypes =
@@ -124,6 +132,9 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
     }, [examDataInfo]);
 
     const handleSubmitAciton = (exam: IExam) => {
+        if (exam.date) {
+            exam.date = (exam.date as Date).toISOString();
+        }
         dispatch(updateExamToCreateInfo(exam));
     };
 
@@ -134,6 +145,140 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
     ) {
         return <CenterMessage message="Vui lòng chọn đề thi mẫu trước" />;
     }
+
+    const handleCreateExam = async (value: {
+        examToCreateInfo: IExam;
+        parts: PartTemp[];
+        questionInfos: QuestionInfo[] | undefined;
+    }) => {
+        const { examToCreateInfo, parts, questionInfos } = ultis.deepCopy(
+            value
+        ) as typeof value;
+        if (!questionInfos) {
+            dispatch(
+                sendAlert({
+                    message: "Chưa có thông tin câu hỏi, vui lòng thử lại",
+                    severity: "error",
+                })
+            );
+            return;
+        }
+        for (const part of parts) {
+            if (!part.title || !part.totalPoints || !part.numberOfQuestions) {
+                dispatch(
+                    sendAlert({
+                        message: "Vui lòng nhập đủ các trường còn thiếu",
+                        severity: "error",
+                    })
+                );
+                return;
+            }
+        }
+        if (!examToCreateInfo.title || !examToCreateInfo.duration) {
+            dispatch(
+                sendAlert({
+                    message:
+                        "Vui lòng cập nhật thông tin bài thi trước khi tạo",
+                    severity: "error",
+                })
+            );
+            return;
+        }
+        const partGroupByTypesOriginal = questionInfos.map((questionInfo) => {
+            return {
+                ...questionInfo,
+                parts: parts.filter((part) => part.type === questionInfo.type),
+            };
+        });
+        for (const partGroupByType of partGroupByTypesOriginal) {
+            const totalQuestions = questionInfos.find(
+                (questionInfo) => questionInfo.type === partGroupByType.type
+            )?.questions.length;
+            const totalQuestionsInPart = partGroupByType.parts.reduce(
+                (sum, part) => {
+                    return sum + part.numberOfQuestions!;
+                },
+                0
+            );
+
+            if (
+                totalQuestions === undefined ||
+                totalQuestions < totalQuestionsInPart
+            ) {
+                dispatch(
+                    sendAlert({
+                        message: `Số câu hỏi thuộc dạng "${
+                            QuestionTypeDatas[
+                                partGroupByType.type as keyof typeof QuestionTypeDatas
+                            ].label
+                        }" vượt quá số câu hỏi hiện có (${totalQuestionsInPart}/${totalQuestions})`,
+                        severity: "error",
+                    })
+                );
+                return;
+            }
+        }
+
+        const exams: IExam[] = [];
+        for (let i = 0; i < numberOfExams; i++) {
+            const partGroupByTypes = ultis.deepCopy(
+                partGroupByTypesOriginal
+            ) as typeof partGroupByTypesOriginal;
+            const partsWitQuesiton = partGroupByTypes
+                .map((partGroupByType) => {
+                    // Shuffle array
+                    const shuffled = partGroupByType.questions.sort(
+                        () => 0.5 - Math.random()
+                    );
+
+                    partGroupByType.parts = partGroupByType.parts.map(
+                        (part) => {
+                            return {
+                                ...part,
+                                questionIds: partGroupByType.questions.splice(
+                                    0,
+                                    part?.numberOfQuestions!
+                                ),
+                            };
+                        }
+                    );
+
+                    return partGroupByType;
+                })
+                .reduce((output, partGroupByType) => {
+                    if (!ultis.checkEmptyArray(partGroupByType.parts)) {
+                        return [...output, ...partGroupByType.parts];
+                    }
+                    return output;
+                }, [] as PartTemp[]);
+
+            const partWitQuesitonSorted = parts.map((part) => {
+                const { clientId, numberOfQuestions, ...newPart } =
+                    partsWitQuesiton.find(
+                        (partWitQuesiton) =>
+                            partWitQuesiton.clientId === part.clientId
+                    )!;
+                return newPart as IPart;
+            });
+            const newExam: IExam = {
+                ...examToCreateInfo,
+                parts: [...partWitQuesitonSorted],
+            };
+            exams.push(newExam);
+        }
+        const payload = {
+            exams,
+        };
+        const result = await request.post<{ exams: IExam[] }>(
+            "exams/create-auto",
+            payload
+        );
+        if (result.exams) {
+            dispatch(sendAlert({ message: "Tạo thành công" }));
+            dispatch(removeAllPartsTemp());
+            navigate(`/user/${userId}/exams/own`);
+        }
+    };
 
     return (
         <Stack
@@ -290,12 +435,39 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
                     <Button
                         variant="contained"
                         onClick={() => {
-                            dispatch(addPartTemp());
+                            if (
+                                ultis.checkEmptyArray(
+                                    examDataInfo.questionInfos
+                                )
+                            ) {
+                                dispatch(
+                                    sendAlert({
+                                        message:
+                                            "Bài thi không có câu hỏi hoặc không rõ thông tin câu hỏi, vui lòng thử lại",
+                                        severity: "error",
+                                    })
+                                );
+                                return;
+                            }
+                            dispatch(
+                                addPartTemp({
+                                    type: examDataInfo.questionInfos?.[0].type!,
+                                })
+                            );
                         }}
                     >
                         Thêm phần
                     </Button>
-                    <Button variant="outlined" onClick={() => {}}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            handleCreateExam({
+                                examToCreateInfo: examToCreateInfo,
+                                parts,
+                                questionInfos: examDataInfo.questionInfos,
+                            });
+                        }}
+                    >
                         Tạo bài thi
                     </Button>
                 </Stack>

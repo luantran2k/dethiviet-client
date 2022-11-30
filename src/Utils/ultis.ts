@@ -102,7 +102,10 @@ const ultis = {
     },
 
     checkEmptyArray: (array: any) => {
-        if (Array.isArray(array) && array.length === 0) {
+        if (
+            (Array.isArray(array) && array.length === 0) ||
+            array == undefined
+        ) {
             return true;
         }
         return false;
@@ -135,6 +138,56 @@ const ultis = {
     },
     isEmptyObject: (obj: object) => {
         return Object.keys(obj).length === 0 ? true : false;
+    },
+    validate: (
+        value: any,
+        options: {
+            required?: boolean;
+            maxLength?: number;
+            minLength?: number;
+            max?: number;
+            min?: number;
+        }
+    ) => {
+        const { required, maxLength, minLength, max, min } = options;
+        if (required && (value === undefined || value === "")) {
+            return { message: "Cần nhập trường này", isError: true };
+        }
+        if (
+            maxLength &&
+            (value?.length === undefined || value.length > maxLength)
+        ) {
+            return {
+                message: `Tối đa cho phép ${maxLength} ký tự.`,
+                isError: true,
+            };
+        }
+        if (
+            minLength &&
+            (value?.length === undefined || value.length < minLength)
+        ) {
+            return {
+                message: `Cần tối thiểu ${minLength} ký tự.`,
+                isError: true,
+            };
+        }
+
+        if (max && value > max) {
+            return {
+                message: `Tối đa cho phép là: ${max}.`,
+                isError: true,
+            };
+        }
+        if (min && value < min) {
+            return {
+                message: `Cần tối thiểu ${min}.`,
+                isError: true,
+            };
+        }
+        return { message: "Success", isError: false };
+    },
+    deepCopy: (object: object): object => {
+        return JSON.parse(JSON.stringify(object));
     },
 };
 export default ultis;

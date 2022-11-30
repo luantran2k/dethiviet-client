@@ -20,7 +20,7 @@ import styles from "./style.module.scss";
 
 export interface IExamInfoProps {
     exam?: IExam;
-    editModal: React.ReactElement;
+    editModal?: React.ReactElement;
 }
 
 export default function ExamInfo(props: IExamInfoProps) {

@@ -17,4 +17,5 @@ export default interface IPart {
     description: string;
     numberOfAnswers: number;
     questions?: QuestionType[];
+    questionIds?: number[];
 }
