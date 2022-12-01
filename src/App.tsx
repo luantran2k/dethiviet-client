@@ -19,10 +19,9 @@ function App() {
     const CreateExamPage = React.lazy(() => import("./pages/Exam/create"));
     const SearchExamPage = React.lazy(() => import("./pages/Exam/search"));
     const DetailExamPage = React.lazy(() => import("./pages/Exam/detail"));
+    const PracticeExamPage = React.lazy(() => import("./pages/Exam/practice"));
+    const ResultExamPage = React.lazy(() => import("./pages/Exam/result"));
     const HomePage = React.lazy(() => import("./pages/Home"));
-    const FitHeightLayout = React.lazy(
-        () => import("./pages/Layouts/FitHeightLayout")
-    );
     const Root = React.lazy(() => import("./pages/Layouts/Root"));
     const LoginPage = React.lazy(() => import("./pages/Login"));
     const EditExamPage = React.lazy(() => import("./pages/Exam/edit"));
@@ -125,6 +124,26 @@ function App() {
                                         fallback={<h4>Đang tải trang</h4>}
                                     >
                                         <EditExamPage />
+                                    </Suspense>
+                                }
+                            ></Route>
+                            <Route
+                                path="practice/:examId"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <PracticeExamPage />
+                                    </Suspense>
+                                }
+                            ></Route>
+                            <Route
+                                path="result/:examId"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <ResultExamPage />
                                     </Suspense>
                                 }
                             ></Route>

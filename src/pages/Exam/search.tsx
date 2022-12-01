@@ -137,11 +137,7 @@ export const FindExamResults = memo((props: { examFilter: ExamFilter }) => {
             <Grid container columnSpacing={2} rowSpacing={4}>
                 {exams.map((exam) => (
                     <Grid item xs={6} sm={4} key={exam.id}>
-                        <CarouselCard
-                            exam={exam}
-                            boxShadow={true}
-                            isClickCard={true}
-                        />
+                        <CarouselCard exam={exam} boxShadow={true} />
                     </Grid>
                 ))}
             </Grid>

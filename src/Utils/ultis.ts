@@ -114,7 +114,7 @@ const ultis = {
         const refreshToken = localStorage.getItem("refreshToken");
         if (
             refreshToken &&
-            new Date(ultis.parseJwt(refreshToken).exp * 1000) >= new Date()
+            new Date(ultis.parseJwt(refreshToken).exp * 1000) > new Date()
         ) {
             return true;
         }

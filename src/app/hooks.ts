@@ -1,3 +1,4 @@
+import { sendAlert } from "./../redux/slices/appSlice";
 import { refreshToken } from "./../Utils/request";
 import { useDispatch, useSelector } from "react-redux";
 import type { TypedUseSelectorHook } from "react-redux";
@@ -54,22 +55,22 @@ export function useFetch<Filter, ResultData>(
 }
 
 export function useAuth(page?: string) {
-    const isSignIn = useAppSelector((state) => state.app.isSignIn);
+    const { isSignIn, ...app } = useAppSelector((state) => state.app);
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     if (page) {
         console.log("check sigin" + page, isSignIn); //for debugging
     }
+
     useEffect(() => {
         if (!isSignIn) {
             const refresToken = ultis.checkRefreshTokenExpire();
             if (!refresToken) {
-                console.log("Use auth navigate to signIn");
                 if (location.state) {
                     navigate("/signIn", { state: { from: location.pathname } });
                 } else {
-                    navigate("/");
+                    navigate("/signIn");
                 }
                 return;
             } else {

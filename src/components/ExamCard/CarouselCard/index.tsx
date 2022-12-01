@@ -2,24 +2,25 @@ import { LibraryAdd, MoreVert } from "@mui/icons-material";
 import { Box, MenuItem, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { BASE_URL } from "../../../const/const";
 import { IDetailExam } from "../../../pages/Exam/detail";
 import { sendAlert } from "../../../redux/slices/appSlice";
 import { addSelectedExam } from "../../../redux/slices/createExamSlice";
 import ultis from "../../../Utils/ultis";
+import UserNameButton from "../../Button/UserNameButton";
 import PopupMenu from "../../PopupMenu";
 
 export interface ICarouselCardProps {
     exam: IDetailExam;
     boxShadow?: boolean;
-    isClickCard?: boolean;
     menuButton?: React.ReactElement;
 }
 
 export default function CarouselCard(props: ICarouselCardProps) {
-    const { exam, boxShadow, isClickCard, menuButton } = props;
-    const naviage = useNavigate();
+    const { exam, boxShadow, menuButton } = props;
+    const userId = useAppSelector((state) => state.app.userInfo?.id);
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     return (
         <Box
@@ -31,10 +32,6 @@ export default function CarouselCard(props: ICarouselCardProps) {
                 boxShadow: boxShadow
                     ? "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
                     : "none",
-                cursor: isClickCard ? "pointer" : "default",
-            }}
-            onClick={() => {
-                if (isClickCard) naviage("/exam/detail/" + exam.id);
             }}
         >
             <Stack height="100%">
@@ -43,7 +40,7 @@ export default function CarouselCard(props: ICarouselCardProps) {
                         <Typography
                             variant="h6"
                             onClick={() => {
-                                naviage("/exam/detail/" + exam.id);
+                                navigate("/exam/detail/" + exam.id);
                             }}
                             title={exam.title}
                             sx={{
@@ -97,6 +94,22 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                 >
                                     Chia sẻ
                                 </MenuItem>
+                                {userId === exam.owner.id && (
+                                    <>
+                                        <MenuItem
+                                            onClick={() =>
+                                                navigate(
+                                                    `/exam/edit/${exam.id}`
+                                                )
+                                            }
+                                        >
+                                            Chính sửa
+                                        </MenuItem>
+                                        <MenuItem onClick={() => {}}>
+                                            Xoá
+                                        </MenuItem>
+                                    </>
+                                )}
                             </Box>
                         </PopupMenu>
                     </Stack>
@@ -132,9 +145,7 @@ export default function CarouselCard(props: ICarouselCardProps) {
                             style={{ height: "2.8rem", width: "2.8rem" }}
                         />
                         <Box>
-                            <Typography fontWeight={500}>
-                                {exam.owner?.name || "@" + exam.owner.username}
-                            </Typography>
+                            <UserNameButton user={exam.owner} />
                             <Typography fontSize={".8rem"} fontWeight={400}>
                                 Ngày tải lên: {ultis.formatDate(exam.createdAt)}
                             </Typography>
