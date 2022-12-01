@@ -1,7 +1,9 @@
-import { Box } from "@mui/system";
+import { Box, Button, Stack, SxProps, Theme, Typography } from "@mui/material";
 
 export interface ICountdownProps {
     time?: number;
+    setPractice: React.Dispatch<React.SetStateAction<boolean>>;
+    sx?: SxProps<Theme> | undefined;
 }
 
 //second * 60 * 60
@@ -16,15 +18,22 @@ export const convertTime = (time: number): string => {
 };
 
 export default function Countdown(props: ICountdownProps) {
-    const { time } = props;
+    const { time, setPractice, sx } = props;
 
     return (
-        <Box height="4rem">
+        <Stack sx={sx} alignItems="center">
+            <Typography fontSize="1.4rem">Thời gian còn lại</Typography>
             {time ? (
-                <p>{convertTime(time)}</p>
+                <Typography fontSize="2rem">{convertTime(time)}</Typography>
             ) : (
-                <p>Thời gian làm bài không xác định</p>
+                <Typography fontSize="2rem">00:00:00</Typography>
             )}
-        </Box>
+            <Button
+                variant="contained"
+                onClick={() => setPractice((pre) => !pre)}
+            >
+                Practice
+            </Button>
+        </Stack>
     );
 }
