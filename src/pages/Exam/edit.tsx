@@ -130,10 +130,10 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     justifyContent="center"
                 >
                     <Button variant="contained" onClick={() => togglePreview()}>
-                        Preview
+                        Xem trước
                     </Button>
                     <Button variant="contained" onClick={handlePrint}>
-                        Export
+                        In/ Lưu file pdf
                     </Button>
                     <Button
                         variant="contained"
@@ -143,7 +143,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                                 .then((data) => navigate("/exam"));
                         }}
                     >
-                        Delete
+                        Xoá
                     </Button>
                 </Stack>
                 <Suspense fallback={<h4>Đang tải trang</h4>}>

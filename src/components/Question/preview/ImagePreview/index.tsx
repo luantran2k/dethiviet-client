@@ -43,7 +43,7 @@ export default function QuestionImagesPreivew(
                     </Box>
                     {question.questionImages?.length! >= 2 && (
                         <Typography textAlign="center" mt={1}>
-                            Hình: {index}
+                            Hình: {index + 1}
                         </Typography>
                     )}
                 </Grid>
