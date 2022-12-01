@@ -22,6 +22,7 @@ export default function MultiSelectQsHasDocument(
             <ul className={styles.answerList}>
                 {question.answers?.map((answer, index) => (
                     <MultiSelectAnswerHasDocument
+                        key={answer.id}
                         partId={partId}
                         question={question}
                         answerId={answer.id}

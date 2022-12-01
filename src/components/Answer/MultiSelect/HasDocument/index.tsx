@@ -28,6 +28,7 @@ const MultiSelectAnswerHasDocument = memo(
         }
         return (
             <li
+                key={answer.id}
                 className={`${styles.answer} ${answer.isTrue && styles.true}`}
                 onClick={async (e) => {
                     const updatedAnswer = await request.patch<IAnswer>(

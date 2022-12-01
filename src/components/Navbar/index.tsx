@@ -9,7 +9,7 @@ import "./style.scss";
 
 export interface INavbarProps {}
 
-export const tealNavBarPath = ["/exam/edit"];
+export const tealNavBarPath = ["/exam/edit", "/exam/practice"];
 
 export default function Navbar(props: INavbarProps) {
     const location = useLocation();

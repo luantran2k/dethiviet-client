@@ -1,7 +1,7 @@
-import * as React from "react";
+import { Box } from "@mui/system";
 
 export interface ICountdownProps {
-    time: number;
+    time?: number;
 }
 
 //second * 60 * 60
@@ -17,17 +17,14 @@ export const convertTime = (time: number): string => {
 
 export default function Countdown(props: ICountdownProps) {
     const { time } = props;
+
     return (
-        <div className="clock">
-            <p
-                style={{
-                    fontSize: "2rem",
-                    textAlign: "center",
-                    margin: "4rem",
-                }}
-            >
-                {convertTime(time)}
-            </p>
-        </div>
+        <Box height="4rem">
+            {time ? (
+                <p>{convertTime(time)}</p>
+            ) : (
+                <p>Thời gian làm bài không xác định</p>
+            )}
+        </Box>
     );
 }

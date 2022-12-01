@@ -26,6 +26,7 @@ const MultipleChoiceAnswerHasDocument = memo(
         }
         return (
             <li
+                key={answer.id}
                 className={`${styles.answer} ${answer.isTrue && styles.true}`}
                 onClick={async (e) => {
                     const oldAnswer: IAnswer | undefined =

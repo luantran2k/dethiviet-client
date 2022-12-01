@@ -132,9 +132,11 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     <Button variant="contained" onClick={() => togglePreview()}>
                         Xem trước
                     </Button>
-                    <Button variant="contained" onClick={handlePrint}>
-                        In/ Lưu file pdf
-                    </Button>
+                    {!exam.documentUrl && (
+                        <Button variant="contained" onClick={handlePrint}>
+                            In/ Lưu file pdf
+                        </Button>
+                    )}
                     <Button
                         variant="contained"
                         onClick={() => {
