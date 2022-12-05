@@ -51,12 +51,16 @@
 
         .login {
             flex: 0 0 45%;
+            overflow-y: auto;
 
             .form {
                 padding: 1.6rem;
                 display: flex;
                 flex-direction: column;
                 gap: 1.2rem;
+                &.signUp {
+                    padding-top: 0;
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ interface LoginInfo {
 
 interface RegisterInfo extends LoginInfo {
     confirmPassword: string;
+    email: string;
 }
 
 export default function LoginPage() {
@@ -120,6 +121,14 @@ export function LoginForm(props: {
             <Button variant="outlined" onClick={() => setIsSignInForm(false)}>
                 Đăng ký
             </Button>
+            <Button
+                onClick={() => {
+                    alert("Đang phát triển");
+                }}
+                sx={{ alignSelf: "center" }}
+            >
+                Quên mật khẩu
+            </Button>
         </form>
     );
 }
@@ -142,7 +151,10 @@ export function RegisterForm(props: {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={styles.form + " " + styles.signUp}
+        >
             <TextField
                 {...register("username", {
                     required: true,
@@ -156,6 +168,16 @@ export function RegisterForm(props: {
                 })}
                 error={Boolean(errors.username?.type)}
                 label="Tên tài khoản"
+            />
+            <TextField
+                {...register("email", {
+                    required: true,
+                })}
+                helperText={ultis.getFormErrorMessage({
+                    error: errors.email?.type,
+                })}
+                error={Boolean(errors.email?.type)}
+                label="Email"
             />
             <TextField
                 type="password"

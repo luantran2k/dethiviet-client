@@ -32,7 +32,7 @@ export default function Countdown(props: ICountdownProps) {
                 variant="contained"
                 onClick={() => setPractice((pre) => !pre)}
             >
-                Practice
+                Nộp bài
             </Button>
         </Stack>
     );

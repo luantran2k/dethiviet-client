@@ -13,6 +13,7 @@ import ultis from "./Utils/ultis";
 
 function App() {
     const AboutPage = React.lazy(() => import("./pages/About"));
+    const DiscussionPage = React.lazy(() => import("./pages/Discussion"));
     const ErrorPage = React.lazy(() => import("./pages/Error"));
     const NotFoundPage = React.lazy(() => import("./pages/Error/NotFound"));
     const ExamPage = React.lazy(() => import("./pages/Exam"));
@@ -57,6 +58,14 @@ function App() {
                             element={
                                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                                     <HomePage />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="discussion"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <DiscussionPage />
                                 </Suspense>
                             }
                         />

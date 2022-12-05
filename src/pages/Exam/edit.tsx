@@ -78,7 +78,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
             {exam.documentUrl ? (
                 <object
                     type="application/pdf"
-                    data="https://res.cloudinary.com/dm3xuympe/image/upload/v1669455597/dethiviet/exam/documents/m3e2us54jthlbfspeox4.pdf"
+                    data={exam.documentUrl}
                     style={{
                         height: "100%",
                         width: isPreview ? "60%" : "0",
