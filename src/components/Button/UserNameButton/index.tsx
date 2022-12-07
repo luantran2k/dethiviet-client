@@ -5,14 +5,16 @@ import { User } from "../../../redux/slices/appSlice";
 
 export interface IUserNameButtonProps {
     user: User;
+    fontSize?: number | string;
 }
 
 export default function UserNameButton(props: IUserNameButtonProps) {
     const navigate = useNavigate();
-    const { user } = props;
+    const { user, fontSize = "1rem" } = props;
     return (
         <Typography
             sx={{
+                fontSize: fontSize,
                 fontWeight: "500",
                 cursor: "pointer",
                 "&:hover": {

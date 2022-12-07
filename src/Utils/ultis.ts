@@ -189,5 +189,6 @@ const ultis = {
     deepCopy: (object: object): object => {
         return JSON.parse(JSON.stringify(object));
     },
+    formatTime: () => {},
 };
 export default ultis;
