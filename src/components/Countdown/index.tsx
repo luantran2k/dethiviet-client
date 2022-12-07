@@ -2,7 +2,6 @@ import { Box, Button, Stack, SxProps, Theme, Typography } from "@mui/material";
 
 export interface ICountdownProps {
     time?: number;
-    setPractice: React.Dispatch<React.SetStateAction<boolean>>;
     sx?: SxProps<Theme> | undefined;
 }
 
@@ -18,7 +17,7 @@ export const convertTime = (time: number): string => {
 };
 
 export default function Countdown(props: ICountdownProps) {
-    const { time, setPractice, sx } = props;
+    const { time, sx } = props;
 
     return (
         <Stack sx={sx} alignItems="center">
@@ -28,12 +27,6 @@ export default function Countdown(props: ICountdownProps) {
             ) : (
                 <Typography fontSize="2rem">00:00:00</Typography>
             )}
-            <Button
-                variant="contained"
-                onClick={() => setPractice((pre) => !pre)}
-            >
-                Nộp bài
-            </Button>
         </Stack>
     );
 }

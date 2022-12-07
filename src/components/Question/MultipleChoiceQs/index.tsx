@@ -2,7 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../../app/hooks";
 import { questionSeletor } from "../../../redux/selectors/examSeletors";
 import MultipleChoiceQsHasDocument from "./HasDocument";
-import MultipleChoiceQsNoDocument from "./NoDocument/NoDocument";
+import MultipleChoiceQsNoDocument from "./NoDocument";
 export interface IQuestionProps {
     questionId: number;
     partId: number;

@@ -16,6 +16,8 @@ export default interface IPart {
     partAudio: string;
     description: string;
     numberOfAnswers: number;
+    numberCorrectQuestionsOfPart?: number;
+    partScore?: number;
     questions?: QuestionType[];
     questionIds?: number[];
 }

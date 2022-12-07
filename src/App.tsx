@@ -147,7 +147,7 @@ function App() {
                                 }
                             ></Route>
                             <Route
-                                path="result/:examId"
+                                path="result/:resultId"
                                 element={
                                     <Suspense
                                         fallback={<h4>Đang tải trang</h4>}

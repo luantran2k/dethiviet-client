@@ -74,7 +74,7 @@ const MultiSelectAnswerNoDocument = React.memo(
                             defaultValue={answer.value}
                             fullWidth
                             placeholder="Nhập đáp án"
-                            onChange={(e) => {
+                            onBlur={(e) => {
                                 if (e.target.value !== answer.value)
                                     dispatch(
                                         updateAnswer({
@@ -84,10 +84,8 @@ const MultiSelectAnswerNoDocument = React.memo(
                                             value: e.target.value,
                                         })
                                     );
-                            }}
-                            onBlur={() => {
                                 request.patch("answers/" + answerId, {
-                                    value: answer.value,
+                                    value: e.target.value,
                                 });
                             }}
                             InputProps={{

@@ -10,11 +10,12 @@ import styles from "./style.module.scss";
 
 export interface IExamProfileOutletProps {
     getExams: (userId: number) => Promise<{ exams: IExam[] } | undefined>;
+    handleClickExam?: (url: string) => void;
     title: string;
 }
 
 export default function ExamProfileOutlet(props: IExamProfileOutletProps) {
-    const { getExams, title } = props;
+    const { getExams, title, handleClickExam } = props;
     const { userInfo } = useUserInfo();
     const [exams, setExams] = React.useState<IExam[] | undefined>(undefined);
     React.useEffect(() => {
@@ -55,7 +56,10 @@ export default function ExamProfileOutlet(props: IExamProfileOutletProps) {
             >
                 {title}
             </Typography>
-            <SmallExamCardList exams={exams} />
+            <SmallExamCardList
+                exams={exams}
+                handleClickExam={handleClickExam}
+            />
         </div>
     );
 }

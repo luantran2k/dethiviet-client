@@ -1,10 +1,16 @@
-import { examSliceState } from "../redux/slices/examSlice";
+import { examSliceState, updateCorrectAnswer } from "../redux/slices/examSlice";
 import { PartType } from "../components/Part/interfaces/IPart";
 import QuestionTypeDatas from "../const/QuestionTypes";
 import IMultiSelectAnswer from "../components/Answer/interfaces/IMultiSelect";
 import { AnswerType } from "../components/Answer/interfaces/IAnswer";
 import IMultiSelectQuestion from "../components/Question/interfaces/IMultiSelect";
 import { QuestionType } from "../components/Question/interfaces/IQuestion";
+import {
+    FormControl,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+} from "@mui/material";
 
 const examUltis = {
     getNewpartId(state: examSliceState): number {

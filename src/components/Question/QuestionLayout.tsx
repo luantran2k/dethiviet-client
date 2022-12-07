@@ -52,17 +52,6 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                     multiline
                                     maxRows={4}
                                     placeholder="Nhập câu hỏi"
-                                    // onB={(e) => {
-                                    //     if (e.target.value !== question.title)
-                                    //         dispatch(
-                                    //             updateQuestionField({
-                                    //                 partId,
-                                    //                 questionId: question.id,
-                                    //                 field: "title",
-                                    //                 value: e.target.value,
-                                    //             })
-                                    //         );
-                                    // }}
                                     onBlur={(e) => {
                                         if (e.target.value !== question.title)
                                             dispatch(
@@ -73,10 +62,11 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                                     value: e.target.value,
                                                 })
                                             );
+
                                         request.patch(
                                             "questions/" + question.id,
                                             {
-                                                title: question.title,
+                                                title: e.target.value,
                                             }
                                         );
                                     }}

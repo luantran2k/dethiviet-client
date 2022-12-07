@@ -38,17 +38,6 @@ const MultipleChoiceAnswerNoDocument = React.memo(
                         variant="standard"
                         defaultValue={answer.value}
                         placeholder="Nhập đáp án"
-                        // onChange={(e) => {
-                        //     if (e.target.value !== answer.value)
-                        //         dispatch(
-                        //             updateAnswer({
-                        //                 partId,
-                        //                 questionId,
-                        //                 answerId,
-                        //                 value: e.target.value,
-                        //             })
-                        //         );
-                        // }}
                         onBlur={(e) => {
                             if (e.target.value !== answer.value)
                                 dispatch(
@@ -60,7 +49,7 @@ const MultipleChoiceAnswerNoDocument = React.memo(
                                     })
                                 );
                             request.patch("answers/" + answerId, {
-                                value: answer.value,
+                                value: e.target.value,
                             });
                         }}
                         InputProps={{

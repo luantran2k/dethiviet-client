@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserInfo } from "..";
 import IExam from "../../../components/Exam/interfaces/IExam";
 import { SmallExamCardList } from "../../../components/ExamCard/SmallExamCard";
@@ -10,6 +11,7 @@ import ExamProfileOutlet from "../ExamProfileOutlet";
 export interface ICompletedExamsProps {}
 
 export default function CompletedExams(props: ICompletedExamsProps) {
+    const navigate = useNavigate();
     const getExams = (userId: number) => {
         return request.get<any, { exams: IExam[] }>(
             `users/${userId}/exams/completed`
@@ -19,6 +21,9 @@ export default function CompletedExams(props: ICompletedExamsProps) {
         <ExamProfileOutlet
             getExams={getExams}
             title={"Bài thi đã hoàn thành"}
+            handleClickExam={(url: string) => {
+                navigate(url);
+            }}
         />
     );
 }

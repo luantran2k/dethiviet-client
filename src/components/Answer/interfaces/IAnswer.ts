@@ -8,6 +8,7 @@ export type AnswerType = IMultipleChoiceAnswer | IMultiSelectAnswer;
 export default interface IAnswer {
     id: number;
     value?: string | number;
+    isAnswerFail?: boolean;
 }
 
 export interface AnswerPayload {
@@ -15,6 +16,7 @@ export interface AnswerPayload {
     questionId: number;
     answerId: number;
     isTrue?: boolean;
+    isAnswerFail?: boolean;
     value?: string | number;
 }
 

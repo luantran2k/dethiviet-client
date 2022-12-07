@@ -6,14 +6,20 @@ import IExam from "../../Exam/interfaces/IExam";
 
 export interface ISmallExamCardProps {
     exam: IExam;
+    handleClickExam?: (url: string) => void;
 }
 
 export default function SmallExamCard(props: ISmallExamCardProps) {
+    const { handleClickExam } = props;
     const navigate = useNavigate();
     const { exam } = props;
     return (
         <Box
-            onClick={() => navigate("/exam/detail/" + exam.id)}
+            onClick={() => {
+                handleClickExam
+                    ? handleClickExam("/exam/result/" + exam.resultId)
+                    : navigate("/exam/detail/" + exam.id);
+            }}
             sx={{
                 flex: "0 0 30%",
                 cursor: "pointer",
@@ -34,7 +40,13 @@ export default function SmallExamCard(props: ISmallExamCardProps) {
     );
 }
 
-export function SmallExamCardList({ exams }: { exams: IExam[] }) {
+export function SmallExamCardList({
+    exams,
+    handleClickExam,
+}: {
+    exams: IExam[];
+    handleClickExam?: (url: string) => void;
+}) {
     return (
         <Box
             sx={{
@@ -45,8 +57,12 @@ export function SmallExamCardList({ exams }: { exams: IExam[] }) {
                 rowGap: "1.4rem",
             }}
         >
-            {exams.map((exam) => (
-                <SmallExamCard key={exam.id} exam={exam} />
+            {exams.map((exam, index) => (
+                <SmallExamCard
+                    key={index}
+                    exam={exam}
+                    handleClickExam={handleClickExam}
+                />
             ))}
         </Box>
     );

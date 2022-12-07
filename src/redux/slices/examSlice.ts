@@ -214,21 +214,28 @@ export const saveExam = createAsyncThunk<
 
 export const getExam = createAsyncThunk<
     examSliceState,
-    { examId: number; includePart: boolean },
+    { examId: number; includePart: boolean; withAnswer?: boolean },
     {
         state: RootState;
     }
->("exams/get", async ({ examId, includePart }, { dispatch, getState }) => {
-    const exam = await request.get<{ includePart: boolean }, IExam>(
-        "exams/" + examId,
-        {
+>(
+    "exams/get",
+    async (
+        { examId, includePart, withAnswer = true },
+        { dispatch, getState }
+    ) => {
+        const exam = await request.get<
+            { includePart: boolean; withAnswer: boolean },
+            IExam
+        >("exams/" + examId, {
             includePart: true,
-        }
-    );
+            withAnswer,
+        });
 
-    if (exam) return exam;
-    return getState().exam;
-});
+        if (exam) return exam;
+        return getState().exam;
+    }
+);
 
 export const updateQuestionFieldServer = createAsyncThunk<
     any,

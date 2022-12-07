@@ -17,6 +17,10 @@ export default interface IExam {
     documentFile?: File;
     isFavorited?: boolean;
     isOriginal?: boolean;
+    resultId?: number;
+    score?: number;
+    numberCorrectQuestions?: number;
+    totalQuestions?: number;
     parts?: PartType[];
     createdAt?: string;
     updatedAt?: string;
