@@ -3,6 +3,9 @@ import {
     Box,
     Button,
     ButtonGroup,
+    Grid,
+    ImageList,
+    ImageListItem,
     MenuItem,
     Stack,
     TextField,
@@ -10,6 +13,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import request from "../../Utils/request";
+import ultis from "../../Utils/ultis";
 import UserNameButton from "../Button/UserNameButton";
 import VoteButton from "../Button/VoteButton";
 import AppComments from "../Comment";
@@ -90,6 +94,41 @@ export default function Post(props: IPostProps) {
                 )}
             </Stack>
             <Typography sx={{ margin: ".4rem 0" }}>{post.content}</Typography>
+            {!ultis.checkEmptyArray(post.questioningImage) && (
+                <Grid container spacing={1}>
+                    {post.questioningImage?.map((url, index) => (
+                        <Grid
+                            item
+                            xs={
+                                post.questioningImage &&
+                                post.questioningImage?.length > 1
+                                    ? 6
+                                    : 12
+                            }
+                            key={index}
+                        >
+                            <Box maxWidth={"100%"}>
+                                <img
+                                    src={url}
+                                    style={{
+                                        height: "100%",
+                                        width: "100%",
+                                        objectFit: "cover",
+                                        display: "block",
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
+            {post.questioningAudio && (
+                <audio
+                    src={post.questioningAudio}
+                    controls
+                    style={{ width: "100%" }}
+                />
+            )}
             {post.tags?.length > 0 && (
                 <Stack direction="row" spacing={1}>
                     {post.tags.map((tag) => (
@@ -102,7 +141,6 @@ export default function Post(props: IPostProps) {
                 downVote={post.downVote}
                 postId={post.id}
             />
-
             <AppComments postId={post.id} comments={post.explainings} />
         </Stack>
     );

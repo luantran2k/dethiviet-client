@@ -1,7 +1,16 @@
-import { Image, AudioFile, Add } from "@mui/icons-material";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { grey, teal } from "@mui/material/colors";
-import { useState } from "react";
+import { Image, AudioFile, Add, Delete } from "@mui/icons-material";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Button,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { grey, red, teal } from "@mui/material/colors";
+import { useRef, useState } from "react";
 import { User } from "../../../redux/slices/appSlice";
 import AppTag from "../../Tag";
 import { v4 as uuid } from "uuid";
@@ -20,6 +29,10 @@ export default function AddPost(props: IAddPostProps) {
     const [tags, setTags] = useState<string[]>([]);
     const [currentTag, setCurrentTag] = useState<string>("");
     const [content, setContent] = useState<string>("");
+    const [audioFile, setAudioFile] = useState<File>();
+    const [imageFiles, setImageFiles] = useState<FileList>();
+    const audioInputRef = useRef<HTMLInputElement>(null);
+    const imageInputRef = useRef<HTMLInputElement>(null);
     if (!user) {
         return (
             <Typography textAlign="center">
@@ -98,6 +111,61 @@ export default function AddPost(props: IAddPostProps) {
                     }}
                 />
             </Stack>
+            {audioFile && (
+                <audio
+                    src={URL.createObjectURL(audioFile)}
+                    controls
+                    style={{ width: "100%" }}
+                />
+            )}
+            {imageFiles && (
+                <Accordion sx={{ marginBottom: "1rem" }}>
+                    <AccordionSummary>
+                        <Typography flex={1}>Hình ảnh</Typography>
+                        <Delete
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setImageFiles(undefined);
+                            }}
+                            sx={{
+                                color: red[500],
+                                cursor: "pointer",
+                                transition: "all .3s ease",
+                                "&:hover": {
+                                    transform: "scale(1.4)",
+                                },
+                                "&:active": {
+                                    transform: "scale(1.2)",
+                                },
+                            }}
+                        />
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Stack direction="row" spacing={1} overflow="auto">
+                            {Array.from(imageFiles).map((image, index) => {
+                                return (
+                                    <Box
+                                        key={index}
+                                        height="12rem"
+                                        borderRadius=".4rem"
+                                        overflow="hidden"
+                                    >
+                                        <img
+                                            key={index}
+                                            src={URL.createObjectURL(image)}
+                                            style={{
+                                                height: "100%",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    </Box>
+                                );
+                            })}
+                        </Stack>
+                    </AccordionDetails>
+                </Accordion>
+            )}
             <Stack
                 spacing={1}
                 direction="row"
@@ -128,26 +196,74 @@ export default function AddPost(props: IAddPostProps) {
                         marginLeft: "auto !important",
                     }}
                 >
-                    <Button sx={{ backgroundColor: grey[100] }}>
+                    <Button
+                        sx={{ backgroundColor: grey[100] }}
+                        onClick={() => {
+                            audioInputRef.current?.click();
+                        }}
+                    >
                         <AudioFile />
+                        <input
+                            type="file"
+                            ref={audioInputRef}
+                            style={{ display: "none" }}
+                            accept="audio/*"
+                            onChange={(e) => setAudioFile(e.target.files?.[0])}
+                        />
                     </Button>
-                    <Button sx={{ backgroundColor: grey[100] }}>
-                        <Image />
-                    </Button>
+                    <Box>
+                        <Button
+                            sx={{ backgroundColor: grey[100] }}
+                            onClick={() => {
+                                imageInputRef.current?.click();
+                            }}
+                        >
+                            <Image />
+                        </Button>
+                        <input
+                            type="file"
+                            ref={imageInputRef}
+                            multiple
+                            accept="image/png, image/jpg, image/jpeg"
+                            style={{ display: "none" }}
+                            onChange={(e) => {
+                                if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                ) {
+                                    setImageFiles(e.target.files);
+                                }
+                            }}
+                        />
+                    </Box>
                     <Button
                         variant="contained"
                         onClick={async () => {
-                            const post = {
-                                content,
-                                tags,
-                            };
+                            const form = new FormData();
+                            form.append("content", content);
+                            tags.forEach((tag) => form.append("tags", tag));
+                            if (audioFile) {
+                                form.append("audioFile", audioFile);
+                            }
+                            if (imageFiles) {
+                                Array.from(imageFiles).forEach((imageFile) =>
+                                    form.append("imageFiles", imageFile)
+                                );
+                            }
                             const newPost = await request.post<IPost>(
                                 "questionings",
-                                post
+                                form,
+                                {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data",
+                                    },
+                                }
                             );
-                            setContent("");
-                            setTags([]);
-                            setPosts((posts) => [newPost, ...posts]);
+                            if (newPost) {
+                                setContent("");
+                                setTags([]);
+                                setPosts((posts) => [newPost, ...posts]);
+                            }
                         }}
                     >
                         Đăng
