@@ -62,6 +62,13 @@ export default function UserControl(props: IUserControlProps) {
                         >
                             Trang cá nhân
                         </MenuItem>
+                        <MenuItem
+                            onClick={() => {
+                                navigate(`/user/report`);
+                            }}
+                        >
+                            Xem báo cáo lỗi
+                        </MenuItem>
                         <AppModal trigger={<MenuItem>Báo cáo lỗi</MenuItem>}>
                             <RepportError />
                         </AppModal>

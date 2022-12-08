@@ -1,14 +1,6 @@
 import { Star } from "@mui/icons-material";
-import {
-    Box,
-    Button,
-    MenuItem,
-    Stack,
-    Table,
-    TableHead,
-    Typography,
-} from "@mui/material";
-import { grey, teal, yellow } from "@mui/material/colors";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { grey, yellow } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -36,6 +28,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.app.userInfo?.id);
     const [exam, setExam] = useState<IDetailExam | undefined>(undefined);
+    const isOwner = userId === exam?.owner.id;
     useEffect(() => {
         const getExam = async () => {
             const exam = await request.get<any, IDetailExam>(
@@ -196,14 +189,26 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                         >
                             Thi thử
                         </Button>
-
-                        <AppModal
-                            trigger={
-                                <Button variant="outlined">Báo cáo lỗi</Button>
-                            }
-                        >
-                            <RepportError examId={exam.id} />
-                        </AppModal>
+                        {isOwner ? (
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    navigate("/user/report");
+                                }}
+                            >
+                                Xem báo cáo lỗi
+                            </Button>
+                        ) : (
+                            <AppModal
+                                trigger={
+                                    <Button variant="outlined">
+                                        Báo cáo lỗi
+                                    </Button>
+                                }
+                            >
+                                <RepportError examId={exam.id} />
+                            </AppModal>
+                        )}
                     </Stack>
                 </Box>
                 <ExamCarousel

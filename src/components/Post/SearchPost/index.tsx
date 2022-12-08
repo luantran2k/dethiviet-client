@@ -86,7 +86,7 @@ export default function SearchPost(props: ISearchPostProps) {
                 <Box display="flex" flexWrap="wrap" columnGap={1} rowGap={1}>
                     {popularTags.map((content, index) => (
                         <AppTag
-                            key="index"
+                            key={index}
                             content={content}
                             clickAction={() => {
                                 setTag(content);

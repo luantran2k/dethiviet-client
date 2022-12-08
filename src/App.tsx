@@ -26,6 +26,7 @@ function App() {
     const Root = React.lazy(() => import("./pages/Layouts/Root"));
     const LoginPage = React.lazy(() => import("./pages/Login"));
     const EditExamPage = React.lazy(() => import("./pages/Exam/edit"));
+    const ReportPage = React.lazy(() => import("./pages/Report"));
 
     const dispatch = useAppDispatch();
     const [isSignIn] = useState(ultis.checkRefreshTokenExpire());
@@ -159,6 +160,16 @@ function App() {
                         </Route>
                         <Route path="user">
                             <Route
+                                path="report"
+                                element={
+                                    <Suspense
+                                        fallback={<h4>Đang tải trang</h4>}
+                                    >
+                                        <ReportPage />
+                                    </Suspense>
+                                }
+                            />
+                            <Route
                                 path=":userId"
                                 element={
                                     <Suspense
@@ -172,6 +183,7 @@ function App() {
                                     path="info"
                                     element={<UserProfileInfo />}
                                 />
+
                                 <Route path="exams">
                                     <Route path="own" element={<OwnExams />} />
                                     <Route

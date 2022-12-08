@@ -34,6 +34,7 @@ interface IAppModalComponentProps {
     buttonVariant?: "contained" | "outlined" | "text";
     buttonStyle?: SxProps<Theme>;
     buttonTitle?: string;
+    sx?: SxProps<Theme> | undefined;
 }
 
 export default function AppModal(props: IAppModalComponentProps) {
@@ -46,6 +47,7 @@ export default function AppModal(props: IAppModalComponentProps) {
         buttonVariant = "contained",
         buttonStyle,
         buttonTitle,
+        sx,
     } = props;
     const [open, setOpen] = React.useState(false);
     const handleOpen = (e: React.MouseEvent) => {
@@ -84,7 +86,7 @@ export default function AppModal(props: IAppModalComponentProps) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>{children}</Box>
+                    <Box sx={sx ? { ...style, ...sx } : style}>{children}</Box>
                 </Fade>
             </Modal>
         </>

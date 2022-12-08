@@ -1,6 +1,7 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 import { User } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
 import "./style.scss";
@@ -11,6 +12,7 @@ type ContextType = { userInfo: User | null };
 export default function ProfilePage(props: IProfilePageProps) {
     const [userInfo, setUserInfo] = useState<User | undefined>(undefined);
     const { userId } = useParams();
+    const user = useAppSelector((state) => state.app.userInfo);
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await request.get<any, User>("users/" + userId);
@@ -35,15 +37,19 @@ export default function ProfilePage(props: IProfilePageProps) {
                                 <NavLink to="./exams/own">
                                     Bài thi sở hữu
                                 </NavLink>
-                                <NavLink to="./exams/completed">
-                                    Bài thi đã làm
-                                </NavLink>
-                                <NavLink to="./exams/favorite">
-                                    Bài thi quan tâm
-                                </NavLink>
-                                <NavLink to="./account-setting">
-                                    Cài đặt tài khoản
-                                </NavLink>
+                                {user?.id === Number(userId) && (
+                                    <>
+                                        <NavLink to="./exams/completed">
+                                            Bài thi đã làm
+                                        </NavLink>
+                                        <NavLink to="./exams/favorite">
+                                            Bài thi quan tâm
+                                        </NavLink>
+                                        <NavLink to="./account-setting">
+                                            Cài đặt tài khoản
+                                        </NavLink>
+                                    </>
+                                )}
                             </Stack>
                         </div>
                     </div>
