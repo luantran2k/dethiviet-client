@@ -1,30 +1,33 @@
-import {
-    Image,
-    AudioFile,
-    MoreVert,
-    ArrowUpward,
-    ArrowDownward,
-} from "@mui/icons-material";
-import {
-    Box,
-    Button,
-    ButtonGroup,
-    Grid,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import Post from "../../components/Post";
 import AddPost from "../../components/Post/AddPost";
+import IPost from "../../components/Post/interfaces/IPost";
 import AppTag from "../../components/Tag";
-import ultis from "../../Utils/ultis";
+import request from "../../Utils/request";
 
 export interface IDiscussionPageProps {}
 
 export default function DiscussionPage(props: IDiscussionPageProps) {
     const user = useAppSelector((state) => state.app.userInfo);
+    const [posts, setPosts] = useState<IPost[]>([]);
+    const [page, setPage] = useState<number>(0);
+
+    useEffect(() => {
+        const getPosts = async () => {
+            const posts = await request.get<{ page: number }, IPost[]>(
+                "questionings",
+                { page }
+            );
+            if (posts && posts?.length > 0) {
+                setPosts(posts);
+                setPage((page) => page + 1);
+            }
+        };
+        getPosts();
+    }, []);
+
     return (
         <Grid
             container
@@ -66,18 +69,16 @@ export default function DiscussionPage(props: IDiscussionPageProps) {
                         "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
                 }}
             >
-                <AddPost user={user} />
+                <AddPost setPosts={setPosts} />
                 <Stack spacing={4} sx={{ margin: "4rem 0" }}>
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
-                    <Post user={user} />
+                    {posts.map((post) => (
+                        <Post
+                            key={post.id}
+                            post={post}
+                            ownPost={user?.id === post.ownerId}
+                            setPosts={setPosts}
+                        />
+                    ))}
                 </Stack>
             </Grid>
         </Grid>

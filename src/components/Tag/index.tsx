@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 
 export interface IAppTagProps {
-    content: string;
+    content: String;
     addAction?: () => void;
     removeAction?: () => void | undefined;
 }

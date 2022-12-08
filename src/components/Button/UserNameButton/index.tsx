@@ -25,7 +25,7 @@ export default function UserNameButton(props: IUserNameButtonProps) {
                 navigate(`/user/${user.id}/info`);
             }}
         >
-            {user.name || "@" + user.username}
+            {user?.name || "@" + user.username}
         </Typography>
     );
 }

@@ -1,26 +1,29 @@
-import { MoreVert, ArrowUpward, ArrowDownward } from "@mui/icons-material";
+import { ArrowDownward, ArrowUpward, MoreVert } from "@mui/icons-material";
 import {
     Box,
     Button,
     ButtonGroup,
+    MenuItem,
     Stack,
     TextField,
     Typography,
 } from "@mui/material";
-import { teal } from "@mui/material/colors";
-import { User } from "../../redux/slices/appSlice";
+import request from "../../Utils/request";
 import UserNameButton from "../Button/UserNameButton";
-import AppComment from "../Comment";
+import VoteButton from "../Button/VoteButton";
+import PopupMenu from "../PopupMenu";
+import AppTag from "../Tag";
+import IPost from "./interfaces/IPost";
 
 export interface IPostProps {
-    user?: User;
+    post: IPost;
+    ownPost: boolean;
+    setPosts: React.Dispatch<React.SetStateAction<IPost[]>>;
 }
 
 export default function Post(props: IPostProps) {
-    const { user } = props;
-    if (!user) {
-        return <></>;
-    }
+    const { post, ownPost = false, setPosts } = props;
+    const owner = post.owner;
     return (
         <Stack
             spacing={2}
@@ -44,50 +47,62 @@ export default function Post(props: IPostProps) {
                 }}
             >
                 <Box sx={{ height: "2.8rem", width: "2.8rem" }}>
-                    <img src={user?.profileImg} alt="avatar" />
+                    <img src={owner?.profileImg} alt="avatar" />
                 </Box>
                 <Stack>
-                    <UserNameButton user={user} fontSize="1.2rem" />
+                    <UserNameButton user={owner} fontSize="1.2rem" />
                     <Typography fontWeight={400} fontSize=".8rem">
-                        {new Date().toLocaleString()}
+                        {new Date(post.createdAt).toLocaleString()}
                     </Typography>
                 </Stack>
-                <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{
-                        alignSelf: "center",
-                        marginLeft: "auto !important",
-                    }}
-                >
-                    <Button sx={{}}>
-                        <MoreVert />
-                    </Button>
-                </Stack>
+                {ownPost && (
+                    <Box sx={{ marginLeft: "auto !important" }}>
+                        <PopupMenu
+                            trigger={
+                                <Button>
+                                    <MoreVert />
+                                </Button>
+                            }
+                        >
+                            <Stack>
+                                <MenuItem>Chỉnh sửa</MenuItem>
+                                <MenuItem
+                                    onClick={() => {
+                                        request.delete(
+                                            `questionings/${post.id}`
+                                        );
+                                        setPosts((posts) => {
+                                            return posts.filter(
+                                                (postFilter) =>
+                                                    postFilter.id !== post.id
+                                            );
+                                        });
+                                    }}
+                                >
+                                    Xoá
+                                </MenuItem>
+                            </Stack>
+                        </PopupMenu>
+                    </Box>
+                )}
             </Stack>
-            <Typography sx={{ margin: ".4rem 0" }}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Cupiditate cum recusandae blanditiis asperiores architecto ullam
-                sequi maiores doloribus dolores, adipisci veritatis, officia
-                esse fuga rerum libero temporibus totam minima? Enim.
-            </Typography>
-            <ButtonGroup>
-                <Button>
-                    <ArrowUpward />
-                </Button>
-                <Button>{300}</Button>
-                <Button>
-                    <ArrowDownward />
-                </Button>
-            </ButtonGroup>
+            <Typography sx={{ margin: ".4rem 0" }}>{post.content}</Typography>
+            <VoteButton vote={post.vote} postId={post.id} />
+            {post.tags?.length > 0 && (
+                <Stack direction="row" spacing={1}>
+                    {post.tags.map((tag) => (
+                        <AppTag content={tag} key={tag + ""} />
+                    ))}
+                </Stack>
+            )}
             <Stack direction="row" spacing={2}>
                 <TextField size="small" sx={{ flex: 1 }} />
                 <Button variant="contained">Bình luận</Button>
             </Stack>
             <Stack spacing={1}>
+                {/* <AppComment user={user!} />
                 <AppComment user={user!} />
-                <AppComment user={user!} />
-                <AppComment user={user!} />
+                <AppComment user={user!} /> */}
             </Stack>
         </Stack>
     );

@@ -7,20 +7,23 @@ import AppTag from "../../Tag";
 import { v4 as uuid } from "uuid";
 import PracticeExamPage from "../../../pages/Exam/practice";
 import request from "../../../Utils/request";
+import { useAppSelector } from "../../../app/hooks";
+import IPost from "../interfaces/IPost";
 
 export interface IAddPostProps {
-    user?: User;
+    setPosts: React.Dispatch<React.SetStateAction<IPost[]>>;
 }
 
 export default function AddPost(props: IAddPostProps) {
-    const { user } = props;
+    const { setPosts } = props;
+    const user = useAppSelector((state) => state.app.userInfo);
     const [tags, setTags] = useState<string[]>([]);
     const [currentTag, setCurrentTag] = useState<string>("");
     const [content, setContent] = useState<string>("");
     if (!user) {
         return (
             <Typography textAlign="center">
-                Đăng nhập để đăng thác mắc
+                Đăng nhập để đăng thắc mắc
             </Typography>
         );
     }
@@ -138,9 +141,13 @@ export default function AddPost(props: IAddPostProps) {
                                 content,
                                 tags,
                             };
-                            await request.post("questionings", post);
+                            const newPost = await request.post<IPost>(
+                                "questionings",
+                                post
+                            );
                             setContent("");
                             setTags([]);
+                            setPosts((posts) => [newPost, ...posts]);
                         }}
                     >
                         Đăng
