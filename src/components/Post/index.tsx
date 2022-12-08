@@ -8,9 +8,12 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import { useState } from "react";
 import request from "../../Utils/request";
 import UserNameButton from "../Button/UserNameButton";
 import VoteButton from "../Button/VoteButton";
+import AppComments from "../Comment";
+import CommentBox from "../Comment/CommentBox";
 import PopupMenu from "../PopupMenu";
 import AppTag from "../Tag";
 import IPost from "./interfaces/IPost";
@@ -87,7 +90,6 @@ export default function Post(props: IPostProps) {
                 )}
             </Stack>
             <Typography sx={{ margin: ".4rem 0" }}>{post.content}</Typography>
-            <VoteButton vote={post.vote} postId={post.id} />
             {post.tags?.length > 0 && (
                 <Stack direction="row" spacing={1}>
                     {post.tags.map((tag) => (
@@ -95,15 +97,13 @@ export default function Post(props: IPostProps) {
                     ))}
                 </Stack>
             )}
-            <Stack direction="row" spacing={2}>
-                <TextField size="small" sx={{ flex: 1 }} />
-                <Button variant="contained">Bình luận</Button>
-            </Stack>
-            <Stack spacing={1}>
-                {/* <AppComment user={user!} />
-                <AppComment user={user!} />
-                <AppComment user={user!} /> */}
-            </Stack>
+            <VoteButton
+                upVote={post.upVote}
+                downVote={post.downVote}
+                postId={post.id}
+            />
+
+            <AppComments postId={post.id} comments={post.explainings} />
         </Stack>
     );
 }
