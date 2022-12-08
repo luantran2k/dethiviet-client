@@ -2,6 +2,7 @@ import { Star } from "@mui/icons-material";
 import {
     Box,
     Button,
+    MenuItem,
     Stack,
     Table,
     TableHead,
@@ -14,6 +15,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import UserNameButton from "../../components/Button/UserNameButton";
 import IExam from "../../components/Exam/interfaces/IExam";
 import ExamCarousel from "../../components/ExamCarousel";
+import AppModal from "../../components/Modal";
+import RepportError from "../../components/ReportError";
 import { BACKUP_AVATAR } from "../../const/const";
 import { sendAlert, User } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
@@ -194,10 +197,13 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                             Thi thử
                         </Button>
 
-                        {/* <Button variant="contained">Đánh giá</Button>
-                        <Button variant="contained">
-                            Thêm vào danh sách đề thi mẫu
-                        </Button> */}
+                        <AppModal
+                            trigger={
+                                <Button variant="outlined">Báo cáo lỗi</Button>
+                            }
+                        >
+                            <RepportError examId={exam.id} />
+                        </AppModal>
                     </Stack>
                 </Box>
                 <ExamCarousel

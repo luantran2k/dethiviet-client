@@ -1,12 +1,14 @@
-import { Box, Button, Menu, MenuItem, Popover } from "@mui/material";
-import * as React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import PopupMenu from "../PopupMenu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Box, Button, MenuItem, TextField } from "@mui/material";
+import { Image } from "@mui/icons-material";
 import { Stack } from "@mui/system";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { signOut } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
+import AppModal from "../Modal";
+import PopupMenu from "../PopupMenu";
+import { useRef, useState } from "react";
+import RepportError from "../ReportError";
 
 export interface IUserControlProps {}
 
@@ -60,6 +62,9 @@ export default function UserControl(props: IUserControlProps) {
                         >
                             Trang cá nhân
                         </MenuItem>
+                        <AppModal trigger={<MenuItem>Báo cáo lỗi</MenuItem>}>
+                            <RepportError />
+                        </AppModal>
                         <MenuItem
                             onClick={async () => {
                                 try {
