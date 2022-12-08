@@ -23,12 +23,10 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const [isSignInForm, setIsSignInForm] = useState(true);
     const isSignIn = useAppSelector((state) => state.app.isSignIn);
-    console.log(isSignIn);
     const location = useLocation();
     const from = location.state?.from || "/";
     const dispatch = useAppDispatch();
     useEffect(() => {
-        console.log(isSignIn);
         if (isSignIn) {
             navigate(from, { replace: true });
         } else {

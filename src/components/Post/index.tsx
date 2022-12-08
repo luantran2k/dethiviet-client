@@ -11,13 +11,14 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { memo, useRef, useState } from "react";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 import UserNameButton from "../Button/UserNameButton";
 import VoteButton from "../Button/VoteButton";
 import AppComments from "../Comment";
 import CommentBox from "../Comment/CommentBox";
+import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
 import AppTag from "../Tag";
 import IPost from "./interfaces/IPost";
@@ -28,9 +29,11 @@ export interface IPostProps {
     setPosts: React.Dispatch<React.SetStateAction<IPost[]>>;
 }
 
-export default function Post(props: IPostProps) {
-    const { post, ownPost = false, setPosts } = props;
+const Post = (props: IPostProps) => {
+    const { post: postProp, ownPost = false, setPosts } = props;
+    const [post, setPost] = useState(postProp);
     const owner = post.owner;
+    const [editPostContent, setEditPostContent] = useState(post.content);
     return (
         <Stack
             spacing={2}
@@ -72,7 +75,50 @@ export default function Post(props: IPostProps) {
                             }
                         >
                             <Stack>
-                                <MenuItem>Chỉnh sửa</MenuItem>
+                                <AppModal
+                                    trigger={<MenuItem>Chỉnh sửa</MenuItem>}
+                                >
+                                    <>
+                                        <TextField
+                                            fullWidth
+                                            multiline
+                                            maxRows={6}
+                                            value={editPostContent}
+                                            onChange={(e) =>
+                                                setEditPostContent(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="center"
+                                            marginTop="2rem"
+                                            spacing="1rem"
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => {
+                                                    request.patch(
+                                                        "questionings/" +
+                                                            post.id,
+                                                        {
+                                                            content:
+                                                                editPostContent,
+                                                        }
+                                                    );
+                                                    setPost((post) => ({
+                                                        ...post,
+                                                        content:
+                                                            editPostContent,
+                                                    }));
+                                                }}
+                                            >
+                                                Lưu
+                                            </Button>
+                                        </Stack>
+                                    </>
+                                </AppModal>
                                 <MenuItem
                                     onClick={() => {
                                         request.delete(
@@ -144,4 +190,6 @@ export default function Post(props: IPostProps) {
             <AppComments postId={post.id} comments={post.explainings} />
         </Stack>
     );
-}
+};
+
+export default memo(Post);

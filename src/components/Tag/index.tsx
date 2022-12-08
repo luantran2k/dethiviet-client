@@ -6,10 +6,11 @@ export interface IAppTagProps {
     content: String;
     addAction?: () => void;
     removeAction?: () => void | undefined;
+    clickAction?: () => void | undefined;
 }
 
 export default function AppTag(props: IAppTagProps) {
-    const { content, addAction, removeAction } = props;
+    const { content, addAction, removeAction, clickAction } = props;
     return (
         <Stack
             direction="row"
@@ -26,6 +27,11 @@ export default function AppTag(props: IAppTagProps) {
                     backgroundColor: teal[600],
                     color: "white",
                 },
+            }}
+            onClick={() => {
+                if (clickAction) {
+                    clickAction();
+                }
             }}
         >
             <Typography>{content}</Typography>

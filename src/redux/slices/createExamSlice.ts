@@ -85,7 +85,7 @@ const createExamSlice = createSlice({
             const partIndex = state.parts.findIndex(
                 (part) => part.clientId === action.payload
             );
-            console.log(partIndex);
+
             if (partIndex !== -1) {
                 state.parts.splice(partIndex, 1);
             }

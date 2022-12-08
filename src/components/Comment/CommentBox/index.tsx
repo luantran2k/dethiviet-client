@@ -24,7 +24,6 @@ export default function CommentBox(props: ICommentBoxProps) {
             <Button
                 variant="contained"
                 onClick={async () => {
-                    console.log(content);
                     const newComment = await request.post<IComment>(
                         "explainings",
                         {

@@ -1,32 +1,39 @@
-import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Post from "../../components/Post";
 import AddPost from "../../components/Post/AddPost";
 import IPost from "../../components/Post/interfaces/IPost";
-import AppTag from "../../components/Tag";
+import SearchPost from "../../components/Post/SearchPost";
 import request from "../../Utils/request";
 
 export interface IDiscussionPageProps {}
 
 export default function DiscussionPage(props: IDiscussionPageProps) {
     const user = useAppSelector((state) => state.app.userInfo);
+    const dispatch = useAppDispatch();
     const [posts, setPosts] = useState<IPost[]>([]);
     const [page, setPage] = useState<number>(0);
+    const [isLastPage, setIsLastPage] = useState(false);
 
     useEffect(() => {
         const getPosts = async () => {
-            const posts = await request.get<{ page: number }, IPost[]>(
-                "questionings",
-                { page }
-            );
-            if (posts && posts?.length > 0) {
-                setPosts(posts);
-                setPage((page) => page + 1);
+            const res = await request.get<
+                { page: number },
+                { total: number | null; posts: IPost[] }
+            >("questionings", { page });
+            if (res?.posts && res?.posts?.length > 0) {
+                if (page === 0) {
+                    setPosts(res.posts);
+                } else {
+                    setPosts((posts) => [...posts, ...res.posts]);
+                }
+            } else {
+                setIsLastPage(true);
             }
         };
         getPosts();
-    }, []);
+    }, [page]);
 
     return (
         <Grid
@@ -38,26 +45,7 @@ export default function DiscussionPage(props: IDiscussionPageProps) {
             }}
         >
             <Grid item xs={3} padding="0 1rem 1rem">
-                <TextField
-                    fullWidth
-                    placeholder="Vui lòng nhập để tìm kiếm"
-                    label="Tìm kiếm"
-                />
-                <Box mt={2}>
-                    <Typography>Các chủ đề phổ biến </Typography>
-                    <Box
-                        display="flex"
-                        flexWrap="wrap"
-                        columnGap={1}
-                        rowGap={1}
-                    >
-                        <AppTag content="Toeic" />
-                        <AppTag content="IELTS" />
-                        <AppTag content="Toán" />
-                        <AppTag content="Văn" />
-                        <AppTag content="Anh" />
-                    </Box>
-                </Box>
+                <SearchPost setPosts={setPosts} setPage={setPage} />
             </Grid>
             <Grid
                 item
@@ -79,6 +67,34 @@ export default function DiscussionPage(props: IDiscussionPageProps) {
                             setPosts={setPosts}
                         />
                     ))}
+                    {!isLastPage ? (
+                        <Button
+                            variant="contained"
+                            sx={{ width: "fit-content", margin: "2rem auto 0" }}
+                            onClick={async () => {
+                                setPage((page) => page + 1);
+                                // const res = await request.get<
+                                //     { page: number },
+                                //     { total: number | null; posts: IPost[] }
+                                // >("questionings", { page: page + 1 });
+                                // if (res?.posts && res?.posts.length > 0) {
+                                //     setPosts((posts) => [
+                                //         ...posts,
+                                //         ...res.posts,
+                                //     ]);
+                                //     setPage((page) => page + 1);
+                                // } else {
+                                //     setIsLastPage(true);
+                                // }
+                            }}
+                        >
+                            Tải thêm
+                        </Button>
+                    ) : (
+                        <Typography textAlign="center" fontSize="1.2rem">
+                            Đã hết
+                        </Typography>
+                    )}
                 </Stack>
             </Grid>
         </Grid>

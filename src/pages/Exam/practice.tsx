@@ -149,7 +149,6 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
     const [isPractice, setPractice] = useState<boolean>(false);
     const [hasCounter, setHasCounter] = useState<boolean>(true);
     useEffect(() => {
-        console.log(isPractice);
         let intervalId: number | undefined = undefined;
         if (isPractice && time) {
             intervalId = setInterval(() => {

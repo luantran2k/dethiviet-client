@@ -21,7 +21,6 @@ export default function ExamResultPage(props: IExamResultPageProps) {
             );
             if (result?.examCompleted) {
                 setExam(JSON.parse(result?.examCompleted));
-                console.log(JSON.parse(result?.examCompleted));
             }
         };
         getExams();

@@ -88,9 +88,6 @@ const examSlice = createSlice({
                 value: string | string[] | number | null;
             }>
         ) => {
-            // console.log(
-            //     `Update question ${action.payload.questionId} field ${action.payload.field} value ${action.payload.value}`
-            // );
             const part = examUltis.getPart(state, action.payload.partId);
             const question: IQuestion | undefined = part?.questions?.find(
                 (question) => question.id === action.payload.questionId
