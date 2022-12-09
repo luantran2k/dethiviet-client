@@ -27,6 +27,7 @@ function App() {
     const LoginPage = React.lazy(() => import("./pages/Login"));
     const EditExamPage = React.lazy(() => import("./pages/Exam/edit"));
     const ReportPage = React.lazy(() => import("./pages/Report"));
+    const FindPasswordPage = React.lazy(() => import("./pages/FindPassword"));
 
     const dispatch = useAppDispatch();
     const [isSignIn] = useState(ultis.checkRefreshTokenExpire());
@@ -83,6 +84,14 @@ function App() {
                             element={
                                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                                     <ContactPage />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="findPassword"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <FindPasswordPage />
                                 </Suspense>
                             }
                         />
@@ -207,7 +216,7 @@ function App() {
                         path="signIn"
                         element={
                             <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                {isSignIn ? <Navigate to="/" /> : <LoginPage />}
+                                <LoginPage />
                             </Suspense>
                         }
                     />

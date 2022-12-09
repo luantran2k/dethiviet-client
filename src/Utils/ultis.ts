@@ -190,5 +190,17 @@ const ultis = {
         return JSON.parse(JSON.stringify(object));
     },
     formatTime: () => {},
+    isEmail: (emailString: string) => {
+        {
+            if (
+                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+                    emailString
+                )
+            ) {
+                return true;
+            }
+            return false;
+        }
+    },
 };
 export default ultis;

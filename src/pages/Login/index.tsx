@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import AppALert from "../../components/AppAlert";
 import AppLoading from "../../components/AppLoading";
 import { setIsSignIn, signIn, signUp } from "../../redux/slices/appSlice";
 import ultis from "../../Utils/ultis";
@@ -40,6 +41,7 @@ export default function LoginPage() {
     return (
         <div className={styles.container}>
             <AppLoading />
+            <AppALert />
             <div className={styles.main}>
                 <div className={styles.decor}>
                     <img
@@ -121,7 +123,7 @@ export function LoginForm(props: {
             </Button>
             <Button
                 onClick={() => {
-                    alert("Đang phát triển");
+                    navigate("/findPassword");
                 }}
                 sx={{ alignSelf: "center" }}
             >

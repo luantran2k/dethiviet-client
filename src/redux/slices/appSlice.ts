@@ -75,7 +75,6 @@ const appSlice = createSlice({
         });
         builder.addCase(signUp.rejected, (state, action) => {
             state.isLoading = false;
-            console.log("signUp rejected", action.payload);
         });
         builder.addCase(signIn.pending, (state, action) => {
             state.isLoading = true;
@@ -88,7 +87,6 @@ const appSlice = createSlice({
         });
         builder.addCase(signIn.rejected, (state, action) => {
             state.isLoading = false;
-            console.log("Sign in rejected", action.payload);
         });
     },
 });

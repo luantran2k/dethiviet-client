@@ -1,5 +1,5 @@
 import { sendAlert, User } from "./../redux/slices/appSlice";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { store } from "../redux/store";
 
 const { dispatch } = store;
@@ -51,7 +51,11 @@ instance.interceptors.response.use(
             }
         }
         dispatch(
-            sendAlert({ message: error.message, severity: "error", time: 5 })
+            sendAlert({
+                message: error.response.data.message,
+                severity: "error",
+                time: 5,
+            })
         );
         return Promise.reject(error);
     }
