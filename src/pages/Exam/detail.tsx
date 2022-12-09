@@ -190,14 +190,24 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                             Thi thử
                         </Button>
                         {isOwner ? (
-                            <Button
-                                variant="outlined"
-                                onClick={() => {
-                                    navigate("/user/report");
-                                }}
-                            >
-                                Xem báo cáo lỗi
-                            </Button>
+                            <>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => {
+                                        navigate("/user/report");
+                                    }}
+                                >
+                                    Xem báo cáo lỗi
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => {
+                                        navigate("/exam/edit/" + exam.id);
+                                    }}
+                                >
+                                    Chỉnh sửa
+                                </Button>
+                            </>
                         ) : (
                             <AppModal
                                 trigger={

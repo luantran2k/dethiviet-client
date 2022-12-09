@@ -1,19 +1,25 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../app/hooks";
 import IExam from "../../components/Exam/interfaces/IExam";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 import { renderAnswer } from "./practice";
-
+declare let renderMathInElement: (
+    element: HTMLElement,
+    options?: object
+) => void;
 export interface IExamResultPageProps {}
 
 export default function ExamResultPage(props: IExamResultPageProps) {
     useAuth();
+    const navigate = useNavigate();
     const { resultId } = useParams();
     const [exam, setExam] = useState<IExam>();
+    const examRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const getExams = async () => {
             const result = await request.get<any, { examCompleted: string }>(
@@ -25,11 +31,30 @@ export default function ExamResultPage(props: IExamResultPageProps) {
         };
         getExams();
     }, []);
+
+    useEffect(() => {
+        try {
+            if (renderMathInElement && examRef.current) {
+                renderMathInElement(examRef.current, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        // { left: "\\(", right: "\\)", display: false },
+                        // { left: "\\[", right: "\\]", display: true },
+                    ],
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [exam]);
+
     if (!exam) {
         return <></>;
     }
     return (
         <Box
+            ref={examRef}
             sx={{
                 maxWidth: "64rem",
                 margin: "2rem auto",
@@ -47,6 +72,16 @@ export default function ExamResultPage(props: IExamResultPageProps) {
                 <Typography>
                     {exam.numberCorrectQuestions}/{exam.totalQuestions} câu đúng
                 </Typography>
+                <Button
+                    color="error"
+                    sx={{ marginLeft: "auto !important" }}
+                    onClick={() => {
+                        request.delete("exams/result/" + resultId);
+                        navigate("/");
+                    }}
+                >
+                    <Delete />
+                </Button>
             </Stack>
             {exam.parts?.map((part, index) => (
                 <Box key={part.id} my={2}>
@@ -76,7 +111,7 @@ export default function ExamResultPage(props: IExamResultPageProps) {
                             <Typography
                                 sx={{
                                     fontSize: "1.2rem",
-                                    span: {
+                                    ">span": {
                                         fontWeight: "bold",
                                     },
                                 }}

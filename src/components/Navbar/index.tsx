@@ -36,7 +36,7 @@ export default function Navbar(props: INavbarProps) {
                         <NavLink to="/">Trang chủ</NavLink>
                         <NavLink to="/exam">Đề thi</NavLink>
                         <NavLink to="/discussion">Thảo luận</NavLink>
-                        <NavLink to="/about">About</NavLink>
+                        {/* <NavLink to="/about">About</NavLink> */}
                     </Stack>
                 </Stack>
                 <AppBarSearch />

@@ -7,6 +7,7 @@ import { BASE_URL } from "../../../const/const";
 import { IDetailExam } from "../../../pages/Exam/detail";
 import { sendAlert } from "../../../redux/slices/appSlice";
 import { addSelectedExam } from "../../../redux/slices/createExamSlice";
+import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import UserNameButton from "../../Button/UserNameButton";
 import PopupMenu from "../../PopupMenu";
@@ -15,10 +16,11 @@ export interface ICarouselCardProps {
     exam: IDetailExam;
     boxShadow?: boolean;
     menuButton?: React.ReactElement;
+    setExams?: React.Dispatch<React.SetStateAction<IDetailExam[] | undefined>>;
 }
 
 export default function CarouselCard(props: ICarouselCardProps) {
-    const { exam, boxShadow, menuButton } = props;
+    const { exam, boxShadow, menuButton, setExams } = props;
     const userId = useAppSelector((state) => state.app.userInfo?.id);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -105,7 +107,28 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                         >
                                             Chính sửa
                                         </MenuItem>
-                                        <MenuItem onClick={() => {}}>
+                                        <MenuItem
+                                            onClick={() => {
+                                                request.delete(
+                                                    "/exams/" + exam.id
+                                                );
+                                                if (setExams) {
+                                                    setExams((exams) => {
+                                                        const newExams =
+                                                            exams?.filter(
+                                                                (examFilter) =>
+                                                                    examFilter.id !==
+                                                                    exam.id
+                                                            );
+                                                        console.log(
+                                                            "newExam: ",
+                                                            newExams
+                                                        );
+                                                        return newExams;
+                                                    });
+                                                }
+                                            }}
+                                        >
                                             Xoá
                                         </MenuItem>
                                     </>

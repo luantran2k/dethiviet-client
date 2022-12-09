@@ -14,6 +14,7 @@ import { Pagination, Navigation } from "swiper";
 import CarouselCard from "../../components/ExamCard/CarouselCard";
 import { IDetailExam } from "../../pages/Exam/detail";
 import ultis from "../../Utils/ultis";
+import { useEffect, useState } from "react";
 
 export interface IExamCarouselProps {
     exams?: IDetailExam[];
@@ -21,8 +22,11 @@ export interface IExamCarouselProps {
 }
 
 export default function ExamCarousel(props: IExamCarouselProps) {
-    const { exams, title } = props;
-
+    const { exams: examsProp, title } = props;
+    const [exams, setExams] = useState(examsProp);
+    useEffect(() => {
+        setExams(examsProp);
+    }, [examsProp]);
     return (
         <Box>
             <Typography variant="h5" fontWeight={600} color={grey[800]}>
@@ -49,7 +53,7 @@ export default function ExamCarousel(props: IExamCarouselProps) {
                 >
                     {exams?.map((exam) => (
                         <SwiperSlide key={exam.id}>
-                            <CarouselCard exam={exam} />
+                            <CarouselCard exam={exam} setExams={setExams} />
                         </SwiperSlide>
                     ))}
                     <SwiperSlide style={{ cursor: "pointer" }}>

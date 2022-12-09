@@ -46,104 +46,115 @@ export default function ReportPage(props: IReportPageProps) {
             >
                 Báo cáo lỗi
             </Typography>
-            <Stack spacing={2}>
-                {reports.map((report) => (
-                    <Stack key={report.id} direction="row" spacing={2}>
-                        <Stack>
-                            <Stack spacing={1} alignItems="center">
-                                <Avatar profileImg={report.user.profileImg!} />
-                                <UserNameButton user={report.user} />
+            {reports.length > 0 ? (
+                <Stack spacing={2}>
+                    {reports.map((report) => (
+                        <Stack key={report.id} direction="row" spacing={2}>
+                            <Stack>
+                                <Stack spacing={1} alignItems="center">
+                                    <Avatar
+                                        profileImg={report.user.profileImg!}
+                                    />
+                                    <UserNameButton user={report.user} />
+                                </Stack>
+                                <Typography>
+                                    Ngày:{" "}
+                                    {new Date(
+                                        report.createdAt
+                                    ).toLocaleDateString()}
+                                </Typography>
+                                <Typography>
+                                    Thời gian:{" "}
+                                    {new Date(
+                                        report.createdAt
+                                    ).toLocaleTimeString()}
+                                </Typography>
                             </Stack>
-                            <Typography>
-                                Ngày:{" "}
-                                {new Date(
-                                    report.createdAt
-                                ).toLocaleDateString()}
-                            </Typography>
-                            <Typography>
-                                Thời gian:{" "}
-                                {new Date(
-                                    report.createdAt
-                                ).toLocaleTimeString()}
-                            </Typography>
-                        </Stack>
-                        <Stack flex={1}>
-                            <Typography
-                                variant="h3"
-                                fontSize="1.4rem"
-                                onClick={() =>
-                                    navigate("/exam/detail/" + report.examId)
-                                }
-                                sx={{
-                                    cursor: "pointer",
-                                    "&:hover": {
-                                        color: teal[500],
-                                    },
-                                }}
-                            >
-                                {report.exam?.title}
-                            </Typography>
-                            <Typography fontSize="1.1rem" fontWeight="500">
-                                Mô tả
-                            </Typography>
-                            <Typography>{report.content}</Typography>
-                        </Stack>
-                        <Stack>
-                            {report.image && (
-                                <AppModal
-                                    trigger={
-                                        <Button>
-                                            <Image />
-                                        </Button>
+                            <Stack flex={1}>
+                                <Typography
+                                    variant="h3"
+                                    fontSize="1.4rem"
+                                    onClick={() =>
+                                        navigate(
+                                            "/exam/detail/" + report.examId
+                                        )
                                     }
                                     sx={{
-                                        width: "68rem",
-                                        maxHeight: "90vh",
-                                        maxWidth: "90vw",
-                                        overflow: "auto",
+                                        cursor: "pointer",
+                                        "&:hover": {
+                                            color: teal[500],
+                                        },
                                     }}
                                 >
-                                    <Box>
-                                        <img
-                                            src={report.image}
-                                            alt=""
-                                            style={{
-                                                height: "100%",
-                                                width: "100%",
-                                                objectFit: "cover",
-                                            }}
-                                        />
-                                    </Box>
-                                </AppModal>
-                            )}
-                            <Button
-                                color="error"
-                                onClick={async () => {
-                                    setReports((reports) =>
-                                        reports.filter(
-                                            (reportFilter) =>
-                                                reportFilter.id !== report.id
-                                        )
-                                    );
-                                    const res = await request.delete(
-                                        "reports/" + report.id
-                                    );
-                                    if (res) {
-                                        dispatch(
-                                            sendAlert({
-                                                message: "Xoá thành công",
-                                                severity: "success",
-                                            })
+                                    {report.exam?.title}
+                                </Typography>
+                                <Typography fontSize="1.1rem" fontWeight="500">
+                                    Mô tả
+                                </Typography>
+                                <Typography>{report.content}</Typography>
+                            </Stack>
+                            <Stack>
+                                {report.image && (
+                                    <AppModal
+                                        trigger={
+                                            <Button>
+                                                <Image />
+                                            </Button>
+                                        }
+                                        sx={{
+                                            width: "68rem",
+                                            maxHeight: "90vh",
+                                            maxWidth: "90vw",
+                                            overflow: "auto",
+                                        }}
+                                    >
+                                        <Box>
+                                            <img
+                                                src={report.image}
+                                                alt=""
+                                                style={{
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        </Box>
+                                    </AppModal>
+                                )}
+                                <Button
+                                    color="error"
+                                    onClick={async () => {
+                                        setReports((reports) =>
+                                            reports.filter(
+                                                (reportFilter) =>
+                                                    reportFilter.id !==
+                                                    report.id
+                                            )
                                         );
-                                    }
-                                }}
-                            >
-                                <Delete />
-                            </Button>
+                                        const res = await request.delete(
+                                            "reports/" + report.id
+                                        );
+                                        if (res) {
+                                            dispatch(
+                                                sendAlert({
+                                                    message: "Xoá thành công",
+                                                    severity: "success",
+                                                })
+                                            );
+                                        }
+                                    }}
+                                >
+                                    <Delete />
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                ))}
-            </Stack>
+                    ))}
+                </Stack>
+            ) : (
+                <Typography textAlign="center" fontSize="1.2rem">
+                    Không có báo cáo nào
+                </Typography>
+            )}
         </Box>
     );
 }

@@ -52,7 +52,9 @@ instance.interceptors.response.use(
         }
         dispatch(
             sendAlert({
-                message: error.response.data.message,
+                message:
+                    error.response?.data?.message ||
+                    "Có lỗi, vui lòng thử lại ",
                 severity: "error",
                 time: 5,
             })
