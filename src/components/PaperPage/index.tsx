@@ -4,6 +4,10 @@ import { useAppSelector } from "../../app/hooks";
 import ultis from "../../Utils/ultis";
 import PartPreview from "../Part/Preview";
 import styles from "./style.module.scss";
+export declare let renderMathInElement: (
+    element: HTMLElement,
+    options?: object
+) => void;
 export interface IPaperPageProps {}
 
 function getPageNumber(paper: React.RefObject<HTMLDivElement>) {
@@ -35,6 +39,22 @@ export default function PaperPage(props: IPaperPageProps) {
         setPageNumber(getPageNumber(paper));
     });
 
+    useEffect(() => {
+        try {
+            if (renderMathInElement && paper.current) {
+                renderMathInElement(paper.current, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        // { left: "\\(", right: "\\)", display: false },
+                        // { left: "\\[", right: "\\]", display: true },
+                    ],
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
     const paperBackground = Array(pageNumber)
         .fill({})
         .map((x, index) => (

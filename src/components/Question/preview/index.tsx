@@ -1,10 +1,8 @@
-import { Typography, Grid, Box } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import * as React from "react";
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import QuestionTypeDatas from "../../../const/QuestionTypes";
 import examUltis from "../../../Utils/examUltis";
-import ultis from "../../../Utils/ultis";
 import MultipleChoiceAnswerPreview from "../../Answer/preview/MultipleChoice";
 import MultiSelectAnswerPreview from "../../Answer/preview/MultiSelect";
 import { QuestionType } from "../interfaces/IQuestion";

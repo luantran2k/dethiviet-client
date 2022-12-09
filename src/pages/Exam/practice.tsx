@@ -26,7 +26,10 @@ import {
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
-
+declare let renderMathInElement: (
+    element: HTMLElement,
+    options?: object
+) => void;
 export interface IPracticeExamPageProps {}
 
 export const getAnswerColorBackground = (answer: AnswerType) => {
@@ -144,7 +147,7 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
         exam?.duration ? exam.duration * 60 : 0
     );
     const submitRef = useRef<HTMLButtonElement>(null);
-
+    const examRef = useRef<HTMLDivElement>(null);
     const [isStart, setStart] = useState<boolean>(false);
     const [isPractice, setPractice] = useState<boolean>(false);
     const [hasCounter, setHasCounter] = useState<boolean>(true);
@@ -169,6 +172,20 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
     useEffect(() => {
         if (time === 0) {
             setTime(exam?.duration ? exam.duration * 60 : 0);
+        }
+        try {
+            if (renderMathInElement && examRef.current) {
+                renderMathInElement(examRef.current, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        // { left: "\\(", right: "\\)", display: false },
+                        // { left: "\\[", right: "\\]", display: true },
+                    ],
+                });
+            }
+        } catch (error) {
+            console.log(error);
         }
     }, [exam]);
 
@@ -212,6 +229,7 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
 
     return (
         <Box
+            ref={examRef}
             maxWidth="64rem"
             margin="2rem auto"
             padding="2rem"
@@ -319,7 +337,7 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
                                 <Typography
                                     sx={{
                                         fontSize: "1.2rem",
-                                        span: {
+                                        "> span": {
                                             fontWeight: "bold",
                                         },
                                     }}

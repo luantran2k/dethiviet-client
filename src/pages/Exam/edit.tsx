@@ -1,10 +1,11 @@
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { Button, Grid, Stack } from "@mui/material";
+import { Button, Grid, Stack, TextField } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import React, { Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
+import FormularForm from "../../components/FormularForm";
 import AppModal from "../../components/Modal";
 import CreatePartModal from "../../components/Part/Modal/create";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
@@ -137,6 +138,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                             In/ Lưu file pdf
                         </Button>
                     )}
+                    {!exam.documentUrl && <FormularForm />}
                     <Button
                         variant="contained"
                         onClick={() => {
