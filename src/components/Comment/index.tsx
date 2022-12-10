@@ -42,6 +42,7 @@ export function AppComment(props: ICommentProps) {
                 </Stack>
                 <TextField
                     value={content}
+                    multiline
                     size="small"
                     variant="standard"
                     sx={{ pointerEvents: isEditable ? "all" : "none" }}

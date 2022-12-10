@@ -93,9 +93,9 @@ const appSlice = createSlice({
 
 export const signUp = createAsyncThunk<
     { accessToken: string; refreshToken: string; userInfo: User },
-    { username: string; password: string },
+    { username: string; password: string; email: string },
     { state: RootState }
->("signUp", async ({ username, password }, { dispatch, getState }) => {
+>("signUp", async ({ username, password, email }, { dispatch, getState }) => {
     const data = await request.post<{
         accessToken: string;
         refreshToken: string;
@@ -103,6 +103,7 @@ export const signUp = createAsyncThunk<
     }>("auth/signUp", {
         username,
         password,
+        email,
     });
     return data;
 });

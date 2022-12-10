@@ -59,11 +59,10 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                 >
                     <Typography
                         variant="h1"
-                        fontSize="3.2rem"
-                        my={4}
+                        marginBottom="2rem"
+                        fontSize="2rem"
                         fontWeight={400}
                         color={grey[900]}
-                        marginY={0}
                     >
                         {exam.title || "Không rõ"}
                     </Typography>
@@ -114,7 +113,9 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                     </Typography>
                     <Typography>
                         <span>Lớp/Trình độ: </span>
-                        {exam.grade}
+                        {exam.grade === "university"
+                            ? "Đại học/Cao đẳng"
+                            : exam.grade}
                     </Typography>
                     <Typography>
                         <span>Loại đề: </span>
@@ -188,6 +189,14 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                             }}
                         >
                             Thi thử
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                navigate("../practice/" + exam.id);
+                            }}
+                        >
+                            Chia sẻ
                         </Button>
                         {isOwner ? (
                             <>

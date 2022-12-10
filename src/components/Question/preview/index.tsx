@@ -22,7 +22,7 @@ const QuestionPreview = memo((props: IQuestionPreviewProps) => {
             <Typography
                 variant="h6"
                 fontWeight="normal"
-                fontSize={18}
+                fontSize={16}
                 display="inline"
                 sx={{ wordBreak: "break-word" }}
             >

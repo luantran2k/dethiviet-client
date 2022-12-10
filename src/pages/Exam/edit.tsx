@@ -1,5 +1,6 @@
+import { More, MoreHoriz } from "@mui/icons-material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { Button, Grid, Stack, TextField } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Stack, TextField } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import React, { Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,6 +9,7 @@ import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
 import FormularForm from "../../components/FormularForm";
 import AppModal from "../../components/Modal";
 import CreatePartModal from "../../components/Part/Modal/create";
+import PopupMenu from "../../components/PopupMenu";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 const Exam = React.lazy(() => import("../../components/Exam"));
@@ -120,36 +122,47 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     bgcolor: teal[50],
                     overflowX: "auto",
                     overflowY: "scroll",
+                    position: "relative",
                 }}
                 height="100%"
                 padding={4}
             >
-                <Stack
-                    direction="row"
-                    spacing={4}
-                    marginY={4}
-                    justifyContent="center"
-                >
-                    <Button variant="contained" onClick={() => togglePreview()}>
-                        Xem trước
-                    </Button>
-                    {!exam.documentUrl && (
-                        <Button variant="contained" onClick={handlePrint}>
-                            In/ Lưu file pdf
+                <PopupMenu
+                    trigger={
+                        <Button
+                            variant="contained"
+                            sx={{
+                                position: "fixed",
+                                bottom: "4rem",
+                                right: "1rem",
+                                zIndex: 2,
+                            }}
+                        >
+                            <MoreHoriz />
                         </Button>
-                    )}
-                    {!exam.documentUrl && <FormularForm />}
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            request
-                                .delete("exams/" + examId)
-                                .then((data) => navigate("/exam"));
-                        }}
-                    >
-                        Xoá
-                    </Button>
-                </Stack>
+                    }
+                >
+                    <Box>
+                        <MenuItem onClick={() => togglePreview()}>
+                            Xem trước
+                        </MenuItem>
+                        {!exam.documentUrl && (
+                            <MenuItem onClick={handlePrint}>
+                                In/ Lưu file pdf
+                            </MenuItem>
+                        )}
+                        {!exam.documentUrl && <FormularForm />}
+                        <MenuItem
+                            onClick={() => {
+                                request
+                                    .delete("exams/" + examId)
+                                    .then((data) => navigate("/exam"));
+                            }}
+                        >
+                            Xoá
+                        </MenuItem>
+                    </Box>
+                </PopupMenu>
                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                     <Exam />
                 </Suspense>

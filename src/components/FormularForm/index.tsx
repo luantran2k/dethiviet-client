@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    MenuItem,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { teal } from "@mui/material/colors";
 import katex from "katex";
 import { useEffect, useRef, useState } from "react";
@@ -37,7 +45,7 @@ export default function formulaForm(props: IformulaFormProps) {
     }, [formula]);
     return (
         <AppModal
-            trigger={<Button variant="contained">Công thức</Button>}
+            trigger={<MenuItem>Công thức</MenuItem>}
             sx={{ maxWidth: "68rem" }}
         >
             <Stack spacing={2} ref={formulaFormRef}>

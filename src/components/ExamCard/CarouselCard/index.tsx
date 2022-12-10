@@ -137,7 +137,12 @@ export default function CarouselCard(props: ICarouselCardProps) {
                         </PopupMenu>
                     </Stack>
                     <Typography>Môn học: {exam.subjectName}</Typography>
-                    <Typography>Lớp/Trình độ: {exam.grade}</Typography>
+                    <Typography>
+                        Lớp/Trình độ:{" "}
+                        {exam.grade === "university"
+                            ? "Đại học/Cao đẳng"
+                            : exam.grade}
+                    </Typography>
                     <Typography>
                         Năm học:{" "}
                         {exam.date
