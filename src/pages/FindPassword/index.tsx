@@ -1,25 +1,37 @@
 import { Button, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppDispatch } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { sendAlert } from "../../redux/slices/appSlice";
+import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
 
 export interface IFindPasswordPageProps {}
 
 interface FindPass {
     email: string;
-    code: string;
+    code: number;
     password: string;
     rePassword: string;
 }
 
 export default function FindPasswordPage(props: IFindPasswordPageProps) {
     const [email, setEmail] = useState("");
+    const naviagte = useNavigate();
+    const isSignIn = useAppSelector((state) => state.app.isSignIn);
+
     const { handleSubmit, register, getValues, watch } = useForm<FindPass>();
     const dispatch = useAppDispatch();
-    const onSubmit: SubmitHandler<FindPass> = (data) => {
+
+    useEffect(() => {
+        if (isSignIn) {
+            naviagte("/");
+        }
+    }, []);
+
+    const onSubmit: SubmitHandler<FindPass> = async (data) => {
         if (data.password !== data.rePassword) {
             dispatch(
                 sendAlert({
@@ -28,6 +40,21 @@ export default function FindPasswordPage(props: IFindPasswordPageProps) {
                 })
             );
             return;
+        }
+        const { rePassword, ...payLoad } = data;
+        const res = await request.post<{ message: string; code: number }>(
+            "auth/changePassword",
+            payLoad
+        );
+
+        if (res.code === 200) {
+            dispatch(
+                sendAlert({
+                    message: "Đặt lại mật khẩu thành công",
+                    severity: "success",
+                })
+            );
+            naviagte("/signIn");
         }
     };
     return (
@@ -55,16 +82,27 @@ export default function FindPasswordPage(props: IFindPasswordPageProps) {
                     <Button
                         variant="outlined"
                         disabled={!Boolean(watch("email"))}
-                        onClick={() => {
+                        onClick={async () => {
                             const email = getValues("email");
                             if (ultis.isEmail(email)) {
                                 dispatch(
                                     sendAlert({
-                                        message:
-                                            "Gửi thành công, vui lòng kiểm tra email",
-                                        severity: "success",
+                                        message: "Đã gửi yêu cầu",
+                                        severity: "info",
                                     })
                                 );
+                                const res = await request.post(
+                                    "auth/getChangePasswordCode",
+                                    { email }
+                                );
+                                if (res)
+                                    dispatch(
+                                        sendAlert({
+                                            message:
+                                                "Gửi thành công, vui lòng kiểm tra email",
+                                            severity: "success",
+                                        })
+                                    );
                             } else {
                                 dispatch(
                                     sendAlert({
@@ -83,7 +121,9 @@ export default function FindPasswordPage(props: IFindPasswordPageProps) {
                 <TextField
                     {...register("code", {
                         required: true,
+                        valueAsNumber: true,
                     })}
+                    type="number"
                     label="Mã xác minh"
                     placeholder="Nhập email để nhận mã xác minh"
                     sx={{ flex: 1 }}
