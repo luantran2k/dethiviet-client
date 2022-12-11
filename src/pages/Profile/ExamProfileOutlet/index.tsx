@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import * as React from "react";
 import { useUserInfo } from "..";
+import { useAppSelector } from "../../../app/hooks";
 import IExam from "../../../components/Exam/interfaces/IExam";
 import { SmallExamCardList } from "../../../components/ExamCard/SmallExamCard";
 import request from "../../../Utils/request";
@@ -9,19 +10,23 @@ import ultis from "../../../Utils/ultis";
 import styles from "./style.module.scss";
 
 export interface IExamProfileOutletProps {
-    getExams: (userId: number) => Promise<{ exams: IExam[] } | undefined>;
+    getExams: (
+        userId: number,
+        userRequestId?: number
+    ) => Promise<{ exams: IExam[] } | undefined>;
     handleClickExam?: (url: string) => void;
     title: string;
 }
 
 export default function ExamProfileOutlet(props: IExamProfileOutletProps) {
     const { getExams, title, handleClickExam } = props;
+    const userRequestId = useAppSelector((state) => state.app.userInfo?.id);
     const { userInfo } = useUserInfo();
     const [exams, setExams] = React.useState<IExam[] | undefined>(undefined);
     React.useEffect(() => {
         const getExamsToState = async () => {
             if (userInfo) {
-                const res = await getExams(userInfo.id);
+                const res = await getExams(userInfo.id, userRequestId);
                 if (res) setExams(res.exams);
             }
         };

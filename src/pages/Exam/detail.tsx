@@ -9,7 +9,7 @@ import IExam from "../../components/Exam/interfaces/IExam";
 import ExamCarousel from "../../components/ExamCarousel";
 import AppModal from "../../components/Modal";
 import RepportError from "../../components/ReportError";
-import { BACKUP_AVATAR } from "../../const/const";
+import { BACKUP_AVATAR, BASE_URL } from "../../const/const";
 import { sendAlert, User } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
 import ultis from "../../Utils/ultis";
@@ -192,8 +192,17 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                         </Button>
                         <Button
                             variant="outlined"
-                            onClick={() => {
-                                navigate("../practice/" + exam.id);
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(
+                                    `${BASE_URL}exam/detail/${exam.id}`
+                                );
+                                dispatch(
+                                    sendAlert({
+                                        message: "Đã copy đường đẫn",
+                                        time: 3,
+                                    })
+                                );
                             }}
                         >
                             Chia sẻ
