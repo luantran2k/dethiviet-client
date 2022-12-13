@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import { grey, red, teal } from "@mui/material/colors";
 import { useRef, useState } from "react";
-import { User } from "../../../redux/slices/appSlice";
+import { sendAlert, setLoading, User } from "../../../redux/slices/appSlice";
 import AppTag from "../../Tag";
 import { v4 as uuid } from "uuid";
 import PracticeExamPage from "../../../pages/Exam/practice";
 import request from "../../../Utils/request";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import IPost from "../interfaces/IPost";
 
 export interface IAddPostProps {
@@ -25,6 +25,7 @@ export interface IAddPostProps {
 
 export default function AddPost(props: IAddPostProps) {
     const { setPosts } = props;
+    const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.app.userInfo);
     const [tags, setTags] = useState<string[]>([]);
     const [currentTag, setCurrentTag] = useState<string>("");
@@ -33,6 +34,7 @@ export default function AddPost(props: IAddPostProps) {
     const [imageFiles, setImageFiles] = useState<FileList>();
     const audioInputRef = useRef<HTMLInputElement>(null);
     const imageInputRef = useRef<HTMLInputElement>(null);
+
     if (!user) {
         return (
             <Typography textAlign="center">
@@ -112,11 +114,21 @@ export default function AddPost(props: IAddPostProps) {
                 />
             </Stack>
             {audioFile && (
-                <audio
-                    src={URL.createObjectURL(audioFile)}
-                    controls
-                    style={{ width: "100%" }}
-                />
+                <Stack direction="row">
+                    <audio
+                        src={URL.createObjectURL(audioFile)}
+                        controls
+                        style={{ width: "100%" }}
+                    />
+                    <Button
+                        onClick={() => {
+                            setAudioFile(undefined);
+                            audioInputRef.current!.value = "";
+                        }}
+                    >
+                        <Delete />
+                    </Button>
+                </Stack>
             )}
             {imageFiles && (
                 <Accordion sx={{ marginBottom: "1rem" }}>
@@ -126,6 +138,7 @@ export default function AddPost(props: IAddPostProps) {
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setImageFiles(undefined);
+                                imageInputRef.current!.value = "";
                             }}
                             sx={{
                                 color: red[500],
@@ -239,6 +252,16 @@ export default function AddPost(props: IAddPostProps) {
                     <Button
                         variant="contained"
                         onClick={async () => {
+                            if (!content) {
+                                dispatch(
+                                    sendAlert({
+                                        message:
+                                            "Vui lòng nhập nội dung bài đăng",
+                                        severity: "warning",
+                                    })
+                                );
+                                return;
+                            }
                             const form = new FormData();
                             form.append("content", content);
                             tags.forEach((tag) => form.append("tags", tag));
@@ -250,6 +273,7 @@ export default function AddPost(props: IAddPostProps) {
                                     form.append("imageFiles", imageFile)
                                 );
                             }
+                            dispatch(setLoading(true));
                             const newPost = await request.post<IPost>(
                                 "questionings",
                                 form,
@@ -259,9 +283,14 @@ export default function AddPost(props: IAddPostProps) {
                                     },
                                 }
                             );
+                            dispatch(setLoading(false));
                             if (newPost) {
                                 setContent("");
                                 setTags([]);
+                                setImageFiles(undefined);
+                                setAudioFile(undefined);
+                                imageInputRef.current!.value = "";
+                                audioInputRef.current!.value = "";
                                 setPosts((posts) => [newPost, ...posts]);
                             }
                         }}

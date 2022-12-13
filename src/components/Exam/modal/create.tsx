@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames from "../../../const/SubjectNames";
+import { sendAlert, setLoading } from "../../../redux/slices/appSlice";
 import { createExam } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
@@ -80,6 +81,7 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
         if (submitAction) {
             return submitAction(data);
         }
+        dispatch(setLoading(true));
         const exam = await request.post<IExam>(
             "exams",
             {
@@ -92,6 +94,7 @@ export default function CreateExamModal(props: ICreateExamModalProps) {
                 },
             }
         );
+        dispatch(setLoading(false));
         if (exam) {
             dispatch(createExam(exam));
             navigate("/exam/edit/" + exam.id);

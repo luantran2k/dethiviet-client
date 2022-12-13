@@ -18,6 +18,7 @@ import UserNameButton from "../Button/UserNameButton";
 import VoteButton from "../Button/VoteButton";
 import AppComments from "../Comment";
 import CommentBox from "../Comment/CommentBox";
+import ImageFullView from "../ImageFullView";
 import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
 import AppTag from "../Tag";
@@ -153,17 +154,22 @@ const Post = (props: IPostProps) => {
                             }
                             key={index}
                         >
-                            <Box maxWidth={"100%"}>
-                                <img
-                                    src={url}
-                                    style={{
-                                        height: "100%",
-                                        width: "100%",
-                                        objectFit: "cover",
-                                        display: "block",
-                                    }}
-                                />
-                            </Box>
+                            <ImageFullView
+                                trigger={
+                                    <Box maxWidth={"100%"}>
+                                        <img
+                                            src={url}
+                                            style={{
+                                                height: "100%",
+                                                width: "100%",
+                                                objectFit: "cover",
+                                                display: "block",
+                                            }}
+                                        />
+                                    </Box>
+                                }
+                                imageUrl={url}
+                            />
                         </Grid>
                     ))}
                 </Grid>

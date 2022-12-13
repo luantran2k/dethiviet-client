@@ -49,6 +49,9 @@ const appSlice = createSlice({
                 localStorage.getItem("userInfo") || "{}"
             );
         },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
+        },
         signOut: (state) => {
             state.isSignIn = false;
             state.userInfo = undefined;
@@ -139,6 +142,7 @@ export const sendAlert = createAsyncThunk(
     }
 );
 
-export const { setIsSignIn, signOut, addAlert, removeAlert } = appSlice.actions;
+export const { setIsSignIn, setLoading, signOut, addAlert, removeAlert } =
+    appSlice.actions;
 
 export default appSlice;

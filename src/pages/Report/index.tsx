@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import Avatar from "../../components/Avatar";
 import UserNameButton from "../../components/Button/UserNameButton";
+import ImageFullView from "../../components/ImageFullView";
 import AppModal from "../../components/Modal";
 import IReport from "../../components/ReportError/interfaces/Report";
 import { sendAlert } from "../../redux/slices/appSlice";
@@ -95,31 +96,7 @@ export default function ReportPage(props: IReportPageProps) {
                             </Stack>
                             <Stack>
                                 {report.image && (
-                                    <AppModal
-                                        trigger={
-                                            <Button>
-                                                <Image />
-                                            </Button>
-                                        }
-                                        sx={{
-                                            width: "68rem",
-                                            maxHeight: "90vh",
-                                            maxWidth: "90vw",
-                                            overflow: "auto",
-                                        }}
-                                    >
-                                        <Box>
-                                            <img
-                                                src={report.image}
-                                                alt=""
-                                                style={{
-                                                    height: "100%",
-                                                    width: "100%",
-                                                    objectFit: "cover",
-                                                }}
-                                            />
-                                        </Box>
-                                    </AppModal>
+                                    <ImageFullView imageUrl={report.image} />
                                 )}
                                 <Button
                                     color="error"

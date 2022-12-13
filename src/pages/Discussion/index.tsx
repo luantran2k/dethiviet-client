@@ -73,19 +73,6 @@ export default function DiscussionPage(props: IDiscussionPageProps) {
                             sx={{ width: "fit-content", margin: "2rem auto 0" }}
                             onClick={async () => {
                                 setPage((page) => page + 1);
-                                // const res = await request.get<
-                                //     { page: number },
-                                //     { total: number | null; posts: IPost[] }
-                                // >("questionings", { page: page + 1 });
-                                // if (res?.posts && res?.posts.length > 0) {
-                                //     setPosts((posts) => [
-                                //         ...posts,
-                                //         ...res.posts,
-                                //     ]);
-                                //     setPage((page) => page + 1);
-                                // } else {
-                                //     setIsLastPage(true);
-                                // }
                             }}
                         >
                             Tải thêm

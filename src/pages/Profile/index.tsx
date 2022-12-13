@@ -19,7 +19,7 @@ export default function ProfilePage(props: IProfilePageProps) {
             setUserInfo(userInfo);
         };
         getUserInfo();
-    }, []);
+    }, [userId]);
     return (
         <Box width="100vw" overflow="hidden">
             {userInfo ? (
