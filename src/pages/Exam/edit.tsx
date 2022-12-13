@@ -1,6 +1,15 @@
 import { More, MoreHoriz } from "@mui/icons-material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { Box, Button, Grid, MenuItem, Stack, TextField } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Grid,
+    MenuItem,
+    Stack,
+    Switch,
+    TextField,
+} from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import React, { Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +18,7 @@ import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
 import FormularForm from "../../components/FormularForm";
 import AppModal from "../../components/Modal";
 import CreatePartModal from "../../components/Part/Modal/create";
+import PdfPreview from "../../components/PdfPreview/";
 import PopupMenu from "../../components/PopupMenu";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
@@ -24,6 +34,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
     const pageAreaRef = React.useRef<HTMLDivElement>(null);
     const paperGroupRef = React.useRef<HTMLDivElement>(null);
     const [isPreview, setPreview] = React.useState(true);
+    const [isNativePreview, setNativePreview] = React.useState(false);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const exam = useAppSelector((state) => state.exam) || " Bài kiểm tra";
@@ -78,7 +89,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
             height="calc(100vh - 4rem)"
             flexGrow={1}
         >
-            {exam.documentUrl ? (
+            {isNativePreview && exam.documentUrl ? (
                 <object
                     type="application/pdf"
                     data={exam.documentUrl}
@@ -101,17 +112,30 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     height="100%"
                     overflow="auto"
                 >
-                    <Stack
-                        className="paper-group"
-                        ref={paperGroupRef}
-                        sx={{ transformOrigin: "top center" }}
-                        spacing={4}
-                        alignItems="center"
-                    >
-                        <Suspense fallback={<h4>Đang tải trang</h4>}>
-                            <PaperPage />
-                        </Suspense>
-                    </Stack>
+                    {exam.documentUrl ? (
+                        <Box
+                            ref={paperGroupRef}
+                            sx={{ transformOrigin: "top center" }}
+                        >
+                            <PdfPreview
+                                path={exam.documentUrl}
+                                securityCode={exam.securityCode}
+                                scale={scale.current}
+                            />
+                        </Box>
+                    ) : (
+                        <Stack
+                            className="paper-group"
+                            ref={paperGroupRef}
+                            sx={{ transformOrigin: "top center" }}
+                            spacing={4}
+                            alignItems="center"
+                        >
+                            <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                <PaperPage />
+                            </Suspense>
+                        </Stack>
+                    )}
                 </Grid>
             )}
             <Grid
@@ -146,11 +170,11 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         <MenuItem onClick={() => togglePreview()}>
                             Xem trước
                         </MenuItem>
-                        {!exam.documentUrl && (
-                            <MenuItem onClick={handlePrint}>
-                                In/ Lưu file pdf
-                            </MenuItem>
-                        )}
+
+                        <MenuItem onClick={handlePrint}>
+                            In/ Lưu file pdf
+                        </MenuItem>
+
                         {!exam.documentUrl && <FormularForm />}
                         <MenuItem
                             onClick={() => {
@@ -163,6 +187,17 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         </MenuItem>
                     </Box>
                 </PopupMenu>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={isNativePreview}
+                            onChange={() => {
+                                setNativePreview((pre) => !pre);
+                            }}
+                        />
+                    }
+                    label="Xem đề thi chế độ mặc định của trình duyệt"
+                />
                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                     <Exam />
                 </Suspense>

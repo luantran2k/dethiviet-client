@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useAppSelector } from "../../../app/hooks";
 import IExam from "../../../components/Exam/interfaces/IExam";
 import request from "../../../Utils/request";
 import ExamProfileOutlet from "../ExamProfileOutlet";

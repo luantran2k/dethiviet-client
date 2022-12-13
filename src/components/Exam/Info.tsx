@@ -76,22 +76,28 @@ export default function ExamInfo(props: IExamInfoProps) {
                         {exam.examName && (
                             <Typography>Tên kỳ thi: {exam.examName}</Typography>
                         )}
-                        {exam.grade !== "unknown" && exam.grade !== undefined && (
-                            <Typography>
-                                Lớp/ Trình độ:
-                                {
-                                    GradeData[
-                                        exam.grade as keyof typeof GradeData
-                                    ]
-                                }
-                            </Typography>
-                        )}
+                        {exam.grade !== "unknown" &&
+                            exam.grade !== undefined && (
+                                <Typography>
+                                    Lớp/ Trình độ:
+                                    {
+                                        GradeData[
+                                            exam.grade as keyof typeof GradeData
+                                        ]
+                                    }
+                                </Typography>
+                            )}
                         <Typography>
                             Trạng thái:{" "}
                             {exam.isPublic === true
                                 ? "Công khai"
                                 : "Không công khai"}
                         </Typography>
+
+                        <Typography>
+                            Mã xác minh: {exam.securityCode}
+                        </Typography>
+
                         {exam.description && (
                             <Typography>Mô tả: {exam.description}</Typography>
                         )}

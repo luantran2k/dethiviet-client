@@ -19,6 +19,7 @@ export default interface IExam {
     isOriginal?: boolean;
     resultId?: number;
     score?: number;
+    securityCode?: string;
     numberCorrectQuestions?: number;
     totalQuestions?: number;
     parts?: PartType[];
