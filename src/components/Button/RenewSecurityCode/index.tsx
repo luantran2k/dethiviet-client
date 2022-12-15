@@ -33,8 +33,10 @@ export default function RenewSecurityCodeButton(
                         any,
                         { securityCode: string; documentUrl: string }
                     >(`exams/${id}/changeSecurityCode`);
-                    if (res?.documentUrl) {
+                    if (res?.securityCode) {
                         setSecurityCode(res.securityCode);
+                    }
+                    if (res?.documentUrl) {
                         dispath(updateExam({ documentUrl: res.documentUrl }));
                     }
                     setIsRenewing(false);
