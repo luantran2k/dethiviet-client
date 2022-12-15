@@ -9,6 +9,7 @@ import {
     Stack,
     Switch,
     TextField,
+    Typography,
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import React, { Suspense, useEffect } from "react";
@@ -20,6 +21,7 @@ import AppModal from "../../components/Modal";
 import CreatePartModal from "../../components/Part/Modal/create";
 import PdfPreview from "../../components/PdfPreview/";
 import PopupMenu from "../../components/PopupMenu";
+import { sendAlert } from "../../redux/slices/appSlice";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 const Exam = React.lazy(() => import("../../components/Exam"));
@@ -28,7 +30,7 @@ const PaperPage = React.lazy(() => import("../../components/PaperPage"));
 export interface ICreateExamPageProps {}
 
 export default function EditExamPage(props: ICreateExamPageProps) {
-    useAuth();
+    const userInfo = useAuth();
     const { examId } = useParams();
     const scale = React.useRef(1);
     const pageAreaRef = React.useRef<HTMLDivElement>(null);
@@ -81,6 +83,21 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         };
     }, []);
 
+    useEffect(() => {
+        if (exam.id && userInfo?.id && userInfo.id !== exam.ownerId) {
+            navigate("/");
+            dispatch(
+                sendAlert({
+                    message: "Bạn không có quyền chỉnh sửa đề thi này",
+                    severity: "error",
+                })
+            );
+        }
+    }, [exam]);
+
+    if (!exam.id) {
+        return <Typography>Đang tải dữ liệu...</Typography>;
+    }
     return (
         <Grid
             container

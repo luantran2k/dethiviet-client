@@ -78,4 +78,6 @@ export function useAuth(page?: string) {
             }
         }
     }, [isSignIn]);
+
+    return app.userInfo;
 }

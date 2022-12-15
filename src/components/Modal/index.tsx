@@ -35,6 +35,7 @@ interface IAppModalComponentProps {
     buttonStyle?: SxProps<Theme>;
     buttonTitle?: string;
     sx?: SxProps<Theme> | undefined;
+    open?: boolean;
 }
 
 export default function AppModal(props: IAppModalComponentProps) {
@@ -48,8 +49,9 @@ export default function AppModal(props: IAppModalComponentProps) {
         buttonStyle,
         buttonTitle,
         sx,
+        open: openProp = false,
     } = props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(openProp);
     const handleOpen = (e: React.MouseEvent) => {
         e.stopPropagation();
         setOpen(true);

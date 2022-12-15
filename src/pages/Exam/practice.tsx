@@ -227,6 +227,19 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
         }
     };
 
+    if (!exam.id) {
+        return (
+            <Typography
+                color="red"
+                variant="h3"
+                textAlign="center"
+                margin="2rem auto"
+            >
+                Từ chối truy cập
+            </Typography>
+        );
+    }
+
     return (
         <Box
             ref={examRef}

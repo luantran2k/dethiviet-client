@@ -1,3 +1,4 @@
+import { sendAlert } from "./appSlice";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import IAnswer, {
     AnswerPayload,
@@ -182,7 +183,7 @@ const examSlice = createSlice({
         });
         builder.addCase(getExam.pending, (state, action) => {});
         builder.addCase(getExam.fulfilled, (state, action) => {
-            return action.payload;
+            if (action.payload.id) return action.payload;
         });
         builder.addCase(getExam.rejected, (state, action) => {
             alert("Get Exam Failed");
@@ -222,14 +223,23 @@ export const getExam = createAsyncThunk<
         { dispatch, getState }
     ) => {
         const exam = await request.get<
-            { includePart: boolean; withAnswer: boolean },
+            {
+                includePart: boolean;
+                withAnswer: boolean;
+            },
             IExam
         >("exams/" + examId, {
             includePart: true,
             withAnswer,
         });
 
-        if (exam) return exam;
+        if (exam?.id) return exam;
+        dispatch(
+            sendAlert({
+                message: "Bạn không có quyền truy cập đề thi này",
+                severity: "error",
+            })
+        );
         return getState().exam;
     }
 );
