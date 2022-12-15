@@ -72,14 +72,16 @@ export default function CarouselCard(props: ICarouselCardProps) {
                             }}
                         >
                             <Box>
-                                <MenuItem
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        dispatch(addSelectedExam(exam));
-                                    }}
-                                >
-                                    Thêm vào danh sách chờ
-                                </MenuItem>
+                                {!exam.documentUrl && (
+                                    <MenuItem
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            dispatch(addSelectedExam(exam));
+                                        }}
+                                    >
+                                        Thêm vào danh sách chờ
+                                    </MenuItem>
+                                )}
                                 <MenuItem
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -146,6 +148,9 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                   new Date(exam.date).getFullYear() + 1
                               }`
                             : "không rõ"}
+                    </Typography>
+                    <Typography>
+                        Dạng đề thi: {exam.documentUrl ? "File" : "Web"}
                     </Typography>
                     {exam.completedCount && (
                         <Typography>

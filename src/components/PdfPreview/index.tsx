@@ -27,6 +27,7 @@ export default function PdfPreview(props: IPdfPreviewProps) {
     const { path, securityCode, scale = 4 } = props;
 
     const pdfViewer = useRef<HTMLDivElement>(null);
+    const countPage = useRef(0);
 
     useEffect(() => {
         let thePdf: pdfjsLibModule.PDFDocumentProxy | null = null;
@@ -36,7 +37,10 @@ export default function PdfPreview(props: IPdfPreviewProps) {
             .promise.then(function (pdf) {
                 thePdf = pdf;
                 const viewer = pdfViewer.current!;
-
+                if (countPage.current >= pdf.numPages) {
+                    console.log("Page count: " + countPage.current);
+                    return;
+                }
                 for (let page = 1; page <= pdf.numPages; page++) {
                     const canvas = document.createElement("canvas");
                     canvas.className = styles.pdfPageCanvas;
@@ -46,6 +50,7 @@ export default function PdfPreview(props: IPdfPreviewProps) {
             });
 
         function renderPage(pageNumber: number, canvas: HTMLCanvasElement) {
+            countPage.current++;
             thePdf?.getPage(pageNumber).then(function (page) {
                 const viewport = page.getViewport({
                     scale: 1.2,

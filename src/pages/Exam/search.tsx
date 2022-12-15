@@ -56,9 +56,9 @@ export default function SearchExamPage(props: ISearchExamPageProps) {
             alignItems="center"
             spacing={4}
             maxWidth="56.62rem"
-            margin="0 auto"
+            m="0 auto 4rem"
         >
-            <Stack direction="row" spacing={2} marginTop={4}></Stack>
+            <Stack direction="row" spacing={2}></Stack>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6} lg={3}>
@@ -97,15 +97,12 @@ export default function SearchExamPage(props: ISearchExamPageProps) {
                     </Grid>
                 </Grid>
             </form>
-            <Grid container rowGap={2}>
-                {examFilter.title ? (
-                    <FindExamResults examFilter={examFilter} />
-                ) : (
-                    <Typography variant="h4">
-                        Nhập thông tin để tìm kiếm
-                    </Typography>
-                )}
-            </Grid>
+
+            {examFilter.title ? (
+                <FindExamResults examFilter={examFilter} />
+            ) : (
+                <Typography variant="h4">Nhập thông tin để tìm kiếm</Typography>
+            )}
         </Stack>
     );
 }
