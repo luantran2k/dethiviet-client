@@ -1,4 +1,4 @@
-import { Edit } from "@mui/icons-material";
+import { Autorenew, CropRotate, Edit } from "@mui/icons-material";
 import {
     Accordion,
     AccordionDetails,
@@ -13,6 +13,8 @@ import { teal } from "@mui/material/colors";
 import * as React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { GradeData } from "../../const/GradeData";
+import request from "../../Utils/request";
+import RenewSecurityCodeButton from "../Button/RenewSecurityCode";
 import AppModal from "../Modal";
 import IExam from "./interfaces/IExam";
 import UpdateExamModal from "./modal/update";
@@ -94,9 +96,10 @@ export default function ExamInfo(props: IExamInfoProps) {
                                 : "Không công khai"}
                         </Typography>
 
-                        <Typography>
-                            Mã xác minh: {exam.securityCode}
-                        </Typography>
+                        <RenewSecurityCodeButton
+                            securityCode={exam.securityCode!}
+                            id={exam.id!}
+                        />
 
                         {exam.description && (
                             <Typography>Mô tả: {exam.description}</Typography>

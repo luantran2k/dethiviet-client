@@ -1,4 +1,4 @@
-import { sendAlert, User } from "./../redux/slices/appSlice";
+import { sendAlert, setLoading, User } from "./../redux/slices/appSlice";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { store } from "../redux/store";
 
@@ -33,9 +33,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
+        dispatch(setLoading(false));
         return response;
     },
     async (error) => {
+        dispatch(setLoading(false));
         if (
             error.config &&
             error.config.url.indexOf("/refreshToken") === -1 &&
