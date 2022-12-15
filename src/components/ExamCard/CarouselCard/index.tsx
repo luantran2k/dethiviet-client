@@ -120,10 +120,6 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                                                     examFilter.id !==
                                                                     exam.id
                                                             );
-                                                        console.log(
-                                                            "newExam: ",
-                                                            newExams
-                                                        );
                                                         return newExams;
                                                     });
                                                 }

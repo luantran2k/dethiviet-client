@@ -77,7 +77,7 @@ export default function ExamResultPage(props: IExamResultPageProps) {
                     sx={{ marginLeft: "auto !important" }}
                     onClick={() => {
                         request.delete("exams/result/" + resultId);
-                        navigate("/");
+                        navigate(-1);
                     }}
                 >
                     <Delete />
