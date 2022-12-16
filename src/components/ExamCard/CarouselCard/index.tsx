@@ -1,6 +1,7 @@
 import { LibraryAdd, MoreVert } from "@mui/icons-material";
 import { Box, MenuItem, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { BASE_URL } from "../../../const/const";
@@ -21,7 +22,8 @@ export interface ICarouselCardProps {
 
 export default function CarouselCard(props: ICarouselCardProps) {
     const { exam, boxShadow, menuButton, setExams } = props;
-    const userId = useAppSelector((state) => state.app.userInfo?.id);
+    const user = useAppSelector((state) => state.app.userInfo);
+    const [isSuggest, setSuggest] = useState(exam.isSuggest);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     return (
@@ -98,7 +100,7 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                 >
                                     Chia sẻ
                                 </MenuItem>
-                                {userId === exam.owner.id && (
+                                {user?.id === exam.owner.id && (
                                     <>
                                         <MenuItem
                                             onClick={() =>
@@ -130,6 +132,29 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                             Xoá
                                         </MenuItem>
                                     </>
+                                )}
+                                {user?.role.find(
+                                    (roleFind) => roleFind == "admin"
+                                ) && (
+                                    <MenuItem
+                                        onClick={() => {
+                                            if (isSuggest) {
+                                                request.delete(
+                                                    `exams/${exam.id}/rmsuggest`,
+                                                    {}
+                                                );
+                                                setSuggest(false);
+                                            } else {
+                                                request.patch(
+                                                    `exams/${exam.id}/suggest`,
+                                                    {}
+                                                );
+                                                setSuggest(true);
+                                            }
+                                        }}
+                                    >
+                                        {isSuggest ? "Bỏ đề xuất" : "Đề xuất"}
+                                    </MenuItem>
                                 )}
                             </Box>
                         </PopupMenu>

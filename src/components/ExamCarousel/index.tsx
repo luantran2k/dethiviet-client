@@ -56,11 +56,11 @@ export default function ExamCarousel(props: IExamCarouselProps) {
                             <CarouselCard exam={exam} setExams={setExams} />
                         </SwiperSlide>
                     ))}
-                    <SwiperSlide style={{ cursor: "pointer" }}>
-                        {ultis.checkEmptyArray(exams)
-                            ? "Danh sách trống"
-                            : "Xem thêm"}
-                    </SwiperSlide>
+                    {ultis.checkEmptyArray(exams) && (
+                        <SwiperSlide style={{ cursor: "pointer" }}>
+                            Danh sách trống
+                        </SwiperSlide>
+                    )}
                 </Swiper>
             </Box>
         </Box>

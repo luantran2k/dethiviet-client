@@ -23,6 +23,7 @@ export interface IExamPageProps {}
 interface examsState {
     lastestExams: IDetailExam[];
     popularMonthExams: IDetailExam[];
+    suggestedExam: IDetailExam[];
 }
 
 export default function ExamPage(props: IExamPageProps) {
@@ -61,6 +62,10 @@ export default function ExamPage(props: IExamPageProps) {
             <ExamCarousel
                 title={"Đề thi được làm nhiều của tháng"}
                 exams={exams?.popularMonthExams}
+            />
+            <ExamCarousel
+                title={"Đề thi được đề xuất bởi quản trị viên"}
+                exams={exams?.suggestedExam}
             />
         </Box>
     );

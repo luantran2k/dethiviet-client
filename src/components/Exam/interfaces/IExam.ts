@@ -24,6 +24,7 @@ export default interface IExam {
     totalQuestions?: number;
     parts?: PartType[];
     isPractice?: boolean;
+    isSuggest?: boolean;
     createdAt?: string;
     updatedAt?: string;
 }

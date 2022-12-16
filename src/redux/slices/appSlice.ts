@@ -12,6 +12,7 @@ export interface User {
     phone?: string;
     name?: string;
     createdAt?: string;
+    role: string[];
 }
 
 export interface AlertPayload {
