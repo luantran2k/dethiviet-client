@@ -12,15 +12,24 @@ export interface IMultipleChoiceAnswerHasDocumentProps {
     question: IMultipleChoiceQuestion;
     answerId: number;
     value: string;
+    answer?: AnswerType;
 }
 
 const MultipleChoiceAnswerHasDocument = memo(
     (props: IMultipleChoiceAnswerHasDocumentProps) => {
-        const { partId, question, answerId, value } = props;
+        const { partId, question, answerId, value, answer: answerProp } = props;
+        const sendRequest = !useAppSelector((state) => state.exam.isPractice);
         const dispatch = useAppDispatch();
-        const answer = useAppSelector((state) =>
-            answerSeletor(state, { partId, questionId: question.id, answerId })
-        );
+        const answer =
+            answerProp ||
+            useAppSelector((state) =>
+                answerSeletor(state, {
+                    partId,
+                    questionId: question.id,
+                    answerId,
+                })
+            );
+
         if (answer === undefined) {
             return <></>;
         }
@@ -34,36 +43,37 @@ const MultipleChoiceAnswerHasDocument = memo(
                             (answer) => answer.isTrue === true
                         );
                     if (oldAnswer) {
-                        const updatedAnswers = await request.patch("answers", [
-                            { id: oldAnswer.id, isTrue: false },
-                            {
-                                id: answerId,
-                                isTrue: true,
-                            },
-                        ]);
-                        if (updatedAnswers) {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId: question.id,
-                                    answerId,
-                                })
-                            );
+                        if (sendRequest) {
+                            request.patch("answers", [
+                                { id: oldAnswer.id, isTrue: false },
+                                {
+                                    id: answerId,
+                                    isTrue: true,
+                                },
+                            ]);
                         }
-                    } else {
-                        const updatedAnswer = await request.patch<IAnswer>(
-                            "answers/" + answerId,
-                            { isTrue: true }
+
+                        dispatch(
+                            updateCorrectAnswer({
+                                partId,
+                                questionId: question.id,
+                                answerId,
+                            })
                         );
-                        if (updatedAnswer) {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId: question.id,
-                                    answerId: updatedAnswer.id,
-                                })
-                            );
+                    } else {
+                        if (sendRequest) {
+                            request.patch<IAnswer>("answers/" + answerId, {
+                                isTrue: true,
+                            });
                         }
+
+                        dispatch(
+                            updateCorrectAnswer({
+                                partId,
+                                questionId: question.id,
+                                answerId,
+                            })
+                        );
                     }
                 }}
             >

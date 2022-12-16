@@ -212,14 +212,19 @@ export const saveExam = createAsyncThunk<
 
 export const getExam = createAsyncThunk<
     examSliceState,
-    { examId: number; includePart: boolean; withAnswer?: boolean },
+    {
+        examId: number;
+        includePart: boolean;
+        withAnswer?: boolean;
+        isPractice?: boolean;
+    },
     {
         state: RootState;
     }
 >(
     "exams/get",
     async (
-        { examId, includePart, withAnswer = true },
+        { examId, includePart, withAnswer = true, isPractice = false },
         { dispatch, getState }
     ) => {
         const exam = await request.get<
@@ -234,7 +239,9 @@ export const getExam = createAsyncThunk<
         });
 
         if (exam?.id) {
-            if (!withAnswer) exam.isPractice = true;
+            if (isPractice) {
+                exam.isPractice = isPractice;
+            }
             return exam;
         }
         dispatch(

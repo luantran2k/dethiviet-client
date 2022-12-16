@@ -179,9 +179,11 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
                     examId: Number(examId),
                     includePart: true,
                     withAnswer: false,
+                    isPractice: true,
                 })
             );
         }
+
         return () => {
             dispatch(removeExamState());
         };

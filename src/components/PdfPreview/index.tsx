@@ -38,7 +38,6 @@ export default function PdfPreview(props: IPdfPreviewProps) {
                 thePdf = pdf;
                 const viewer = pdfViewer.current!;
                 if (countPage.current >= pdf.numPages) {
-                    console.log("Page count: " + countPage.current);
                     return;
                 }
                 for (let page = 1; page <= pdf.numPages; page++) {
