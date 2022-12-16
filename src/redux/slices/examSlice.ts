@@ -233,7 +233,10 @@ export const getExam = createAsyncThunk<
             withAnswer,
         });
 
-        if (exam?.id) return exam;
+        if (exam?.id) {
+            if (!withAnswer) exam.isPractice = true;
+            return exam;
+        }
         dispatch(
             sendAlert({
                 message: "Bạn không có quyền truy cập đề thi này",

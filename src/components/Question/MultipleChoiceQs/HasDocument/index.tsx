@@ -1,6 +1,6 @@
 import { Add } from "@mui/icons-material";
 import { teal } from "@mui/material/colors";
-import { useAppDispatch } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import AddNewAnswerButton from "../../../Answer/AddNewAnswerButton";
 import DeleteAnswerButton from "../../../Answer/DeleteAnswerButton";
 import MultipleChoiceAnswerHasDocument from "../../../Answer/MultipleChoice/HasDocument";
@@ -17,6 +17,7 @@ export default function MultipleChoiceQsHasDocument(
     props: IMultipleChoiceQsHasDocumentProps
 ) {
     const dispatch = useAppDispatch();
+    const isPractice = useAppSelector((state) => state.exam.isPractice);
     const { question, partId } = props;
     return (
         <QuestionLayout question={question} partId={partId}>
@@ -30,14 +31,16 @@ export default function MultipleChoiceQsHasDocument(
                         value={String.fromCharCode(index + 65)}
                     />
                 ))}
-                <li>
-                    <AddNewAnswerButton
-                        question={question}
-                        partId={partId}
-                        hasDocument={true}
-                    />
-                </li>
-                {question.answers?.at(-1)?.id && (
+                {!isPractice && (
+                    <li>
+                        <AddNewAnswerButton
+                            question={question}
+                            partId={partId}
+                            hasDocument={true}
+                        />
+                    </li>
+                )}
+                {question.answers?.at(-1)?.id && !isPractice && (
                     <li>
                         <DeleteAnswerButton
                             partId={partId}

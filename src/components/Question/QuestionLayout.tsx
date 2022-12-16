@@ -35,6 +35,7 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
     const dispatch = useAppDispatch();
     const documentUrl = useAppSelector((state) => state.exam.documentUrl);
     const isOriginal = useAppSelector((state) => state.exam.isOriginal);
+    const isPractice = useAppSelector((state) => state.exam.isOriginal);
     if (!question) {
         return <></>;
     }
@@ -84,7 +85,7 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                 </Typography>
                             ))}
                         {documentUrl && <Box flex={1}>{children}</Box>}
-                        {isOriginal && (
+                        {isOriginal && !isPractice && (
                             <QuestionMenu
                                 question={question}
                                 partId={partId}

@@ -4,7 +4,6 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-    Grid,
     Radio,
     RadioGroup,
     Stack,
@@ -16,6 +15,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
 import { AnswerType } from "../../components/Answer/interfaces/IAnswer";
 import Countdown from "../../components/Countdown";
+import Exam from "../../components/Exam";
+import ExamPracticeNoDocument from "../../components/Exam/practice/NoDocument";
+import ExamPracticeWithDocument from "../../components/Exam/practice/WithDocument";
 import { PartType } from "../../components/Part/interfaces/IPart";
 import { QuestionType } from "../../components/Question/interfaces/IQuestion";
 import QuestionTypeDatas from "../../const/QuestionTypes";
@@ -23,9 +25,9 @@ import {
     getExam,
     removeExamState,
     updateCorrectAnswer,
+    updateExam,
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
-import ultis from "../../Utils/ultis";
 declare let renderMathInElement: (
     element: HTMLElement,
     options?: object
@@ -151,6 +153,7 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
     const [isStart, setStart] = useState<boolean>(false);
     const [isPractice, setPractice] = useState<boolean>(false);
     const [hasCounter, setHasCounter] = useState<boolean>(true);
+
     useEffect(() => {
         let intervalId: number | undefined = undefined;
         if (isPractice && time) {
@@ -168,26 +171,6 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
             clearInterval(intervalId);
         };
     }, [isPractice]);
-
-    useEffect(() => {
-        if (time === 0) {
-            setTime(exam?.duration ? exam.duration * 60 : 0);
-        }
-        try {
-            if (renderMathInElement && examRef.current) {
-                renderMathInElement(examRef.current, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        // { left: "\\(", right: "\\)", display: false },
-                        // { left: "\\[", right: "\\]", display: true },
-                    ],
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }, [exam]);
 
     useEffect(() => {
         if (examId) {
@@ -220,6 +203,12 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
         };
     }, [isPractice]);
 
+    useEffect(() => {
+        if (isStart === false && exam?.duration) {
+            setTime(exam.duration * 60);
+        }
+    }, [exam]);
+
     const handleSubmitExam = async () => {
         const res = await request.post<{ id: number }>("exams/completed", exam);
         if (res?.id) {
@@ -229,25 +218,14 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
 
     if (!exam.id) {
         return (
-            <Typography
-                color="red"
-                variant="h3"
-                textAlign="center"
-                margin="2rem auto"
-            >
-                Từ chối truy cập
+            <Typography variant="h3" textAlign="center" margin="2rem auto">
+                Đang tải dữ liệu
             </Typography>
         );
     }
 
     return (
-        <Box
-            ref={examRef}
-            maxWidth="64rem"
-            margin="2rem auto"
-            padding="2rem"
-            boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
-        >
+        <Box position="relative">
             <Box
                 display={!isStart ? "flex" : "none"}
                 position="fixed"
@@ -288,19 +266,22 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
                     </Button>
                 </Stack>
             </Box>
-
             <Stack
                 spacing={1}
+                direction={exam.documentUrl ? "row" : "column"}
+                alignItems="center"
                 sx={{
-                    position: "fixed",
-                    top: "4rem",
-                    right: "4rem",
+                    position: exam.documentUrl ? "absolute" : "fixed",
+                    top: exam.documentUrl ? "1rem" : "4rem",
+                    right: exam.documentUrl ? "2rem" : "4rem",
                     zIndex: 2,
                 }}
             >
                 {hasCounter && (
                     <>
-                        {" "}
+                        <Typography fontSize="1.4rem">
+                            Thời gian còn lại:
+                        </Typography>
                         <Countdown time={time} />
                         <Button
                             variant="outlined"
@@ -328,81 +309,11 @@ export default function PracticeExamPage(props: IPracticeExamPageProps) {
                     Nộp bài
                 </Button>
             </Stack>
-            <Box>
-                <Typography variant="h2" fontSize="2.4rem" fontWeight="400">
-                    {exam.title}
-                </Typography>
-                {exam.parts?.map((part, index) => (
-                    <Box key={part.id} my={2}>
-                        <Typography variant="h6" fontSize={"1.4rem"}>{`Phần ${
-                            index + 1
-                        }. ${part.title}`}</Typography>
-                        <Typography>{part.description}</Typography>
-                        {part.partAudio && (
-                            <audio
-                                src={part.partAudio}
-                                style={{ width: "100%" }}
-                                controls
-                            />
-                        )}
-                        {part.questions?.map((question, index) => (
-                            <Stack mb={4} spacing={2} key={question.id}>
-                                <Typography
-                                    sx={{
-                                        fontSize: "1.2rem",
-                                        "> span": {
-                                            fontWeight: "bold",
-                                        },
-                                    }}
-                                >
-                                    <span>{`Câu ${index + 1}. `}</span>
-                                    {question.title}
-                                </Typography>
-                                <Typography>{question.description}</Typography>
-                                {question.questionAudio && (
-                                    <audio
-                                        src={question.questionAudio}
-                                        style={{ width: "100%" }}
-                                        controls
-                                    />
-                                )}
-                                {!ultis.checkEmptyArray(
-                                    question.questionImages
-                                ) && (
-                                    <Grid container sx={{ gap: "1rem" }}>
-                                        {question.questionImages?.map(
-                                            (url, index) => (
-                                                <Grid
-                                                    key={url}
-                                                    item
-                                                    sx={{
-                                                        flex: "0 1 calc((100% - 1rem)/2)",
-                                                        img: {
-                                                            borderRadius:
-                                                                ".4rem",
-                                                            height: "100%",
-                                                            width: "100%",
-                                                            objectFit: "cover",
-                                                        },
-                                                    }}
-                                                >
-                                                    <Box height="16rem">
-                                                        <img src={url} />
-                                                    </Box>
-                                                    <Typography textAlign="center">
-                                                        Hình {index + 1}
-                                                    </Typography>
-                                                </Grid>
-                                            )
-                                        )}
-                                    </Grid>
-                                )}
-                                {renderAnswer({ part, question, dispatch })}
-                            </Stack>
-                        ))}
-                    </Box>
-                ))}
-            </Box>
+            {exam.documentUrl ? (
+                <ExamPracticeWithDocument />
+            ) : (
+                <ExamPracticeNoDocument />
+            )}
         </Box>
     );
 }

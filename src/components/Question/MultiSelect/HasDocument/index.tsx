@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import AddNewAnswerButton from "../../../Answer/AddNewAnswerButton";
 import DeleteAnswerButton from "../../../Answer/DeleteAnswerButton";
 import MultipleChoiceAnswerHasDocument from "../../../Answer/MultipleChoice/HasDocument";
@@ -16,6 +16,7 @@ export default function MultiSelectQsHasDocument(
     props: IMultiSelectQsHasDocumentProps
 ) {
     const dispatch = useAppDispatch();
+    const isPractice = useAppSelector((state) => state.exam.isPractice);
     const { question, partId } = props;
     return (
         <QuestionLayout question={question} partId={partId}>
@@ -29,15 +30,17 @@ export default function MultiSelectQsHasDocument(
                         value={String.fromCharCode(index + 65)}
                     />
                 ))}
-                <li>
-                    <AddNewAnswerButton
-                        question={question}
-                        partId={partId}
-                        hasDocument={true}
-                        type="multiSlelectAs"
-                    />
-                </li>
-                {question.answers?.at(-1)?.id && (
+                {!isPractice && (
+                    <li>
+                        <AddNewAnswerButton
+                            question={question}
+                            partId={partId}
+                            hasDocument={true}
+                            type="multiSlelectAs"
+                        />
+                    </li>
+                )}
+                {question.answers?.at(-1)?.id && !isPractice && (
                     <li>
                         <DeleteAnswerButton
                             partId={partId}

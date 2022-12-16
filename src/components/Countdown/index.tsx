@@ -21,7 +21,6 @@ export default function Countdown(props: ICountdownProps) {
 
     return (
         <Stack sx={sx} alignItems="center">
-            <Typography fontSize="1.4rem">Thời gian còn lại</Typography>
             {time ? (
                 <Typography fontSize="2rem">{convertTime(time)}</Typography>
             ) : (

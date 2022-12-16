@@ -70,12 +70,16 @@ export const Part = React.memo((props: IPartProps) => {
     const dispatch = useAppDispatch();
     const part = useAppSelector((state) => partSeletor(state, partId));
     const isOriginal = useAppSelector((state) => state.exam.isOriginal);
+    const isPractice = useAppSelector((state) => state.exam.isPractice);
     const documentUrl = useAppSelector((state) => state.exam.documentUrl);
     if (part === undefined) {
         return <></>;
     }
     return (
-        <details className={styles.part}>
+        <details
+            className={styles.part}
+            style={{ paddingBottom: isOriginal && !isPractice ? 0 : "1rem" }}
+        >
             <summary className={styles.part_summary}>
                 <Stack
                     direction="row"
@@ -83,7 +87,7 @@ export const Part = React.memo((props: IPartProps) => {
                     sx={{ width: "100%" }}
                 >
                     <Typography variant="h6">{part.title}</Typography>
-                    {isOriginal && (
+                    {isOriginal && !isPractice && (
                         <PopupMenu>
                             <Stack direction="row">
                                 <AppModal
@@ -226,7 +230,7 @@ export const Part = React.memo((props: IPartProps) => {
                     )
                 )}
             </ol>
-            {isOriginal && (
+            {isOriginal && !isPractice && (
                 <CardActions sx={{ justifyContent: "center" }}>
                     <Button
                         title="Thêm câu hỏi mới"

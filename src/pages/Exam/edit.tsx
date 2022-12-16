@@ -20,6 +20,7 @@ import FormularForm from "../../components/FormularForm";
 import AppModal from "../../components/Modal";
 import CreatePartModal from "../../components/Part/Modal/create";
 import PdfPreview from "../../components/PdfPreview/";
+import PdfNativePreview from "../../components/PdfPreview/NativePreview";
 import PopupMenu from "../../components/PopupMenu";
 import { sendAlert } from "../../redux/slices/appSlice";
 import { getExam, removeExamState } from "../../redux/slices/examSlice";
@@ -107,15 +108,10 @@ export default function EditExamPage(props: ICreateExamPageProps) {
             flexGrow={1}
         >
             {isNativePreview && exam.documentUrl ? (
-                <object
-                    type="application/pdf"
-                    data={exam.documentUrl}
-                    style={{
-                        height: "100%",
-                        width: isPreview ? "60%" : "0",
-                        transition: "all 0.3s linear",
-                    }}
-                ></object>
+                <PdfNativePreview
+                    url={exam.documentUrl}
+                    isPreview={isPreview}
+                />
             ) : (
                 <Grid
                     item

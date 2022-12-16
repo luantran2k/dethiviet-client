@@ -23,6 +23,7 @@ export default interface IExam {
     numberCorrectQuestions?: number;
     totalQuestions?: number;
     parts?: PartType[];
+    isPractice?: boolean;
     createdAt?: string;
     updatedAt?: string;
 }
