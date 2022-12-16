@@ -20,6 +20,10 @@ export const FormulaList: { label: string; value: string }[] = [
         value: "\\frac{A}{B}",
     },
     {
+        label: "Phân số 2",
+        value: "\\dfrac{A}{B}",
+    },
+    {
         label: "Nhị thức",
         value: "\\binom{A}{B}",
     },
@@ -38,5 +42,13 @@ export const FormulaList: { label: string; value: string }[] = [
     {
         label: "Ma trận",
         value: "\\begin{bmatrix}a & b \\\\ c & d \\end{bmatrix}",
+    },
+    {
+        label: "Nhỏ hơn hoặc bằng",
+        value: "\\le",
+    },
+    {
+        label: "Lớn hơn hoặc bằng",
+        value: "\\ge",
     },
 ];

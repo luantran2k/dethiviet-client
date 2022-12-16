@@ -63,6 +63,10 @@
         width: 210mm;
         flex: 0 0 calc(297mm - 6rem);
         position: relative;
+        &:first-child {
+            break-after: always;
+            flex: 0 0 calc(296mm - 6rem);
+        }
         &:last-child {
             break-after: always;
             flex: 0 0 calc(296mm - 6rem);

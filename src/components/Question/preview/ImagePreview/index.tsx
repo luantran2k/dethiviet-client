@@ -30,12 +30,12 @@ export default function QuestionImagesPreivew(
         <Grid container spacing={2}>
             {question.questionImages?.map((url, index) => (
                 <Grid item xs={12 / column} key={url} mb={2}>
-                    <Box height={200}>
+                    <Box maxHeight={600} margin="0 auto">
                         <img
                             src={url}
                             style={{
                                 height: "100%",
-                                width: "100%",
+                                maxWidth: "100%",
                                 objectFit: "cover",
                                 filter: "grayscale(1)",
                             }}
