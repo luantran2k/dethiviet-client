@@ -1,9 +1,10 @@
 import { Delete } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { grey, teal } from "@mui/material/colors";
+import { grey, red, teal } from "@mui/material/colors";
 import { Box, Stack } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import QuestionTypeDatas from "../../../../const/QuestionTypes";
+import { getAnswerColorBackground } from "../../../../pages/Exam/practice";
 import request from "../../../../Utils/request";
 import ultis from "../../../../Utils/ultis";
 import { AnswerType } from "../../../Answer/interfaces/IAnswer";
@@ -89,13 +90,7 @@ export default function ExamResultWithDocument(
                     securityCode={exam.securityCode}
                 />
             </Box>
-            <Stack
-                padding={2}
-                flexBasis="40%"
-                height="100%"
-                overflow="auto"
-                bgcolor={teal[50]}
-            >
+            <Stack padding={2} flexBasis="40%" height="100%" overflow="auto">
                 <Stack direction="row">
                     <Box>
                         <Typography
@@ -203,14 +198,27 @@ export default function ExamResultWithDocument(
                                     </Grid>
                                 )}
                                 <Stack direction="row" spacing={2} mt={1}>
-                                    {question.answers?.map((answer, index) =>
-                                        renderAnswer({
-                                            answer: answer,
-                                            index,
-                                            part,
-                                            question,
-                                        })
-                                    )}
+                                    {question.answers?.map((answer, index) => (
+                                        <Box
+                                            sx={{
+                                                borderRadius: ".4rem",
+                                                padding: ".4rem",
+                                                backgroundColor:
+                                                    getAnswerColorBackground(
+                                                        answer,
+                                                        teal[100],
+                                                        red[100]
+                                                    ),
+                                            }}
+                                        >
+                                            {renderAnswer({
+                                                answer: answer,
+                                                index,
+                                                part,
+                                                question,
+                                            })}
+                                        </Box>
+                                    ))}
                                 </Stack>
                                 {question.explain && (
                                     <Typography

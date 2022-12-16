@@ -34,19 +34,23 @@ declare let renderMathInElement: (
 ) => void;
 export interface IPracticeExamPageProps {}
 
-export const getAnswerColorBackground = (answer: AnswerType) => {
+export const getAnswerColorBackground = (
+    answer: AnswerType,
+    tealColor?: string,
+    redColor?: string
+) => {
     if (
         answer.isTrue &&
         answer.isTrue == true &&
         answer.isAnswerFail == false
     ) {
-        return teal[50];
+        return tealColor || teal[50];
     }
     if (answer.isAnswerFail == true && Boolean(answer.isTrue) == false) {
-        return teal[50];
+        return tealColor || teal[50];
     }
     if (answer.isAnswerFail == true) {
-        return red[50];
+        return redColor || red[50];
     }
     return "white";
 };
