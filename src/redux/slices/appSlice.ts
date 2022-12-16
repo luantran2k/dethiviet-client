@@ -11,7 +11,7 @@ export interface User {
     email?: string;
     phone?: string;
     name?: string;
-    createAt?: string;
+    createdAt?: string;
 }
 
 export interface AlertPayload {

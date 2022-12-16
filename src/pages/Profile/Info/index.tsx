@@ -1,12 +1,24 @@
-import { Grid, TextField, Typography } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useUserInfo } from "..";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import AppModal from "../../../components/Modal";
+import { sendAlert } from "../../../redux/slices/appSlice";
+import ultis from "../../../Utils/ultis";
+import UpdateProfileModal from "./modal/update";
 import styles from "./style.module.scss";
 
 export interface IUserProfileInfoProps {}
 
 export default function UserProfileInfo(props: IUserProfileInfoProps) {
-    const { userInfo } = useUserInfo();
+    const { userInfo: userInfoProp } = useUserInfo();
+    const [userInfo, setUserInfo] = useState(userInfoProp);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.app.userInfo);
+
     return (
         <div className={styles.userInfo}>
             <Typography
@@ -19,55 +31,27 @@ export default function UserProfileInfo(props: IUserProfileInfoProps) {
                 Thông tin cá nhân
             </Typography>
             <ul className={styles.userInfoList}>
-                <li>Usename: {userInfo?.username}</li>
-                <li>Email: {userInfo?.email || "Chưa cập nhật"}</li>
-                <li>Số điện thoại {userInfo?.phone || "Chưa cập nhật"} </li>
-                <li>Ngày tham gia: {userInfo?.createAt || "Không rõ"}</li>
+                <li>
+                    <span>Usename: </span> {userInfo?.username}
+                </li>
+                <li>
+                    <span>Email: </span> {userInfo?.email || "Chưa cập nhật"}
+                </li>
+                <li>
+                    <span>Số điện thoại: </span>
+                    {userInfo?.phone || "Chưa cập nhật"}
+                </li>
+                <li>
+                    <span>Ngày tham gia: </span>
+                    {ultis.formatDate(userInfo?.createdAt) || "Không rõ"}
+                </li>
             </ul>
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        placeholder="Chưa cập nhật"
-                        value={userInfo?.name}
-                        label="Tên hiển thị"
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        disabled
-                        placeholder="Chưa cập nhật"
-                        value={userInfo?.username}
-                        label="Tên tài khoản"
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        placeholder="Chưa cập nhật"
-                        value={userInfo?.email}
-                        label="Email liên hệ"
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        placeholder="Chưa cập nhật"
-                        value={userInfo?.phone}
-                        label="Số điện thoại liên hệ"
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        disabled
-                        placeholder="Chưa cập nhật"
-                        value={userInfo?.createAt}
-                        label="Ngày tham gia"
-                    />
-                </Grid>
-            </Grid>
+            {userInfo?.id === user?.id && userInfo && (
+                <UpdateProfileModal
+                    userInfo={userInfo}
+                    setUserInfo={setUserInfo}
+                />
+            )}
         </div>
     );
 }

@@ -32,6 +32,10 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
     const [type, setType] = React.useState(
         QuestionTypeDatas.MultipleChoice.value
     );
+    const enableType: string[] = [
+        QuestionTypeDatas.MultipleChoice.value,
+        QuestionTypeDatas.MultiSelect.value,
+    ];
 
     const onSubmit: SubmitHandler<PartPayLoad> = async (data) => {
         const newPart = await request.post<IPart>("/parts", {
@@ -113,7 +117,15 @@ export default function CreatePartModal(props: ICreatePartModalProps) {
                         }}
                     >
                         {Object.values(QuestionTypeDatas).map((type, index) => (
-                            <MenuItem key={index} value={type.value}>
+                            <MenuItem
+                                key={index}
+                                value={type.value}
+                                disabled={
+                                    !enableType.some(
+                                        (value) => value === type.value
+                                    )
+                                }
+                            >
                                 {type.label}
                             </MenuItem>
                         ))}

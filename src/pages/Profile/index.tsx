@@ -45,9 +45,9 @@ export default function ProfilePage(props: IProfilePageProps) {
                                         <NavLink to="./exams/favorite">
                                             Bài thi quan tâm
                                         </NavLink>
-                                        <NavLink to="./account-setting">
+                                        {/* <NavLink to="./account-setting">
                                             Cài đặt tài khoản
-                                        </NavLink>
+                                        </NavLink> */}
                                     </>
                                 )}
                             </Stack>
