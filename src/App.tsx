@@ -1,6 +1,12 @@
 import { ContactPage } from "@mui/icons-material";
 import React, { Suspense, useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter,
+    Navigate,
+    redirect,
+    Route,
+    Routes,
+} from "react-router-dom";
 import { useAppDispatch } from "./app/hooks";
 import ProfilePage from "./pages/Profile";
 import AccountSetting from "./pages/Profile/AccountSetting";
@@ -28,6 +34,13 @@ function App() {
     const EditExamPage = React.lazy(() => import("./pages/Exam/edit"));
     const ReportPage = React.lazy(() => import("./pages/Report"));
     const FindPasswordPage = React.lazy(() => import("./pages/FindPassword"));
+    const AdminPage = React.lazy(() => import("./pages/Admin"));
+    const DashboardOutlet = React.lazy(
+        () => import("./pages/Admin/DashboardOutlet")
+    );
+    const UserOutlet = React.lazy(() => import("./pages/Admin/UserOutlet"));
+    const ExamOutlet = React.lazy(() => import("./pages/Admin/ExamOutlet"));
+    const ErrorOutlet = React.lazy(() => import("./pages/Admin/ErrorOutlet"));
 
     const dispatch = useAppDispatch();
     const [isSignIn] = useState(ultis.checkRefreshTokenExpire());
@@ -220,6 +233,49 @@ function App() {
                             </Suspense>
                         }
                     />
+                    <Route
+                        path="admin"
+                        element={
+                            <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                <AdminPage />
+                            </Suspense>
+                        }
+                    >
+                        <Route index element={<Navigate to="home" />} />
+                        <Route
+                            path="home"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <DashboardOutlet />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="users"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <UserOutlet />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="exams"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <ExamOutlet />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="errors"
+                            element={
+                                <Suspense fallback={<h4>Đang tải trang</h4>}>
+                                    <ErrorOutlet />
+                                </Suspense>
+                            }
+                        />
+                    </Route>
+
                     <Route
                         path="*"
                         element={

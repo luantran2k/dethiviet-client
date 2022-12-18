@@ -54,16 +54,21 @@ export function useFetch<Filter, ResultData>(
     return { data, error, loading };
 }
 
-export function useAuth(page?: string) {
+export function useAuth(options?: { role: string }) {
+    const role = options?.role;
     const { isSignIn, ...app } = useAppSelector((state) => state.app);
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    if (page) {
-        console.log("check sigin" + page, isSignIn); //for debugging
-    }
 
     useEffect(() => {
+        if (
+            isSignIn &&
+            !app.userInfo?.role?.some((roleSome) => roleSome === role)
+        ) {
+            alert("Bạn không có quyền truy cập");
+            navigate("/");
+        }
         if (!isSignIn) {
             const refresToken = ultis.checkRefreshTokenExpire();
             if (!refresToken) {
