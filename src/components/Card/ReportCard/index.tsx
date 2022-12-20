@@ -1,5 +1,6 @@
 import { Box, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 
 interface MuiColor {
     50: string;
@@ -21,42 +22,65 @@ interface MuiColor {
 export interface IReportCardProps {
     icon: React.ReactElement;
     title: string;
-    data: string;
+    data: number;
+    to?: string;
     color?: MuiColor;
     sx?: SxProps<Theme>;
 }
 
 export default function ReportCard(props: IReportCardProps) {
-    const { icon, title, data, color = teal, sx } = props;
+    const { icon, title, data, color = teal, sx, to } = props;
+    const navigate = useNavigate();
     return (
-        <Stack
-            alignItems="center"
-            justifyContent="center"
+        <Box
             bgcolor={color[50]}
             flex={1}
-            spacing={2}
             padding="4rem 0"
             borderRadius=".8rem"
-            sx={sx}
+            onClick={() => {
+                if (to) {
+                    navigate(to);
+                }
+            }}
+            sx={{
+                userSelect: "none",
+                cursor: "pointer",
+                "&:hover .report-card": {
+                    transform: "scale(1.15)",
+                },
+                ...sx,
+            }}
         >
-            <Box
-                width="4rem"
-                height="4rem"
-                borderRadius="50%"
-                display="flex"
-                justifyContent="center"
+            <Stack
+                className="report-card"
                 alignItems="center"
-                bgcolor={color[100]}
-                color={color[800]}
+                justifyContent="center"
+                spacing={2}
+                sx={{ transition: "all .3s ease" }}
             >
-                {icon}
-            </Box>
-            <Stack alignItems="center" justifyContent="center">
-                <Typography fontSize="2rem" fontWeight="500" color={color[900]}>
-                    {data}
-                </Typography>
-                <Typography color={color[900]}>{title}</Typography>
+                <Box
+                    width="4rem"
+                    height="4rem"
+                    borderRadius="50%"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    bgcolor={color[100]}
+                    color={color[900]}
+                >
+                    {icon}
+                </Box>
+                <Stack alignItems="center" justifyContent="center">
+                    <Typography
+                        fontSize="2rem"
+                        fontWeight="500"
+                        color={color[900]}
+                    >
+                        {data}
+                    </Typography>
+                    <Typography color={color[900]}>{title}</Typography>
+                </Stack>
             </Stack>
-        </Stack>
+        </Box>
     );
 }

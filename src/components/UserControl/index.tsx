@@ -62,6 +62,17 @@ export default function UserControl(props: IUserControlProps) {
                         >
                             Trang cá nhân
                         </MenuItem>
+                        {userInfo?.role.some(
+                            (currentRole) => currentRole === "admin"
+                        ) && (
+                            <MenuItem
+                                onClick={() => {
+                                    navigate(`/admin`);
+                                }}
+                            >
+                                Quản trị
+                            </MenuItem>
+                        )}
                         <MenuItem
                             onClick={() => {
                                 navigate(`/user/report`);

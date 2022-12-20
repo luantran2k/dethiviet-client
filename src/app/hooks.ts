@@ -64,6 +64,7 @@ export function useAuth(options?: { role: string }) {
     useEffect(() => {
         if (
             isSignIn &&
+            role &&
             !app.userInfo?.role?.some((roleSome) => roleSome === role)
         ) {
             alert("Bạn không có quyền truy cập");

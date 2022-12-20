@@ -3,11 +3,14 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { User } from "../../redux/slices/appSlice";
 
 export interface IAvatarProps {
-    profileImg: string;
+    profileImg?: string;
 }
 
 export default function Avatar(props: IAvatarProps) {
-    const { profileImg } = props;
+    let { profileImg } = props;
+    if (!profileImg) {
+        profileImg = "/image/user/profile.png";
+    }
     return (
         <Box
             sx={{

@@ -215,5 +215,8 @@ const ultis = {
     checkPhoneNumber: (number: string) => {
         return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
     },
+    randomInt: (min: number, max: number) => {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    },
 };
 export default ultis;

@@ -2,10 +2,10 @@ import {
     ArticleRounded,
     DashboardRounded,
     ErrorRounded,
+    LogoutRounded,
     PersonRounded,
 } from "@mui/icons-material";
 import {
-    Box,
     Grid,
     ListItemIcon,
     ListItemText,
@@ -14,29 +14,36 @@ import {
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import { Stack } from "@mui/system";
-import { NavLink, Outlet } from "react-router-dom";
-import { useAppSelector, useAuth } from "../../app/hooks";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
+import { signOut } from "../../redux/slices/appSlice";
+import request from "../../Utils/request";
 
 export interface IAdminPageProps {}
 
 export default function AdminPage(props: IAdminPageProps) {
     useAuth({ role: "admin" });
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const user = useAppSelector((state) => state.app.userInfo);
     return (
         <Grid container height={"100vh"}>
             <Grid
                 item
-                minWidth={"20rem"}
+                flexBasis={"20rem"}
                 borderRight={`1px solid ${grey[300]}`}
             >
-                <img
-                    src="/image/logo/teal_logo.png"
-                    style={{
-                        width: "12rem",
-                        display: "block",
-                        margin: "2rem auto",
-                    }}
-                />
+                <Link to="/">
+                    {" "}
+                    <img
+                        src="/image/logo/teal_logo.png"
+                        style={{
+                            width: "10rem",
+                            display: "block",
+                            margin: "2rem auto",
+                        }}
+                    />
+                </Link>
 
                 <Stack
                     direction="row"
@@ -111,6 +118,24 @@ export default function AdminPage(props: IAdminPageProps) {
                         </MenuItem>
                     </NavLink>
                 </Stack>
+                <MenuItem
+                    sx={{ padding: "1rem", margin: "1rem" }}
+                    onClick={async () => {
+                        try {
+                            await request.get("auth/signOut");
+                        } catch (err) {
+                            console.log(err);
+                        } finally {
+                            dispatch(signOut());
+                            navigate(location.pathname || "/");
+                        }
+                    }}
+                >
+                    <ListItemIcon>
+                        <LogoutRounded sx={{ color: teal[600] }} />
+                    </ListItemIcon>
+                    <ListItemText>Đăng xuất</ListItemText>
+                </MenuItem>
             </Grid>
             <Grid item flex={1} padding="2rem">
                 <Outlet />
