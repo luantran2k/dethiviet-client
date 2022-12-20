@@ -75,6 +75,7 @@ const appSlice = createSlice({
         builder.addCase(signUp.fulfilled, (state, action) => {
             state.isSignIn = true;
             state.isLoading = false;
+            state.userInfo = action.payload.userInfo;
             saveRefreshToken(action.payload);
         });
         builder.addCase(signUp.rejected, (state, action) => {

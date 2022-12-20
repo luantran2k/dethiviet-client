@@ -16,6 +16,8 @@ import { grey, teal } from "@mui/material/colors";
 import { Stack } from "@mui/system";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
+import AppALert from "../../components/AppAlert";
+import AppLoading from "../../components/AppLoading";
 import { signOut } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
 
@@ -28,6 +30,8 @@ export default function AdminPage(props: IAdminPageProps) {
     const user = useAppSelector((state) => state.app.userInfo);
     return (
         <Grid container height={"100vh"}>
+            <AppALert />
+            <AppLoading />
             <Grid
                 item
                 flexBasis={"20rem"}

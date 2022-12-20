@@ -4,6 +4,7 @@ import {
     Button,
     Fade,
     Modal,
+    Stack,
     SxProps,
     Theme,
 } from "@mui/material";
@@ -19,6 +20,7 @@ const style = {
     borderRadius: 2,
     boxShadow: 24,
     p: 4,
+    maxHeight: "80vh",
 };
 
 export interface AppModalProps {
@@ -36,6 +38,10 @@ interface IAppModalComponentProps {
     buttonTitle?: string;
     sx?: SxProps<Theme> | undefined;
     open?: boolean;
+    cancelButton?: React.ReactElement;
+    confirmButton?: React.ReactElement;
+    confirmHandler?: (arg?: any) => void;
+    closeAfterConfirm?: boolean;
 }
 
 export default function AppModal(props: IAppModalComponentProps) {
@@ -50,6 +56,10 @@ export default function AppModal(props: IAppModalComponentProps) {
         buttonTitle,
         sx,
         open: openProp = false,
+        cancelButton,
+        confirmButton,
+        confirmHandler,
+        closeAfterConfirm = true,
     } = props;
     const [open, setOpen] = React.useState(openProp);
     const handleOpen = (e: React.MouseEvent) => {
@@ -88,7 +98,35 @@ export default function AppModal(props: IAppModalComponentProps) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={sx ? { ...style, ...sx } : style}>{children}</Box>
+                    <Box sx={sx ? { ...style, ...sx } : style}>
+                        {children}
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            width="100%"
+                            mt={2}
+                            justifyContent={"center"}
+                        >
+                            {cancelButton &&
+                                React.cloneElement(cancelButton, {
+                                    onClick: () => {
+                                        setOpen(false);
+                                    },
+                                })}
+
+                            {confirmButton &&
+                                React.cloneElement(confirmButton, {
+                                    onClick: () => {
+                                        if (confirmHandler) {
+                                            confirmHandler();
+                                        }
+                                        if (closeAfterConfirm) {
+                                            setOpen(false);
+                                        }
+                                    },
+                                })}
+                        </Stack>
+                    </Box>
                 </Fade>
             </Modal>
         </>
