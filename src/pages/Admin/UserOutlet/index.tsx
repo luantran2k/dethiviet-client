@@ -43,8 +43,17 @@ export default function UserOutlet(props: IUserOutletProps) {
             { page: number; search?: string },
             { users: User[]; totalPages?: number }
         >("admin/users", { page: page - 1, search: searchArg });
-        if (result?.users) {
+        if (result?.users && !ultis.checkEmptyArray(result.users)) {
             setUsers(result.users);
+        } else {
+            dispatch(
+                sendAlert({
+                    message: "Không tìm thấy kết quả",
+                    severity: "error",
+                })
+            );
+            setTotalPages(1);
+            setUsers([]);
         }
         if (result?.totalPages) {
             setTotalPages(result.totalPages);

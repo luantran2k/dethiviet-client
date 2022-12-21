@@ -40,7 +40,7 @@ function App() {
     );
     const UserOutlet = React.lazy(() => import("./pages/Admin/UserOutlet"));
     const ExamOutlet = React.lazy(() => import("./pages/Admin/ExamOutlet"));
-    const ErrorOutlet = React.lazy(() => import("./pages/Admin/ErrorOutlet"));
+    const ReportOutlet = React.lazy(() => import("./pages/Admin/ReportOutlet"));
 
     const dispatch = useAppDispatch();
     const [isSignIn] = useState(ultis.checkRefreshTokenExpire());
@@ -270,7 +270,7 @@ function App() {
                             path="errors"
                             element={
                                 <Suspense fallback={<h4>Đang tải trang</h4>}>
-                                    <ErrorOutlet />
+                                    <ReportOutlet />
                                 </Suspense>
                             }
                         />

@@ -18,10 +18,11 @@ import {
 import { teal } from "@mui/material/colors";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../../app/hooks";
 import UserNameButton from "../../../components/Button/UserNameButton";
 import AppModal from "../../../components/Modal";
 import OrderList from "../../../components/OrderList";
-import { User } from "../../../redux/slices/appSlice";
+import { sendAlert, User } from "../../../redux/slices/appSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import { IDetailExam } from "../../Exam/detail";
@@ -29,6 +30,7 @@ import { IDetailExam } from "../../Exam/detail";
 export interface IExamOutletProps {}
 
 export default function ExamOutlet(props: IExamOutletProps) {
+    const dispatch = useAppDispatch();
     const [exams, setExams] = useState<IDetailExam[]>();
     const [selectedExamIds, setSelectedExamIds] = useState<number[]>([]);
     const [page, setPage] = useState(1);
@@ -41,8 +43,17 @@ export default function ExamOutlet(props: IExamOutletProps) {
             { page: number; search?: string },
             { exams: IDetailExam[]; totalPages?: number }
         >("admin/exams", { page: page - 1, search: searchArg });
-        if (result?.exams) {
+        if (result?.exams && !ultis.checkEmptyArray(result.exams)) {
             setExams(result.exams);
+        } else {
+            dispatch(
+                sendAlert({
+                    message: "Không tìm thấy kết quả",
+                    severity: "error",
+                })
+            );
+            setTotalPages(1);
+            setExams([]);
         }
         if (result?.totalPages) {
             setTotalPages(result.totalPages);

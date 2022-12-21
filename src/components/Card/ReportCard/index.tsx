@@ -29,7 +29,7 @@ export interface IReportCardProps {
 }
 
 export default function ReportCard(props: IReportCardProps) {
-    const { icon, title, data, color = teal, sx, to } = props;
+    const { icon, title, data = 0, color = teal, sx, to } = props;
     const navigate = useNavigate();
     return (
         <Box

@@ -130,8 +130,8 @@ export default function AdminPage(props: IAdminPageProps) {
                         } catch (err) {
                             console.log(err);
                         } finally {
+                            navigate("/");
                             dispatch(signOut());
-                            navigate(location.pathname || "/");
                         }
                     }}
                 >
