@@ -32,6 +32,7 @@ li::marker {
 
 ::-webkit-scrollbar {
     width: 0.35rem;
+    height: 0.35rem;
     cursor: pointer;
     &:hover {
         width: 0.5rem;
