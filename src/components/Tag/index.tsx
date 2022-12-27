@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 
 export interface IAppTagProps {

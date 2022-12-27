@@ -5,7 +5,7 @@ import ultis from "../../Utils/ultis";
 import ExamSelected from "../ExamSelected";
 import AppBarSearch from "../Search/AppBarSearch";
 import UserControl from "../UserControl";
-import "./style.scss";
+import "./styles.scss";
 
 export interface INavbarProps {}
 
@@ -36,7 +36,6 @@ export default function Navbar(props: INavbarProps) {
                         <NavLink to="/">Trang chủ</NavLink>
                         <NavLink to="/exam">Đề thi</NavLink>
                         <NavLink to="/discussion">Thảo luận</NavLink>
-                        {/* <NavLink to="/about">About</NavLink> */}
                     </Stack>
                 </Stack>
                 <AppBarSearch />

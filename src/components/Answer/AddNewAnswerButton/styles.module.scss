@@ -1,0 +1,21 @@
+@use "../../../scss/variables/color" as *;
+@use "../../Answer/MultipleChoice/HasDocument/styles.module.scss" as
+    multipleChoiceAs;
+@use "../../Answer/MultiSelect/HasDocument/styles.module.scss" as multiSlelectAs;
+.addAnswerDocument {
+    color: white;
+    background-color: $teal-500;
+    cursor: pointer;
+    &.multipleChoiceAs {
+        @include multipleChoiceAs.answerItem;
+    }
+    &.multiSlelectAs {
+        @include multiSlelectAs.answerItem;
+    }
+    &:hover {
+        background-color: $teal-400;
+    }
+    &:active {
+        background-color: $teal-300;
+    }
+}

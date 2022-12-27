@@ -1,11 +1,10 @@
-import { Delete, Search, Send } from "@mui/icons-material";
+import { Delete, Search } from "@mui/icons-material";
 import {
     Box,
     Button,
     ButtonGroup,
     Checkbox,
     Pagination,
-    Paper,
     Stack,
     Table,
     TableBody,
@@ -17,12 +16,11 @@ import {
 } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import UserNameButton from "../../../components/Button/UserNameButton";
 import AppModal from "../../../components/Modal";
 import OrderList from "../../../components/OrderList";
-import { sendAlert, User } from "../../../redux/slices/appSlice";
+import { sendAlert } from "../../../redux/slices/appSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 import { IDetailExam } from "../../Exam/detail";
@@ -83,6 +81,15 @@ export default function ExamOutlet(props: IExamOutletProps) {
             setSearchText(search.current?.value);
         } else {
             setSearchText("");
+        }
+    };
+
+    const handleChangeCheckBox = (exam: IDetailExam) => {
+        const isSelected = selectedExamIds.some((id) => id === exam.id);
+        if (isSelected) {
+            setSelectedExamIds((ids) => ids.filter((id) => id !== exam.id));
+        } else {
+            setSelectedExamIds((ids) => [...ids, exam.id!]);
         }
     };
 
@@ -189,23 +196,8 @@ export default function ExamOutlet(props: IExamOutletProps) {
                                         checked={selectedExamIds.some(
                                             (id) => id === exam.id
                                         )}
-                                        onChange={(e) => {
-                                            const isSelected =
-                                                selectedExamIds.some(
-                                                    (id) => id === exam.id
-                                                );
-                                            if (isSelected) {
-                                                setSelectedExamIds((ids) =>
-                                                    ids.filter(
-                                                        (id) => id !== exam.id
-                                                    )
-                                                );
-                                            } else {
-                                                setSelectedExamIds((ids) => [
-                                                    ...ids,
-                                                    exam.id!,
-                                                ]);
-                                            }
+                                        onChange={() => {
+                                            handleChangeCheckBox(exam);
                                         }}
                                     />
                                 </TableCell>

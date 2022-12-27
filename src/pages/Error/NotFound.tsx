@@ -1,5 +1,4 @@
 import { Button, Typography } from "@mui/material";
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./notFound.module.scss";
 

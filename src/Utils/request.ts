@@ -1,8 +1,10 @@
+import { StoreType } from "./../redux/store";
+import axios, { AxiosRequestConfig } from "axios";
 import { sendAlert, setLoading, User } from "./../redux/slices/appSlice";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { store } from "../redux/store";
-
-const { dispatch } = store;
+let store: StoreType;
+export const injectStore = (_store: StoreType) => {
+    store = _store;
+};
 
 export const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL_API,
@@ -33,11 +35,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
         return response;
     },
     async (error) => {
-        dispatch(setLoading(false));
+        store.dispatch(setLoading(false));
         if (
             error.config &&
             error.config.url.indexOf("/refreshToken") === -1 &&
@@ -52,15 +54,13 @@ instance.interceptors.response.use(
                 });
             }
         }
-        dispatch(
+        store?.dispatch(
             sendAlert({
-                message:
-                    error.response?.data?.message ||
-                    "Có lỗi, vui lòng thử lại ",
+                message: error.response?.data.message,
                 severity: "error",
-                time: 5,
             })
         );
+
         return Promise.reject(error);
     }
 );

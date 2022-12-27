@@ -1,7 +1,10 @@
 import examSlice from "./slices/examSlice";
-import { configureStore } from "@reduxjs/toolkit";
-import appSlice from "./slices/appSlice";
-import createExamSlice from "./slices/createExamSlice";
+import { AnyAction, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import appSlice, { AppSliceState } from "./slices/appSlice";
+import createExamSlice, {
+    CreateExamSliceState,
+} from "./slices/createExamSlice";
+import IExam from "../components/Exam/interfaces/IExam";
 // ...
 
 export const store = configureStore({
@@ -11,6 +14,8 @@ export const store = configureStore({
         createExam: createExamSlice.reducer,
     },
 });
+
+export type StoreType = typeof store;
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

@@ -9,7 +9,7 @@ import AppModal from "../../../components/Modal";
 import { sendAlert } from "../../../redux/slices/appSlice";
 import ultis from "../../../Utils/ultis";
 import UpdateProfileModal from "./modal/update";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IUserProfileInfoProps {}
 

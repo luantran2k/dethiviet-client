@@ -1,14 +1,12 @@
-import { sendAlert } from "./../redux/slices/appSlice";
-import { refreshToken } from "./../Utils/request";
-import { useDispatch, useSelector } from "react-redux";
+import { AxiosRequestConfig } from "axios";
+import { useEffect, useState } from "react";
 import type { TypedUseSelectorHook } from "react-redux";
-import type { RootState, AppDispatch } from "../redux/store";
-import axios, { AxiosRequestConfig } from "axios";
-import { useState, useEffect } from "react";
-import request, { instance } from "../Utils/request";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import ultis from "../Utils/ultis";
 import { setIsSignIn } from "../redux/slices/appSlice";
+import type { AppDispatch, RootState } from "../redux/store";
+import request from "../Utils/request";
+import ultis from "../Utils/ultis";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;

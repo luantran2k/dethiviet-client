@@ -1,12 +1,9 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import * as React from "react";
 import { memo } from "react";
-import { questionSeletor } from "../../../redux/selectors/examSeletors";
-import examUltis from "../../../Utils/examUltis";
 import QuestionPreview from "../../Question/preview";
 import { PartType } from "../interfaces/IPart";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 export interface IPartPreviewProps {
     part: PartType;
 }

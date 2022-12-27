@@ -13,7 +13,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { red, teal } from "@mui/material/colors";
+import { teal } from "@mui/material/colors";
 import { Box } from "@mui/system";
 import { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
@@ -115,6 +115,15 @@ export default function UserOutlet(props: IUserOutletProps) {
             );
             mailContent.current?.value == "";
             mailTitle.current?.value == "";
+        }
+    };
+
+    const handleCheck = (user: User) => {
+        const isSelected = userSelectedIds.some((id) => id === user.id);
+        if (isSelected) {
+            setUsersSelectedIds((ids) => ids.filter((id) => id !== user.id));
+        } else {
+            setUsersSelectedIds((ids) => [...ids, user.id]);
         }
     };
 
@@ -249,23 +258,7 @@ export default function UserOutlet(props: IUserOutletProps) {
                                     checked={userSelectedIds.some(
                                         (id) => id === user.id
                                     )}
-                                    onChange={(e) => {
-                                        const isSelected = userSelectedIds.some(
-                                            (id) => id === user.id
-                                        );
-                                        if (isSelected) {
-                                            setUsersSelectedIds((ids) =>
-                                                ids.filter(
-                                                    (id) => id !== user.id
-                                                )
-                                            );
-                                        } else {
-                                            setUsersSelectedIds((ids) => [
-                                                ...ids,
-                                                user.id,
-                                            ]);
-                                        }
-                                    }}
+                                    onChange={() => handleCheck(user)}
                                 />
                             </TableCell>
                             <TableCell>{user.id}</TableCell>

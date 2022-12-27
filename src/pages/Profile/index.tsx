@@ -4,7 +4,7 @@ import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import { User } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
-import "./style.scss";
+import "./styles.scss";
 
 export interface IProfilePageProps {}
 type ContextType = { userInfo: User | null };

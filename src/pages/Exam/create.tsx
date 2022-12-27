@@ -1,15 +1,12 @@
 import { Edit } from "@mui/icons-material";
 import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
-import { display } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { stringify } from "uuid";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CenterMessage from "../../components/CenterMessage";
 import ExamInfo from "../../components/Exam/Info";
 import IExam from "../../components/Exam/interfaces/IExam";
-import CreateExamModal from "../../components/Exam/modal/create";
 import UpdateExamModal from "../../components/Exam/modal/update";
 import AppModal from "../../components/Modal";
 import IPart from "../../components/Part/interfaces/IPart";
@@ -137,14 +134,6 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
         }
         dispatch(updateExamToCreateInfo(exam));
     };
-
-    if (
-        ultis.checkEmptyArray(examDataInfos) ||
-        examDataInfos === undefined ||
-        examDataInfo === undefined
-    ) {
-        return <CenterMessage message="Vui lòng chọn đề thi mẫu trước" />;
-    }
 
     const handleCreateExam = async (value: {
         examToCreateInfo: IExam;
@@ -288,6 +277,14 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
             navigate(`/user/${userId}/exams/own`);
         }
     };
+
+    if (
+        ultis.checkEmptyArray(examDataInfos) ||
+        examDataInfos === undefined ||
+        examDataInfo === undefined
+    ) {
+        return <CenterMessage message="Vui lòng chọn đề thi mẫu trước" />;
+    }
 
     return (
         <Stack

@@ -11,7 +11,6 @@ export interface IDiscussionPageProps {}
 
 export default function DiscussionPage(props: IDiscussionPageProps) {
     const user = useAppSelector((state) => state.app.userInfo);
-    const dispatch = useAppDispatch();
     const [posts, setPosts] = useState<IPost[]>([]);
     const [page, setPage] = useState<number>(0);
     const [isLastPage, setIsLastPage] = useState(false);

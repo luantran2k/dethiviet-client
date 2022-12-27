@@ -1,0 +1,33 @@
+@use "../../../../scss/variables/color" as *;
+
+@mixin answerItem {
+    display: block;
+    height: 2rem;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    list-style: none;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+.answer {
+    border: 1px solid teal;
+    @include answerItem;
+    &.true {
+        background-color: $teal-500;
+        color: white;
+        border: none;
+    }
+
+    &:hover {
+        background-color: $teal-100;
+    }
+
+    &:active {
+        background-color: $teal-200;
+    }
+}

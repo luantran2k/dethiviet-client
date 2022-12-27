@@ -6,16 +6,14 @@ import {
 import { Box, Grid, MenuItem, Stack, Typography } from "@mui/material";
 import { amber, lightGreen, red, teal } from "@mui/material/colors";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useFetch } from "../../../app/hooks";
+import { useAppDispatch } from "../../../app/hooks";
 import Avatar from "../../../components/Avatar";
 import UserNameButton from "../../../components/Button/UserNameButton";
 import ReportCard from "../../../components/Card/ReportCard";
-import { ChartData, DataSet, LineChart } from "../../../components/Chart/Line";
+import { ChartData, LineChart } from "../../../components/Chart/Line";
 import ExamTitle from "../../../components/Exam/Title";
-import ExamCarousel from "../../../components/ExamCarousel";
 import { sendAlert } from "../../../redux/slices/appSlice";
 import request from "../../../Utils/request";
-import ultis from "../../../Utils/ultis";
 import { IDetailExam } from "../../Exam/detail";
 
 export interface IDashboardOutletProps {}

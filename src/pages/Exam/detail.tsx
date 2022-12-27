@@ -1,12 +1,5 @@
 import { Star } from "@mui/icons-material";
-import {
-    Box,
-    Button,
-    Stack,
-    TextField,
-    Typography,
-    useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -63,6 +56,66 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
             getExam();
         }
     }, [examId]);
+
+    const handleFavorite = async (exam: IExam) => {
+        if (!userId) {
+            dispatch(
+                sendAlert({
+                    message: "Bạn cần đăng nhập để thực hiện chức năng này",
+                    time: 3,
+                    severity: "warning",
+                })
+            );
+            return;
+        }
+        if (exam.isFavorited) {
+            const res = await request.delete(
+                `exams/${exam.id}/favorite?userId=${userId}`
+            );
+            if (res) {
+                setExam(
+                    (preValue) =>
+                        ({
+                            ...preValue,
+                            isFavorited: false,
+                        } as IDetailExam)
+                );
+            }
+        } else {
+            const res = await request.post(
+                `exams/${exam.id}/favorite?userId=${userId}`,
+                {}
+            );
+            if (res) {
+                setExam(
+                    (preValue) =>
+                        ({
+                            ...preValue,
+                            isFavorited: true,
+                        } as IDetailExam)
+                );
+            }
+        }
+    };
+
+    const handleShare = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        exam: IExam
+    ) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(
+            `${BASE_URL}exam/detail/${exam.id}?${
+                exam.isPublic ? "" : `securityCode=${exam.securityCode}`
+            }`
+        );
+        dispatch(
+            sendAlert({
+                message: "Đã copy đường đẫn",
+                time: 3,
+            })
+        );
+    };
+
     if (isNeedSecurityCode) {
         return (
             <AppModal
@@ -195,47 +248,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                                 cursor: "pointer",
                                 fontSize: "2rem",
                             }}
-                            onClick={async () => {
-                                if (!userId) {
-                                    dispatch(
-                                        sendAlert({
-                                            message:
-                                                "Bạn cần đăng nhập để thực hiện chức năng này",
-                                            time: 3,
-                                            severity: "warning",
-                                        })
-                                    );
-                                    return;
-                                }
-                                if (exam.isFavorited) {
-                                    const res = await request.delete(
-                                        `exams/${exam.id}/favorite?userId=${userId}`
-                                    );
-                                    if (res) {
-                                        setExam(
-                                            (preValue) =>
-                                                ({
-                                                    ...preValue,
-                                                    isFavorited: false,
-                                                } as IDetailExam)
-                                        );
-                                    }
-                                } else {
-                                    const res = await request.post(
-                                        `exams/${exam.id}/favorite?userId=${userId}`,
-                                        {}
-                                    );
-                                    if (res) {
-                                        setExam(
-                                            (preValue) =>
-                                                ({
-                                                    ...preValue,
-                                                    isFavorited: true,
-                                                } as IDetailExam)
-                                        );
-                                    }
-                                }
-                            }}
+                            onClick={() => handleFavorite(exam)}
                         />
 
                         <Button
@@ -249,20 +262,7 @@ export default function DetailExamPage(props: IDetailExamPageProps) {
                         <Button
                             variant="outlined"
                             onClick={(e) => {
-                                e.stopPropagation();
-                                navigator.clipboard.writeText(
-                                    `${BASE_URL}exam/detail/${exam.id}?${
-                                        exam.isPublic
-                                            ? ""
-                                            : `securityCode=${exam.securityCode}`
-                                    }`
-                                );
-                                dispatch(
-                                    sendAlert({
-                                        message: "Đã copy đường đẫn",
-                                        time: 3,
-                                    })
-                                );
+                                handleShare(e, exam);
                             }}
                         >
                             Chia sẻ

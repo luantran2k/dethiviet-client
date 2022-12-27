@@ -1,11 +1,10 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useState } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 import { Part } from "../../../Part";
 import PdfPreview from "../../../PdfPreview";
 import PdfNativePreview from "../../../PdfPreview/NativePreview";
-import ExamInfo from "../../Info";
 
 export interface IExamPracticeWithDocumentProps {}
 
@@ -50,7 +49,6 @@ export default function ExamPracticeWithDocument(
                 <Typography variant="h2" fontSize="2rem" fontWeight={500}>
                     {exam.title}
                 </Typography>
-                {/* <Typography>Mã đề thi: {exam.securityCode} </Typography> */}
                 <Box marginTop={2}>
                     {exam.parts?.map(({ id }) => (
                         <Part partId={id} key={id} />

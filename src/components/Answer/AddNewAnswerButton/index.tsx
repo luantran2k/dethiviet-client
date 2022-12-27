@@ -1,12 +1,11 @@
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import { teal } from "@mui/material/colors";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { createNewAnswer } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import IQuestion from "../../Question/interfaces/IQuestion";
 import IAnswer from "../interfaces/IAnswer";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IAddNewAnswerButtonProps {
     question: IQuestion;

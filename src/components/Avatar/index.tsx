@@ -1,6 +1,4 @@
-import { MoreVert } from "@mui/icons-material";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { User } from "../../redux/slices/appSlice";
+import { Box } from "@mui/material";
 
 export interface IAvatarProps {
     profileImg?: string;

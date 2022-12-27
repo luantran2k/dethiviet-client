@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface IExamTitleProps {

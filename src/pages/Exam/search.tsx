@@ -1,13 +1,11 @@
-import { Queue } from "@mui/icons-material";
 import { Button, Grid, Stack, TextField, Typography } from "@mui/material";
-import { FormEvent, memo, useEffect, useId, useState } from "react";
+import { FormEvent, memo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector, useFetch } from "../../app/hooks";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useFetch } from "../../app/hooks";
 import { ExamFilter } from "../../components/Exam/interfaces/IExam";
 import { IExamCard } from "../../components/ExamCard";
 import CarouselCard from "../../components/ExamCard/CarouselCard";
-import ExamSelected from "../../components/ExamSelected";
 import ultis from "../../Utils/ultis";
 
 export interface ISearchExamPageProps {}

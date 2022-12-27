@@ -1,5 +1,4 @@
-import { Grid, Box, Typography } from "@mui/material";
-import * as React from "react";
+import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ultis from "../../../../Utils/ultis";
 import IQuestion from "../../interfaces/IQuestion";
@@ -12,7 +11,6 @@ export default function QuestionImagesPreivew(
     props: IQuestionImagesPreivewProps
 ) {
     const { question } = props;
-    const [height, setHeight] = useState(400);
     const [column, setColumn] = useState(() => {
         return question.questionImages?.length! >= 2 ? 2 : 1;
     });

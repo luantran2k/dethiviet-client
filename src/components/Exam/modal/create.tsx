@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { GradeData } from "../../../const/GradeData";
 import SubjectNames from "../../../const/SubjectNames";
-import { sendAlert, setLoading } from "../../../redux/slices/appSlice";
+import { setLoading } from "../../../redux/slices/appSlice";
 import { createExam } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";

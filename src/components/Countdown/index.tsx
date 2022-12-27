@@ -1,4 +1,4 @@
-import { Box, Button, Stack, SxProps, Theme, Typography } from "@mui/material";
+import { Stack, SxProps, Theme, Typography } from "@mui/material";
 
 export interface ICountdownProps {
     time?: number;

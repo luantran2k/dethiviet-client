@@ -1,7 +1,7 @@
 import * as pdfjsLibModule from "pdfjs-dist";
 import { useEffect, useRef, useState } from "react";
 type PDFJS = typeof pdfjsLibModule;
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 import "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.1.81/build/pdf.min.js";
 // Loaded via <script> tag, create shortcut to access PDF.js exports.

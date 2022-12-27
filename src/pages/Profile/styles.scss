@@ -1,0 +1,40 @@
+@use "../../scss/variables/" as *;
+.profilePage {
+    display: flex;
+    max-width: 68rem;
+    margin: 2rem auto 0;
+    gap: 2rem;
+    .menuColumn {
+        flex: 0 0 16rem;
+        .menuPanel {
+            justify-content: center;
+            border-radius: 0.4rem;
+            overflow: hidden;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            margin-bottom: 2rem;
+            .menu {
+                margin-top: 1rem;
+                a {
+                    padding: 1rem 1rem;
+                    text-transform: capitalize;
+                    color: $gray-800;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    font-size: 1.1rem;
+                    &.active {
+                        background-color: $teal-500;
+                        color: white;
+                    }
+                    &:hover:not(.active) {
+                        background-color: $teal-50;
+                    }
+                }
+            }
+        }
+    }
+    .profileOutlet {
+        flex: 1;
+        margin-bottom: 2rem;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+}

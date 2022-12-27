@@ -7,7 +7,7 @@ import IExam from "../../../components/Exam/interfaces/IExam";
 import { SmallExamCardList } from "../../../components/ExamCard/SmallExamCard";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IExamProfileOutletProps {
     getExams: (

@@ -6,7 +6,7 @@ import request from "../../../../Utils/request";
 import IMultiSelectQuestion from "../../../Question/interfaces/IMultiSelect";
 import IAnswer, { AnswerType } from "../../interfaces/IAnswer";
 import IMultiSelectAnswer from "../../interfaces/IMultiSelect";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IMultiSelectAnswerHasDocumentProps {
     partId: number;
@@ -30,6 +30,26 @@ const MultiSelectAnswerHasDocument = memo(
                     answerId,
                 })
             );
+
+        const handleChangeCorrectAnswer = async (
+            partId: number,
+            questionId: number,
+            answer: IMultiSelectAnswer
+        ) => {
+            if (sendRequest) {
+                request.patch<IAnswer>("answers/" + answer.id, {
+                    isTrue: !answer.isTrue,
+                });
+            }
+            dispatch(
+                updateCorrectAnswer({
+                    partId,
+                    questionId: question.id,
+                    answerId: answer.id,
+                })
+            );
+        };
+
         if (answer === undefined) {
             return <></>;
         }
@@ -37,21 +57,9 @@ const MultiSelectAnswerHasDocument = memo(
             <li
                 key={answer.id}
                 className={`${styles.answer} ${answer.isTrue && styles.true}`}
-                onClick={async (e) => {
-                    if (sendRequest) {
-                        request.patch<IAnswer>("answers/" + answerId, {
-                            isTrue: !answer.isTrue,
-                        });
-                    }
-
-                    dispatch(
-                        updateCorrectAnswer({
-                            partId,
-                            questionId: question.id,
-                            answerId,
-                        })
-                    );
-                }}
+                onClick={() =>
+                    handleChangeCorrectAnswer(partId, question.id, answer)
+                }
             >
                 {value}
             </li>

@@ -2,9 +2,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import CreateExamButton from "../../components/Exam/Button/CreateExamButton";
-import CreateExamModal from "../../components/Exam/modal/create";
-import AppModal from "../../components/Modal";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 export interface IHomePageProps {}
 
 export default function HomePage(props: IHomePageProps) {

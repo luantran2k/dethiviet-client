@@ -1,7 +1,6 @@
 import { Grid } from "@mui/material";
-import * as React from "react";
 import IMultipleChoiceAnswer from "../interfaces/IMultipleChoice";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IMultipleChoiceAnswerPreviewProps {
     size: number;

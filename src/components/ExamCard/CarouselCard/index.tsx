@@ -1,4 +1,4 @@
-import { LibraryAdd, MoreVert } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import { Box, MenuItem, Stack, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useState } from "react";
@@ -26,6 +26,29 @@ export default function CarouselCard(props: ICarouselCardProps) {
     const [isSuggest, setSuggest] = useState(exam.isSuggest);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    const handleDeleteExam = () => {
+        request.delete("/exams/" + exam.id);
+        if (setExams) {
+            setExams((exams) => {
+                const newExams = exams?.filter(
+                    (examFilter) => examFilter.id !== exam.id
+                );
+                return newExams;
+            });
+        }
+    };
+
+    const handleSuggestExam = () => {
+        if (isSuggest) {
+            request.delete(`exams/${exam.id}/rmsuggest`, {});
+            setSuggest(false);
+        } else {
+            request.patch(`exams/${exam.id}/suggest`, {});
+            setSuggest(true);
+        }
+    };
+
     return (
         <Box
             sx={{
@@ -111,24 +134,7 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                         >
                                             Chính sửa
                                         </MenuItem>
-                                        <MenuItem
-                                            onClick={() => {
-                                                request.delete(
-                                                    "/exams/" + exam.id
-                                                );
-                                                if (setExams) {
-                                                    setExams((exams) => {
-                                                        const newExams =
-                                                            exams?.filter(
-                                                                (examFilter) =>
-                                                                    examFilter.id !==
-                                                                    exam.id
-                                                            );
-                                                        return newExams;
-                                                    });
-                                                }
-                                            }}
-                                        >
+                                        <MenuItem onClick={handleDeleteExam}>
                                             Xoá
                                         </MenuItem>
                                     </>
@@ -136,23 +142,7 @@ export default function CarouselCard(props: ICarouselCardProps) {
                                 {user?.role.find(
                                     (roleFind) => roleFind == "admin"
                                 ) && (
-                                    <MenuItem
-                                        onClick={() => {
-                                            if (isSuggest) {
-                                                request.delete(
-                                                    `exams/${exam.id}/rmsuggest`,
-                                                    {}
-                                                );
-                                                setSuggest(false);
-                                            } else {
-                                                request.patch(
-                                                    `exams/${exam.id}/suggest`,
-                                                    {}
-                                                );
-                                                setSuggest(true);
-                                            }
-                                        }}
-                                    >
+                                    <MenuItem onClick={handleSuggestExam}>
                                         {isSuggest ? "Bỏ đề xuất" : "Đề xuất"}
                                     </MenuItem>
                                 )}

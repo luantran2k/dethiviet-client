@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { v4 as uuid } from "uuid";
-import IExam from "../../components/Exam/interfaces/IExam";
 import request, { removeToken, saveRefreshToken } from "../../Utils/request";
 import { RootState } from "../store";
 
@@ -80,6 +80,7 @@ const appSlice = createSlice({
         });
         builder.addCase(signUp.rejected, (state, action) => {
             state.isLoading = false;
+            console.log(state);
         });
         builder.addCase(signIn.pending, (state, action) => {
             state.isLoading = true;

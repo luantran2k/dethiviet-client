@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import ultis from "../../../Utils/ultis";
 import IExam from "../../Exam/interfaces/IExam";

@@ -1,11 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import AddNewAnswerButton from "../../../Answer/AddNewAnswerButton";
 import DeleteAnswerButton from "../../../Answer/DeleteAnswerButton";
-import MultipleChoiceAnswerHasDocument from "../../../Answer/MultipleChoice/HasDocument";
 import MultiSelectAnswerHasDocument from "../../../Answer/MultiSelect/HasDocument";
 import IMultiSelectQuestion from "../../interfaces/IMultiSelect";
 import QuestionLayout from "../../QuestionLayout";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IMultiSelectQsHasDocumentProps {
     question: IMultiSelectQuestion;
@@ -15,7 +14,6 @@ export interface IMultiSelectQsHasDocumentProps {
 export default function MultiSelectQsHasDocument(
     props: IMultiSelectQsHasDocumentProps
 ) {
-    const dispatch = useAppDispatch();
     const isPractice = useAppSelector((state) => state.exam.isPractice);
     const { question, partId } = props;
     return (

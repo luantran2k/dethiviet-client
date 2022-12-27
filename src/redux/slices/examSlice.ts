@@ -1,9 +1,6 @@
-import { sendAlert } from "./appSlice";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import IAnswer, {
     AnswerPayload,
-    AnswerType,
-    createEmptyAnswer,
 } from "../../components/Answer/interfaces/IAnswer";
 import IExam from "../../components/Exam/interfaces/IExam";
 import IPart from "../../components/Part/interfaces/IPart";
@@ -12,6 +9,7 @@ import QuestionTypeDatas from "../../const/QuestionTypes";
 import examUltis from "../../Utils/examUltis";
 import request from "../../Utils/request";
 import { RootState } from "./../store";
+import { sendAlert } from "./appSlice";
 
 export interface examSliceState extends IExam {}
 

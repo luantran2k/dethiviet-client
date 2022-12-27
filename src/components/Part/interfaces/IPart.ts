@@ -1,9 +1,6 @@
-import { PartPayLoad } from "./../Modal/create";
+import { QuestionType } from "../../Question/interfaces/IQuestion";
 import IMultipleChoicePart from "./IMultipleChoice";
 import IMultiSelectPart from "./IMultiSelect";
-import QuestionTypeDatas from "../../../const/QuestionTypes";
-import { QuestionType } from "../../Question/interfaces/IQuestion";
-import examUltis from "../../../Utils/examUltis";
 
 export type PartType = IMultipleChoicePart | IMultiSelectPart;
 

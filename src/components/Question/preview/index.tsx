@@ -7,7 +7,7 @@ import MultipleChoiceAnswerPreview from "../../Answer/preview/MultipleChoice";
 import MultiSelectAnswerPreview from "../../Answer/preview/MultiSelect";
 import { QuestionType } from "../interfaces/IQuestion";
 import QuestionImagesPreivew from "./ImagePreview";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IQuestionPreviewProps {
     partId: number;

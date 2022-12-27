@@ -1,4 +1,4 @@
-import { More, MoreHoriz } from "@mui/icons-material";
+import { MoreHoriz } from "@mui/icons-material";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import {
     Box,
@@ -8,7 +8,6 @@ import {
     MenuItem,
     Stack,
     Switch,
-    TextField,
     Typography,
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
@@ -200,17 +199,19 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                         </MenuItem>
                     </Box>
                 </PopupMenu>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={isNativePreview}
-                            onChange={() => {
-                                setNativePreview((pre) => !pre);
-                            }}
-                        />
-                    }
-                    label="Xem đề thi chế độ mặc định của trình duyệt"
-                />
+                {exam.documentUrl && (
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isNativePreview}
+                                onChange={() => {
+                                    setNativePreview((pre) => !pre);
+                                }}
+                            />
+                        }
+                        label="Xem đề thi chế độ mặc định của trình duyệt"
+                    />
+                )}
                 <Suspense fallback={<h4>Đang tải trang</h4>}>
                     <Exam />
                 </Suspense>

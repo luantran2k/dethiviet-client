@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import ultis from "../../Utils/ultis";
 import PartPreview from "../Part/Preview";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 export declare let renderMathInElement: (
     element: HTMLElement,
     options?: object

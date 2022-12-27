@@ -6,7 +6,7 @@ export interface IAboutPageProps {}
 export default function AboutPage(props: IAboutPageProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const [text, setText] = useState<string>("");
-    //      "% \\f is defined as #1f(#2) using the macro\n\\f\\relax{x} = \\int_{-\\infty}^\\infty\n    \\f\\hat\\xi\\,e^{2 \\pi i \\xi x}\n    \\,d\\xi"
+
     useEffect(() => {
         katex.render(text, divRef.current!, {
             displayMode: true,

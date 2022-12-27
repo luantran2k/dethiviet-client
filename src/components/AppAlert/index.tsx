@@ -2,7 +2,7 @@ import { Cancel } from "@mui/icons-material";
 import { Alert, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { removeAlert } from "../../redux/slices/appSlice";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 export interface IAppALertProps {}
 
 export default function AppALert(props: IAppALertProps) {

@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { deleteAnswer } from "../../../redux/slices/examSlice";
 import request from "../../../Utils/request";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IDeleteAnswerButtonProps {
     partId: number;

@@ -3,7 +3,6 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ThemeProvider } from "@mui/material";
-import { Util } from "pdfjs-dist";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -11,7 +10,10 @@ import App from "./App";
 import { store } from "./redux/store";
 import "./scss/index.scss";
 import { theme } from "./themes";
+import { injectStore } from "./Utils/request";
 import ultis from "./Utils/ultis";
+
+injectStore(store);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>

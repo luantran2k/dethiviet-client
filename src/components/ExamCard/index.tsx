@@ -1,6 +1,5 @@
-import { Box, CardActions, Grid, Typography } from "@mui/material";
-import { amber, teal } from "@mui/material/colors";
-import * as React from "react";
+import { Box, Typography } from "@mui/material";
+import { teal } from "@mui/material/colors";
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "../../redux/slices/appSlice";
 import IExam from "../Exam/interfaces/IExam";

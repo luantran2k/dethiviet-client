@@ -15,7 +15,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector, useAuth } from "../../app/hooks";
 import { AnswerType } from "../../components/Answer/interfaces/IAnswer";
 import Countdown from "../../components/Countdown";
-import Exam from "../../components/Exam";
 import ExamPracticeNoDocument from "../../components/Exam/practice/NoDocument";
 import ExamPracticeWithDocument from "../../components/Exam/practice/WithDocument";
 import { PartType } from "../../components/Part/interfaces/IPart";
@@ -25,7 +24,6 @@ import {
     getExam,
     removeExamState,
     updateCorrectAnswer,
-    updateExam,
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 declare let renderMathInElement: (

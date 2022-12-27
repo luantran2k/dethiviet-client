@@ -18,7 +18,7 @@ import RenewSecurityCodeButton from "../Button/RenewSecurityCode";
 import AppModal from "../Modal";
 import IExam from "./interfaces/IExam";
 import UpdateExamModal from "./modal/update";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IExamInfoProps {
     exam?: IExam;

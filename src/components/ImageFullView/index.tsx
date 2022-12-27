@@ -1,6 +1,6 @@
+import { Image } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import AppModal from "../Modal";
-import { Image } from "@mui/icons-material";
 
 export interface IImageFullViewProps {
     imageUrl: string;

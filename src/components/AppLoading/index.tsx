@@ -1,8 +1,5 @@
-import { Typography } from "@mui/material";
-import * as React from "react";
 import { useAppSelector } from "../../app/hooks";
-import styles from "./style.module.scss";
-
+import styles from "./styles.module.scss";
 export interface IAppLoadingProps {}
 
 export default function AppLoading(props: IAppLoadingProps) {

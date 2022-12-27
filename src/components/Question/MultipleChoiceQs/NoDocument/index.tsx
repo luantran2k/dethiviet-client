@@ -1,5 +1,5 @@
 import { RadioGroup } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { useAppDispatch } from "../../../../app/hooks";
 import { updateCorrectAnswer } from "../../../../redux/slices/examSlice";
 import request from "../../../../Utils/request";
 import IAnswer from "../../../Answer/interfaces/IAnswer";
@@ -18,49 +18,50 @@ export default function MultipleChoiceQsNoDocument(
 ) {
     const dispatch = useAppDispatch();
     const { question, partId } = props;
-    const isOriginal = useAppSelector((state) => state.exam.isOriginal);
+
+    const handleCheck = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const oldAnswer: IAnswer | undefined = question.answers?.find(
+            (answer) => answer.isTrue === true
+        );
+        if (oldAnswer) {
+            const updatedAnswers = await request.patch("answers", [
+                { id: oldAnswer.id, isTrue: false },
+                {
+                    id: Number(e.target.value),
+                    isTrue: true,
+                },
+            ]);
+            if (updatedAnswers) {
+                dispatch(
+                    updateCorrectAnswer({
+                        partId,
+                        questionId: question.id,
+                        answerId: Number(e.target.value),
+                    })
+                );
+            }
+        } else {
+            const updatedAnswer = await request.patch<IAnswer>(
+                "answers/" + e.target.value,
+                { isTrue: true }
+            );
+            if (updatedAnswer) {
+                dispatch(
+                    updateCorrectAnswer({
+                        partId,
+                        questionId: question.id,
+                        answerId: updatedAnswer.id,
+                    })
+                );
+            }
+        }
+    };
+
     return (
         <QuestionLayout question={question} partId={partId}>
             <RadioGroup
                 name={`${partId}/${question.id}}`}
-                onChange={async (e) => {
-                    const oldAnswer: IAnswer | undefined =
-                        question.answers?.find(
-                            (answer) => answer.isTrue === true
-                        );
-                    if (oldAnswer) {
-                        const updatedAnswers = await request.patch("answers", [
-                            { id: oldAnswer.id, isTrue: false },
-                            {
-                                id: Number(e.target.value),
-                                isTrue: true,
-                            },
-                        ]);
-                        if (updatedAnswers) {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId: question.id,
-                                    answerId: Number(e.target.value),
-                                })
-                            );
-                        }
-                    } else {
-                        const updatedAnswer = await request.patch<IAnswer>(
-                            "answers/" + e.target.value,
-                            { isTrue: true }
-                        );
-                        if (updatedAnswer) {
-                            dispatch(
-                                updateCorrectAnswer({
-                                    partId,
-                                    questionId: question.id,
-                                    answerId: updatedAnswer.id,
-                                })
-                            );
-                        }
-                    }
-                }}
+                onChange={handleCheck}
             >
                 <OrderList variant="upper-alpha">
                     {question?.answers

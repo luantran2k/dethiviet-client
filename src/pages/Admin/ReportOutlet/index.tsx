@@ -1,15 +1,11 @@
 import {
-    BugReport,
     BugReportRounded,
-    Delete,
     DoneAllRounded,
     HourglassBottomRounded,
     Search,
 } from "@mui/icons-material";
 import {
-    Box,
     Button,
-    ButtonGroup,
     Grid,
     MenuItem,
     Pagination,
@@ -28,11 +24,8 @@ import { useAppDispatch } from "../../../app/hooks";
 import UserNameButton from "../../../components/Button/UserNameButton";
 import ReportCard from "../../../components/Card/ReportCard";
 import ImageFullView from "../../../components/ImageFullView";
-import AppModal from "../../../components/Modal";
-import OrderList from "../../../components/OrderList";
 import IReport from "../../../components/ReportError/interfaces/Report";
-import { sendAlert, User } from "../../../redux/slices/appSlice";
-import examSlice from "../../../redux/slices/examSlice";
+import { User } from "../../../redux/slices/appSlice";
 import request from "../../../Utils/request";
 import ultis from "../../../Utils/ultis";
 
@@ -76,12 +69,6 @@ export default function ReportOutlet(props: IReportOutletProps) {
         if (results?.reports && !ultis.checkEmptyArray(results.reports)) {
             setReports(results.reports);
         } else {
-            dispatch(
-                sendAlert({
-                    message: "Không tìm thấy kết quả",
-                    severity: "error",
-                })
-            );
             setTotalPages(1);
             setReports([]);
         }
@@ -103,6 +90,33 @@ export default function ReportOutlet(props: IReportOutletProps) {
             setSearchText(search.current?.value);
         } else {
             setSearchText("");
+        }
+    };
+
+    const handleChangeReportState = async (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        report: IReport
+    ) => {
+        const result = await request.patch<{
+            states: States;
+            updateResult: IReport;
+        }>("admin/reports/update-state", {
+            id: report.id,
+            state: e.target.value,
+        });
+        if (result.updateResult) {
+            setReports((reports) =>
+                reports?.map((curReport) => {
+                    if (curReport.id === report.id) {
+                        return {
+                            ...curReport,
+                            state: e.target.value,
+                        };
+                    }
+                    return curReport;
+                })
+            );
+            setStates(result.states);
         }
     };
 
@@ -234,34 +248,9 @@ export default function ReportOutlet(props: IReportOutletProps) {
                                     value={report.state}
                                     select
                                     fullWidth
-                                    onChange={async (e) => {
-                                        const oldState = report.state;
-                                        const result = await request.patch<{
-                                            states: States;
-                                            updateResult: IReport;
-                                        }>("admin/reports/update-state", {
-                                            id: report.id,
-                                            state: e.target.value,
-                                        });
-                                        if (result.updateResult) {
-                                            setReports((reports) =>
-                                                reports?.map((curReport) => {
-                                                    if (
-                                                        curReport.id ===
-                                                        report.id
-                                                    ) {
-                                                        return {
-                                                            ...curReport,
-                                                            state: e.target
-                                                                .value,
-                                                        };
-                                                    }
-                                                    return curReport;
-                                                })
-                                            );
-                                            setStates(result.states);
-                                        }
-                                    }}
+                                    onChange={(e) =>
+                                        handleChangeReportState(e, report)
+                                    }
                                     sx={{
                                         backgroundColor:
                                             report.state == "pending"

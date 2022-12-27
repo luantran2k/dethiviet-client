@@ -1,17 +1,16 @@
 import {
-    Delete,
-    Image,
     AudioFile,
+    Delete,
     Description,
     HistoryEdu,
+    Image,
 } from "@mui/icons-material";
 import { MenuItem, Stack } from "@mui/material";
-import { red, teal } from "@mui/material/colors";
 import { useId } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import {
-    updateQuestionField,
     deleteQuestion,
+    updateQuestionField,
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 import PopupMenu from "../PopupMenu";
@@ -28,6 +27,80 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
     const dispatch = useAppDispatch();
     const audioId = useId();
     const imageId = useId();
+
+    const handleChangeAudio = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (e.target.files?.[0]) {
+            const audioFile = e.target.files[0];
+            dispatch(
+                updateQuestionField({
+                    partId,
+                    questionId: question.id,
+                    field: "questionAudio",
+                    value: "loading",
+                })
+            );
+            const data = new FormData();
+            data.append("questionAudio", audioFile, audioFile.name);
+            const res = await request.patch<{
+                url: string;
+            }>(`questions/${question.id}/audio`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            dispatch(
+                updateQuestionField({
+                    partId,
+                    questionId: question.id,
+                    field: "questionAudio",
+                    value: res.url,
+                })
+            );
+        }
+    };
+
+    const handleChangeImages = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const images: FileList | null = e.target.files;
+        if (images) {
+            const formData = new FormData();
+            [...images].forEach((file) => {
+                formData.append("questionImages", file);
+            });
+            const res = await request.post<{
+                questionImages: string[];
+            }>(`questions/${question.id}/image`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            dispatch(
+                updateQuestionField({
+                    partId,
+                    questionId: question.id,
+                    field: "questionImages",
+                    value: res.questionImages,
+                })
+            );
+        }
+    };
+
+    const handleDeleteQuestion = async () => {
+        const res = await request.delete("questions/" + question.id);
+        if (res)
+            dispatch(
+                deleteQuestion({
+                    partId,
+                    questionId: question.id,
+                })
+            );
+        else {
+            alert("Xoá không thành công, vui lòng thử lại");
+        }
+    };
 
     return (
         <PopupMenu
@@ -96,40 +169,7 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
                         width: 0,
                         height: 0,
                     }}
-                    onChange={async (e) => {
-                        if (e.target.files?.[0]) {
-                            const audioFile = e.target.files[0];
-                            dispatch(
-                                updateQuestionField({
-                                    partId,
-                                    questionId: question.id,
-                                    field: "questionAudio",
-                                    value: "loading",
-                                })
-                            );
-                            const data = new FormData();
-                            data.append(
-                                "questionAudio",
-                                audioFile,
-                                audioFile.name
-                            );
-                            const res = await request.patch<{
-                                url: string;
-                            }>(`questions/${question.id}/audio`, data, {
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            });
-                            dispatch(
-                                updateQuestionField({
-                                    partId,
-                                    questionId: question.id,
-                                    field: "questionAudio",
-                                    value: res.url,
-                                })
-                            );
-                        }
-                    }}
+                    onChange={handleChangeAudio}
                 />
 
                 {!isDocumentExam && (
@@ -152,58 +192,13 @@ export default function QuestionMenu(props: IQuestionMenuProps) {
                                 width: 0,
                                 height: 0,
                             }}
-                            onChange={async (e) => {
-                                const images: FileList | null = e.target.files;
-                                if (images) {
-                                    const formData = new FormData();
-                                    [...images].forEach((file) => {
-                                        formData.append("questionImages", file);
-                                    });
-                                    const res = await request.post<{
-                                        questionImages: string[];
-                                    }>(
-                                        `questions/${question.id}/image`,
-                                        formData,
-                                        {
-                                            headers: {
-                                                "Content-Type":
-                                                    "multipart/form-data",
-                                            },
-                                        }
-                                    );
-                                    dispatch(
-                                        updateQuestionField({
-                                            partId,
-                                            questionId: question.id,
-                                            field: "questionImages",
-                                            value: res.questionImages,
-                                        })
-                                    );
-                                }
-                            }}
+                            onChange={handleChangeImages}
                             multiple
                         />
                     </>
                 )}
 
-                <MenuItem
-                    title="Xoá câu hỏi"
-                    onClick={async () => {
-                        const res = await request.delete(
-                            "questions/" + question.id
-                        );
-                        if (res)
-                            dispatch(
-                                deleteQuestion({
-                                    partId,
-                                    questionId: question.id,
-                                })
-                            );
-                        else {
-                            alert("Xoá không thành công, vui lòng thử lại");
-                        }
-                    }}
-                >
+                <MenuItem title="Xoá câu hỏi" onClick={handleDeleteQuestion}>
                     <Delete />
                 </MenuItem>
             </Stack>

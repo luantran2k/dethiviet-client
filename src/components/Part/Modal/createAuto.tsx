@@ -1,14 +1,12 @@
 import { Delete } from "@mui/icons-material";
 import { Button, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import QuestionTypeDatas from "../../../const/QuestionTypes";
 import {
     removePartTemp,
     updateFieldPartTemp,
 } from "../../../redux/slices/createExamSlice";
-import ultis from "../../../Utils/ultis";
 import TextFieldValidated from "../../ValidateInput/TextFieldValidated";
 
 export interface IPartsTempProps {

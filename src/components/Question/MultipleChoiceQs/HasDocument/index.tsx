@@ -1,12 +1,10 @@
-import { Add } from "@mui/icons-material";
-import { teal } from "@mui/material/colors";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import AddNewAnswerButton from "../../../Answer/AddNewAnswerButton";
 import DeleteAnswerButton from "../../../Answer/DeleteAnswerButton";
 import MultipleChoiceAnswerHasDocument from "../../../Answer/MultipleChoice/HasDocument";
 import { QuestionType } from "../../interfaces/IQuestion";
 import QuestionLayout from "../../QuestionLayout";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 
 export interface IMultipleChoiceQsHasDocumentProps {
     question: QuestionType;
@@ -16,7 +14,6 @@ export interface IMultipleChoiceQsHasDocumentProps {
 export default function MultipleChoiceQsHasDocument(
     props: IMultipleChoiceQsHasDocumentProps
 ) {
-    const dispatch = useAppDispatch();
     const isPractice = useAppSelector((state) => state.exam.isPractice);
     const { question, partId } = props;
     return (

@@ -1,5 +1,4 @@
-import { Box, Button, MenuItem, TextField } from "@mui/material";
-import { Image } from "@mui/icons-material";
+import { Box, MenuItem } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -7,7 +6,6 @@ import { signOut } from "../../redux/slices/appSlice";
 import request from "../../Utils/request";
 import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
-import { useRef, useState } from "react";
 import RepportError from "../ReportError";
 
 export interface IUserControlProps {}

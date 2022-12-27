@@ -1,0 +1,16 @@
+.userInfo {
+    margin: 2rem;
+}
+
+.userInfoList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    li {
+        font-size: 1.2rem;
+        span {
+            font-weight: 600;
+        }
+    }
+}

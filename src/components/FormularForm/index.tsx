@@ -1,16 +1,7 @@
-import {
-    Box,
-    Button,
-    Grid,
-    MenuItem,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
+import { Grid, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import katex from "katex";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { FormulaList } from "../../const/formular";
 import { sendAlert } from "../../redux/slices/appSlice";

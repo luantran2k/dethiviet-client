@@ -37,6 +37,60 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
     const isOriginal = useAppSelector((state) => state.exam.isOriginal);
     const isPractice = useAppSelector((state) => state.exam.isOriginal);
 
+    const handleChangeQuestionTitle = (
+        e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+    ) => {
+        if (e.target.value !== question.title)
+            dispatch(
+                updateQuestionField({
+                    partId,
+                    questionId: question.id,
+                    field: "title",
+                    value: e.target.value,
+                })
+            );
+
+        request.patch("questions/" + question.id, {
+            title: e.target.value,
+        });
+    };
+
+    const handleDeleteQuestion = async () => {
+        dispatch(
+            updateQuestionField({
+                partId,
+                questionId: question.id,
+                field: "questionAudio",
+                value: "loading",
+            })
+        );
+        const res = await request.delete(`questions/${question.id}/audio`);
+        if (res) {
+            dispatch(
+                updateQuestionField({
+                    partId,
+                    questionId: question.id,
+                    field: "questionAudio",
+                    value: null,
+                })
+            );
+        }
+    };
+
+    const handleDeleteImage = async (url: string) => {
+        const res = await request.delete<{
+            questionImages: string[];
+        }>(`questions/${question.id}/image?url=${url}`);
+        dispatch(
+            updateQuestionField({
+                partId,
+                questionId: question.id,
+                field: "questionImages",
+                value: res.questionImages,
+            })
+        );
+    };
+
     if (!question) {
         return <></>;
     }
@@ -54,24 +108,7 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                     multiline
                                     maxRows={4}
                                     placeholder="Nhập câu hỏi"
-                                    onBlur={(e) => {
-                                        if (e.target.value !== question.title)
-                                            dispatch(
-                                                updateQuestionField({
-                                                    partId,
-                                                    questionId: question.id,
-                                                    field: "title",
-                                                    value: e.target.value,
-                                                })
-                                            );
-
-                                        request.patch(
-                                            "questions/" + question.id,
-                                            {
-                                                title: e.target.value,
-                                            }
-                                        );
-                                    }}
+                                    onBlur={handleChangeQuestionTitle}
                                     variant="outlined"
                                     sx={{ scrollbarWidth: 0 }}
                                     fullWidth
@@ -162,31 +199,7 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                 style={{ flexGrow: 1, margin: "1rem 0" }}
                             />
                             {isOriginal && (
-                                <DeleteButton
-                                    onClick={async () => {
-                                        dispatch(
-                                            updateQuestionField({
-                                                partId,
-                                                questionId: question.id,
-                                                field: "questionAudio",
-                                                value: "loading",
-                                            })
-                                        );
-                                        const res = await request.delete(
-                                            `questions/${question.id}/audio`
-                                        );
-                                        if (res) {
-                                            dispatch(
-                                                updateQuestionField({
-                                                    partId,
-                                                    questionId: question.id,
-                                                    field: "questionAudio",
-                                                    value: null,
-                                                })
-                                            );
-                                        }
-                                    }}
-                                />
+                                <DeleteButton onClick={handleDeleteQuestion} />
                             )}
                         </Stack>
                     ))}
@@ -223,23 +236,9 @@ export default function QuestionLayout(props: IQuestionLayoutProps) {
                                                         color: "black",
                                                     },
                                                 }}
-                                                onClick={async () => {
-                                                    const res =
-                                                        await request.delete<{
-                                                            questionImages: string[];
-                                                        }>(
-                                                            `questions/${question.id}/image?url=${url}`
-                                                        );
-                                                    dispatch(
-                                                        updateQuestionField({
-                                                            partId,
-                                                            questionId:
-                                                                question.id,
-                                                            field: "questionImages",
-                                                            value: res.questionImages,
-                                                        })
-                                                    );
-                                                }}
+                                                onClick={() =>
+                                                    handleDeleteImage(url)
+                                                }
                                             />
                                         )}
                                         <img

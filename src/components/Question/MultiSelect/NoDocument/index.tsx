@@ -1,6 +1,4 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
-import { questionSeletor } from "../../../../redux/selectors/examSeletors";
+import { memo } from "react";
 import MultiSelectAnswer from "../../../Answer/MultiSelect/NoDocument";
 import OrderList from "../../../OrderList";
 import IMultiSelectQuestion from "../../interfaces/IMultiSelect";
@@ -11,31 +9,28 @@ export interface IMultiSelectQsNoDocumentProps {
     partId: number;
 }
 
-const MultiSelectQsNoDocument = React.memo(
-    (props: IMultiSelectQsNoDocumentProps) => {
-        const { question, partId } = props;
-        const dispatch = useAppDispatch();
-        if (question === undefined) {
-            return <></>;
-        }
-
-        return (
-            <QuestionLayout question={question} partId={partId}>
-                <OrderList variant="upper-alpha">
-                    {question?.answers
-                        ?.map((answer) => answer.id)
-                        ?.map((answerId, index) => (
-                            <MultiSelectAnswer
-                                partId={partId}
-                                questionId={question.id}
-                                answerId={answerId}
-                                key={answerId}
-                            />
-                        ))}
-                </OrderList>
-            </QuestionLayout>
-        );
+const MultiSelectQsNoDocument = memo((props: IMultiSelectQsNoDocumentProps) => {
+    const { question, partId } = props;
+    if (question === undefined) {
+        return <></>;
     }
-);
+
+    return (
+        <QuestionLayout question={question} partId={partId}>
+            <OrderList variant="upper-alpha">
+                {question?.answers
+                    ?.map((answer) => answer.id)
+                    ?.map((answerId, index) => (
+                        <MultiSelectAnswer
+                            partId={partId}
+                            questionId={question.id}
+                            answerId={answerId}
+                            key={answerId}
+                        />
+                    ))}
+            </OrderList>
+        </QuestionLayout>
+    );
+});
 
 export default MultiSelectQsNoDocument;

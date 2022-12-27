@@ -1,4 +1,4 @@
-import React from "react";
+import { memo } from "react";
 import { useAppSelector } from "../../../app/hooks";
 import { questionSeletor } from "../../../redux/selectors/examSeletors";
 import MultipleChoiceQsHasDocument from "./HasDocument";
@@ -9,7 +9,7 @@ export interface IQuestionProps {
     hasDocument: boolean;
 }
 
-export const MultipleChoiceQuestion = React.memo((props: IQuestionProps) => {
+export const MultipleChoiceQuestion = memo((props: IQuestionProps) => {
     const { questionId, partId, hasDocument } = props;
     const question = useAppSelector((state) =>
         questionSeletor(state, { questionId, partId })

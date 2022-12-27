@@ -1,5 +1,4 @@
 import {
-    Button,
     Checkbox,
     FormControlLabel,
     Stack,
@@ -14,9 +13,9 @@ import {
     updateAnswer,
     updateCorrectAnswer,
 } from "../../../../redux/slices/examSlice";
-import { Delete } from "@mui/icons-material";
 import request from "../../../../Utils/request";
 import DeleteButton from "../../../Button/DeleteButton";
+import IMultiSelectAnswer from "../../interfaces/IMultiSelect";
 
 export interface IMultiSelectAnswerNoDocumentProps {
     partId: number;
@@ -32,6 +31,60 @@ const MultiSelectAnswerNoDocument = React.memo(
         const answer = useAppSelector((state) =>
             answerSeletor(state, { partId, questionId, answerId })
         );
+
+        const handleCheck = async (
+            partId: number,
+            questionId: number,
+            answer: IMultiSelectAnswer
+        ) => {
+            const res = await request.patch("answers/" + answer.id, {
+                isTrue: !answer.isTrue,
+            });
+            if (res)
+                dispatch(
+                    updateCorrectAnswer({
+                        partId,
+                        questionId,
+                        answerId: answer.id,
+                    })
+                );
+        };
+
+        const handleChangeAnswer = (
+            e: React.FocusEvent<
+                HTMLInputElement | HTMLTextAreaElement,
+                Element
+            >,
+            partId: number,
+            questionId: number,
+            answer: IMultiSelectAnswer
+        ) => {
+            if (e.target.value !== answer.value)
+                dispatch(
+                    updateAnswer({
+                        partId,
+                        questionId,
+                        answerId: answer.id,
+                        value: e.target.value,
+                    })
+                );
+            request.patch("answers/" + answer.id, {
+                value: e.target.value,
+            });
+        };
+
+        const handleDeleteAnswer = async () => {
+            const res = await request.delete("answers/" + answerId);
+            if (res)
+                dispatch(
+                    deleteAnswer({
+                        partId,
+                        questionId,
+                        answerId,
+                    })
+                );
+        };
+
         if (answer === undefined) {
             return <></>;
         }
@@ -43,22 +96,9 @@ const MultiSelectAnswerNoDocument = React.memo(
                         checked={answer.isTrue}
                         control={
                             <Checkbox
-                                onChange={async () => {
-                                    const res = await request.patch(
-                                        "answers/" + answer.id,
-                                        {
-                                            isTrue: !answer.isTrue,
-                                        }
-                                    );
-                                    if (res)
-                                        dispatch(
-                                            updateCorrectAnswer({
-                                                partId,
-                                                questionId,
-                                                answerId: answerId,
-                                            })
-                                        );
-                                }}
+                                onChange={() =>
+                                    handleCheck(partId, questionId, answer)
+                                }
                             />
                         }
                         label={""}
@@ -75,18 +115,12 @@ const MultiSelectAnswerNoDocument = React.memo(
                             fullWidth
                             placeholder="Nhập đáp án"
                             onBlur={(e) => {
-                                if (e.target.value !== answer.value)
-                                    dispatch(
-                                        updateAnswer({
-                                            partId,
-                                            questionId,
-                                            answerId,
-                                            value: e.target.value,
-                                        })
-                                    );
-                                request.patch("answers/" + answerId, {
-                                    value: e.target.value,
-                                });
+                                handleChangeAnswer(
+                                    e,
+                                    partId,
+                                    questionId,
+                                    answer
+                                );
                             }}
                             InputProps={{
                                 disableUnderline: true,
@@ -96,23 +130,7 @@ const MultiSelectAnswerNoDocument = React.memo(
                         <Typography>{answer.value}</Typography>
                     )}
                 </li>
-                {isOriginal && (
-                    <DeleteButton
-                        onClick={async () => {
-                            const res = await request.delete(
-                                "answers/" + answerId
-                            );
-                            if (res)
-                                dispatch(
-                                    deleteAnswer({
-                                        partId,
-                                        questionId,
-                                        answerId,
-                                    })
-                                );
-                        }}
-                    />
-                )}
+                {isOriginal && <DeleteButton onClick={handleDeleteAnswer} />}
             </Stack>
         );
     }

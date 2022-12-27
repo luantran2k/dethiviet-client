@@ -23,6 +23,40 @@ const MultipleChoiceAnswerNoDocument = React.memo(
         if (answer === undefined) {
             return <></>;
         }
+
+        const handleBlur = (
+            e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
+        ) => {
+            if (e.target.value !== answer.value)
+                dispatch(
+                    updateAnswer({
+                        partId,
+                        questionId,
+                        answerId,
+                        value: e.target.value,
+                    })
+                );
+            request.patch("answers/" + answerId, {
+                value: e.target.value,
+            });
+        };
+
+        const handleDelete = async (
+            partId: number,
+            questionId: number,
+            answerId: number
+        ) => {
+            const res = await request.delete("answers/" + answerId);
+            if (res)
+                dispatch(
+                    deleteAnswer({
+                        partId,
+                        questionId,
+                        answerId,
+                    })
+                );
+        };
+
         return (
             <Stack direction="row" alignItems="center">
                 <FormControlLabel
@@ -38,20 +72,7 @@ const MultipleChoiceAnswerNoDocument = React.memo(
                         variant="standard"
                         defaultValue={answer.value}
                         placeholder="Nhập đáp án"
-                        onBlur={(e) => {
-                            if (e.target.value !== answer.value)
-                                dispatch(
-                                    updateAnswer({
-                                        partId,
-                                        questionId,
-                                        answerId,
-                                        value: e.target.value,
-                                    })
-                                );
-                            request.patch("answers/" + answerId, {
-                                value: e.target.value,
-                            });
-                        }}
+                        onBlur={handleBlur}
                         InputProps={{
                             disableUnderline: true,
                         }}
@@ -59,19 +80,9 @@ const MultipleChoiceAnswerNoDocument = React.memo(
                 </li>
                 {isOriginal && (
                     <DeleteButton
-                        onClick={async () => {
-                            const res = await request.delete(
-                                "answers/" + answerId
-                            );
-                            if (res)
-                                dispatch(
-                                    deleteAnswer({
-                                        partId,
-                                        questionId,
-                                        answerId,
-                                    })
-                                );
-                        }}
+                        onClick={() =>
+                            handleDelete(partId, questionId, answerId)
+                        }
                     />
                 )}
             </Stack>

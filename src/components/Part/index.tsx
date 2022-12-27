@@ -1,6 +1,5 @@
 import { Add, AudioFile, Delete, Edit } from "@mui/icons-material";
 import {
-    AccordionDetails,
     Button,
     CardActions,
     MenuItem,
@@ -15,18 +14,16 @@ import {
     createNewQuestion,
     deletePart,
     updatePartField,
-    updateQuestionField,
 } from "../../redux/slices/examSlice";
 import request from "../../Utils/request";
 import DeleteButton from "../Button/DeleteButton";
-import UpdateExamModal from "../Exam/modal/update";
 import AppModal from "../Modal";
 import PopupMenu from "../PopupMenu";
 import IQuestion from "../Question/interfaces/IQuestion";
 import { MultipleChoiceQuestion } from "../Question/MultipleChoiceQs";
 import MultiSelectQuestion from "../Question/MultiSelect";
 import UpdatePartModal from "./Modal/update";
-import styles from "./style.module.scss";
+import styles from "./styles.module.scss";
 export interface IPartProps {
     partId: number;
 }
