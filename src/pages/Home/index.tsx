@@ -1,16 +1,50 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    Stack,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import CreateExamButton from "../../components/Exam/Button/CreateExamButton";
-import styles from "./styles.module.scss";
+import { theme } from "../../themes";
 export interface IHomePageProps {}
 
 export default function HomePage(props: IHomePageProps) {
     const navigate = useNavigate();
+
     return (
-        <Box className={styles.homePage}>
-            <section className={styles.hero + " container"}>
-                <div className={styles.heroContent}>
+        <Stack
+            sx={{ maxWidth: "86rem", margin: "2rem auto", padding: "2rem" }}
+            spacing={4}
+        >
+            <Grid container alignItems="center">
+                <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    sx={{
+                        [`@media (max-width: ${theme.breakpoints.values.md}px)`]:
+                            {
+                                textAlign: "center",
+                                h1: {
+                                    fontSize: "3.2rem",
+                                },
+                            },
+                        [`@media (max-width: ${theme.breakpoints.values.sm}px)`]:
+                            {
+                                textAlign: "center",
+                                h1: {
+                                    fontSize: "2.4rem",
+                                },
+                                h6: {
+                                    fontSize: "1.2rem",
+                                },
+                            },
+                    }}
+                >
                     <Typography
                         variant="h1"
                         fontSize="4rem"
@@ -28,8 +62,16 @@ export default function HomePage(props: IHomePageProps) {
                         Khám phá kho tài liệu khổng lồ và đa dạng. Dễ dàng kiểm
                         tra trình độ với các bài thi thử
                     </Typography>
-
-                    <Stack direction="row" gap={2}>
+                    <Stack
+                        direction="row"
+                        gap={2}
+                        sx={{
+                            [`@media (max-width: ${theme.breakpoints.values.md}px)`]:
+                                {
+                                    justifyContent: "center",
+                                },
+                        }}
+                    >
                         <Button
                             variant="contained"
                             onClick={() => navigate("/exam/search")}
@@ -38,14 +80,14 @@ export default function HomePage(props: IHomePageProps) {
                         </Button>
                         <CreateExamButton variant="outlined" />
                     </Stack>
-                </div>
-                <div className={styles.imageBox}>
+                </Grid>
+                <Grid item xs={12} md={8}>
                     <img
-                        className={styles.heroImage}
                         src="/image/homePage/hero.png"
+                        style={{ width: "100%" }}
                     />
-                </div>
-            </section>
-        </Box>
+                </Grid>
+            </Grid>
+        </Stack>
     );
 }

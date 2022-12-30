@@ -1,5 +1,5 @@
 import { Search as SearchIcon } from "@mui/icons-material";
-import { InputBase, styled } from "@mui/material";
+import { InputBase, styled, SxProps, Theme } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
+    color: teal[900],
     height: "100%",
     "& .MuiInputBase-input": {
         padding: theme.spacing(1, 1, 1, 0),
@@ -46,12 +46,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export interface IAppBarSearchProps {}
+export interface IAppBarSearchProps {
+    sx?: SxProps<Theme>;
+}
 
 export default function AppBarSearch(props: IAppBarSearchProps) {
+    const { sx } = props;
     const navigate = useNavigate();
     return (
-        <Search>
+        <Search sx={sx}>
             <SearchIconWrapper>
                 <SearchIcon />
             </SearchIconWrapper>

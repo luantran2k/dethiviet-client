@@ -40,7 +40,7 @@ export default function ExamPage(props: IExamPageProps) {
         <Box
             sx={{
                 maxWidth: "60rem",
-                margin: "2rem auto",
+                margin: { md: "2rem auto", xs: "2rem" },
                 padding: "2rem",
                 borderRadius: ".4rem",
                 boxShadow:

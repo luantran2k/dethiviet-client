@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -23,6 +23,9 @@ export interface IExamCarouselProps {
 
 export default function ExamCarousel(props: IExamCarouselProps) {
     const { exams: examsProp, title } = props;
+    const theme = useTheme();
+    const smMatches = useMediaQuery(theme.breakpoints.up("sm"));
+    const mdMatches = useMediaQuery(theme.breakpoints.up("md"));
     const [exams, setExams] = useState(examsProp);
     useEffect(() => {
         setExams(examsProp);
@@ -45,7 +48,7 @@ export default function ExamCarousel(props: IExamCarouselProps) {
                 }}
             >
                 <Swiper
-                    slidesPerView={3}
+                    slidesPerView={mdMatches ? 3 : smMatches ? 2 : 1}
                     spaceBetween={30}
                     navigation={true}
                     modules={[Pagination, Navigation]}
