@@ -5,6 +5,7 @@
         align-items: center;
         font-weight: 500;
         gap: 1rem;
+        transition: all 0.3s ease;
         a {
             color: color.$gray-900;
             text-transform: uppercase;

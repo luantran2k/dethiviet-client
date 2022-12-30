@@ -83,6 +83,11 @@ const ultis = {
         return number * onePixel;
     },
 
+    converMilimetToPixel: (number: number) => {
+        const onePixel = 25.4 / ultis.calcScreenDPI();
+        return number / onePixel;
+    },
+
     parseJwt: (token: string) => {
         var base64Url = token.split(".")[1];
         var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

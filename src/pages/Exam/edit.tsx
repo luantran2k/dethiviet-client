@@ -45,7 +45,6 @@ export default function EditExamPage(props: ICreateExamPageProps) {
         documentTitle: exam.title,
     });
 
-    //get Exan fron db if has examId
     useEffect(() => {
         if (examId) {
             dispatch(getExam({ examId: Number(examId), includePart: true }));
@@ -150,6 +149,7 @@ export default function EditExamPage(props: ICreateExamPageProps) {
                     )}
                 </Grid>
             )}
+
             <Grid
                 item
                 flexGrow={1}

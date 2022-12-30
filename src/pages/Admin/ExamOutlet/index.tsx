@@ -44,12 +44,6 @@ export default function ExamOutlet(props: IExamOutletProps) {
         if (result?.exams && !ultis.checkEmptyArray(result.exams)) {
             setExams(result.exams);
         } else {
-            dispatch(
-                sendAlert({
-                    message: "Không tìm thấy kết quả",
-                    severity: "error",
-                })
-            );
             setTotalPages(1);
             setExams([]);
         }
@@ -159,7 +153,8 @@ export default function ExamOutlet(props: IExamOutletProps) {
                                 <Checkbox
                                     checked={
                                         selectedExamIds?.length ===
-                                        exams?.length
+                                            exams?.length &&
+                                        selectedExamIds?.length > 0
                                     }
                                     onChange={(e) => {
                                         if (e.target.checked) {

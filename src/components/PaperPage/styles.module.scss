@@ -36,20 +36,15 @@
         &:not(:last-child) {
             flex: 0 0 calc(297mm - 6rem);
             border-bottom: 2px dashed #ccc;
-            .pageNumber {
-                position: absolute;
-                bottom: 1rem;
-                right: 1rem;
-            }
         }
         &:last-child {
             margin-top: auto;
             position: relative;
-            .pageNumber {
-                position: absolute;
-                bottom: 1rem;
-                right: 1rem;
-            }
+        }
+        .pageNumber {
+            position: absolute;
+            bottom: 0;
+            right: 2rem;
         }
     }
 }
@@ -71,11 +66,10 @@
             break-after: always;
             flex: 0 0 calc(296mm - 6rem);
         }
-
         .pageNumber {
             position: absolute;
             bottom: 0;
-            right: 2rem;
+            right: 0;
         }
     }
 }
