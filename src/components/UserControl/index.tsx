@@ -1,4 +1,5 @@
 import { Box, MenuItem } from "@mui/material";
+import { teal } from "@mui/material/colors";
 import { Stack } from "@mui/system";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -32,7 +33,7 @@ export default function UserControl(props: IUserControlProps) {
                     }}
                     trigger={
                         <Box
-                            margin="1rem 0 1rem 1rem"
+                            margin="0 1rem 0 0 "
                             height="2rem"
                             width="2rem"
                             borderRadius="50%"
@@ -106,7 +107,7 @@ export default function UserControl(props: IUserControlProps) {
                             },
                         });
                     }}
-                    sx={{ height: "100%" }}
+                        sx={{ height: "100%", fontWeight: "bold",color: teal[800] }}
                 >
                     Đăng nhập
                 </MenuItem>

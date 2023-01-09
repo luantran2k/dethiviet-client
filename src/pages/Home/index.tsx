@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
+import FeatureCard from "../../components/Card/FeatureCard";
 import CreateExamButton from "../../components/Exam/Button/CreateExamButton";
 import { theme } from "../../themes";
 export interface IHomePageProps {}
@@ -63,11 +64,12 @@ export default function HomePage(props: IHomePageProps) {
                         tra trình độ với các bài thi thử
                     </Typography>
                     <Stack
-                        direction="row"
+                        direction={{ xs: "column", sm: "row" }}
                         gap={2}
                         sx={{
                             [`@media (max-width: ${theme.breakpoints.values.md}px)`]:
                                 {
+                                    alignItems: "center",
                                     justifyContent: "center",
                                 },
                         }}
@@ -86,6 +88,18 @@ export default function HomePage(props: IHomePageProps) {
                         src="/image/homePage/hero.png"
                         style={{ width: "100%" }}
                     />
+                </Grid>
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    spacing={2}
+                    justifyContent="center"
+                >
+                    <FeatureCard />
+                    <FeatureCard />
+                    <FeatureCard />
+                    <FeatureCard />
                 </Grid>
             </Grid>
         </Stack>
