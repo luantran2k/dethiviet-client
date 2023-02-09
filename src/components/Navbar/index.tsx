@@ -62,7 +62,7 @@ export default function Navbar(props: INavbarProps) {
             className={`app-bar ${isTealNav ? "teal-nav" : ""}`}
             sx={{ backgroundColor: "white" }}
         >
-            <Container maxWidth="xl">
+            <Container>
                 <Toolbar disableGutters>
                     <Box
                         sx={{

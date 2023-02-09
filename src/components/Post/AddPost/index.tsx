@@ -181,26 +181,27 @@ export default function AddPost(props: IAddPostProps) {
             )}
             <Stack
                 spacing={1}
-                direction="row"
+                direction={{ xs: "column", sm: "row" }}
                 sx={{
                     img: {
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",
+                        objectFit: "container",
                     },
                 }}
             >
-                <Box sx={{ height: "2.8rem", width: "2.8rem" }}>
+                <Stack direction="row" sx={{ width: "2.8rem" }}>
                     <img src={user?.profileImg} alt="avatar" />
-                </Box>
-                <Stack>
-                    <Typography fontWeight={500} fontSize="1.2rem">
-                        {user?.name || "@" + user?.username}
-                    </Typography>
-                    <Typography fontWeight={400} fontSize=".8rem">
-                        {new Date().toLocaleString()}
-                    </Typography>
+                    <Stack>
+                        <Typography fontWeight={500} fontSize="1.2rem">
+                            {user?.name || "@" + user?.username}
+                        </Typography>
+                        <Typography fontWeight={400} fontSize=".8rem">
+                            {new Date().toLocaleString()}
+                        </Typography>
+                    </Stack>
                 </Stack>
+
                 <Stack
                     direction="row"
                     spacing={1}

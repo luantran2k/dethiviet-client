@@ -32,6 +32,9 @@
                 filter: grayscale(0.6);
                 user-select: none;
             }
+            @media (max-width: 42.5rem) {
+                display: none;
+            }
 
             @keyframes showImage {
                 from {
@@ -50,7 +53,7 @@
         }
 
         .login {
-            flex: 0 0 45%;
+            flex: 1 0 45%;
             overflow-y: auto;
 
             .form {

@@ -17,14 +17,14 @@ injectStore(store);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
-        {ultis.checkMobileDevice() ? (
+        {/* {ultis.checkMobileDevice() ? (
             <h1>Tạm thời chưa hỗ trợ các thiết bị di động</h1>
-        ) : (
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <App />
-                </ThemeProvider>
-            </Provider>
-        )}
+        ) : ( */}
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <App />
+            </ThemeProvider>
+        </Provider>
+        {/* )} */}
     </React.StrictMode>
 );

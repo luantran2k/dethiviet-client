@@ -1,5 +1,12 @@
 import { Edit } from "@mui/icons-material";
-import { Button, MenuItem, Stack, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    Container,
+    MenuItem,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { teal } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -287,197 +294,203 @@ export default function CreateExamPage(props: ICreateExamPageProps) {
     }
 
     return (
-        <Stack
-            flexDirection="row"
-            maxWidth={"68rem"}
-            minHeight="calc(100vh - 10rem)"
-            margin="2rem auto"
-            borderRadius=".4rem"
-            boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
-        >
+        <Container>
             <Stack
-                spacing={1}
-                padding="2rem"
-                bgcolor={teal[50]}
-                flex="0  0 30%"
-                sx={{
-                    span: {
-                        fontWeight: "bold",
-                        color: teal[900],
-                    },
-                    ".MuiTypography-root": {
-                        fontSize: "1.1rem",
-                    },
-                }}
+                direction={{ xs: "column", md: "row" }}
+                maxWidth={"68rem"}
+                minHeight="calc(100vh - 10rem)"
+                margin="2rem auto"
+                borderRadius=".4rem"
+                boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"
             >
-                <TextField
-                    select
-                    fullWidth
-                    label="Môn học"
-                    value={
-                        examDataInfos.some(
-                            (exam) =>
-                                exam.subjectName === examDataInfo.subjectName
-                        )
-                            ? examDataInfo.subjectName
-                            : examDataInfos[0].subjectName
-                    }
-                    onChange={(e) => {
-                        const examDataInfo = examDataInfos.find(
-                            (examInfo) =>
-                                examInfo.subjectName === e.target.value
-                        );
-                        if (!ultis.checkEmptyArray(parts)) {
-                            const isAllow = confirm(
-                                "Thay đổi sẽ bỏ hết tất cả các phần đã được tạo, bạn có muốn tiếp tục ?"
-                            );
-                            if (isAllow) {
-                                setExamDataInfo(examDataInfo);
-                                dispatch(removeAllPartsTemp());
-                            }
-                            return;
-                        } else {
-                            setExamDataInfo(examDataInfo);
-                        }
+                <Stack
+                    spacing={1}
+                    padding="2rem"
+                    bgcolor={teal[50]}
+                    flex="0  0 30%"
+                    sx={{
+                        span: {
+                            fontWeight: "bold",
+                            color: teal[900],
+                        },
+                        ".MuiTypography-root": {
+                            fontSize: "1.1rem",
+                        },
                     }}
                 >
-                    {examDataInfos.map((examDataInfo, index) => (
-                        <MenuItem
-                            key={index}
-                            defaultChecked={index === 0 ? true : false}
-                            value={examDataInfo.subjectName}
-                        >
-                            {examDataInfo.subjectName}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <Typography>
-                    <span>Số bài thi: </span>
-                    {examDataInfo.numberOfExams}
-                </Typography>
-                {ultis.checkEmptyArray(examDataInfo.questionInfos) ? (
-                    <Typography>Đề không có câu hỏi nào</Typography>
-                ) : (
-                    examDataInfo.questionInfos?.map((questionInfo, index) => (
-                        <Stack key={index}>
-                            <Typography>
-                                <span>Loại câu hỏi: </span>
-                                {
-                                    QuestionTypeDatas[
-                                        questionInfo.type as keyof typeof QuestionTypeDatas
-                                    ]?.label
-                                }
-                            </Typography>
-                            <Typography>
-                                <span>Số lượng câu hỏi: </span>
-                                {questionInfo.questions.length}
-                            </Typography>
-                        </Stack>
-                    ))
-                )}
-            </Stack>
-            <Stack
-                flex="1"
-                sx={{
-                    padding: "2rem",
-                    overflowY: "auto",
-                }}
-            >
-                <ExamInfo
-                    exam={examToCreateInfo}
-                    editModal={
-                        <AppModal
-                            trigger={
-                                <Button
-                                    sx={{
-                                        alignSelf: "center",
-                                        marginTop: "1rem",
-                                    }}
-                                    variant="contained"
-                                >
-                                    <Edit />
-                                </Button>
-                            }
-                        >
-                            <UpdateExamModal
-                                submitAction={handleSubmitAciton}
-                                defaultValueProp={
-                                    ultis.isEmptyObject(examToCreateInfo)
-                                        ? {
-                                              isPublic: true,
-                                              subjectName: "Khác",
-                                              duration: 45,
-                                              date: null,
-                                              grade: "unknown",
-                                              type: "unOfficial",
-                                          }
-                                        : examToCreateInfo
-                                }
-                            />
-                        </AppModal>
-                    }
-                />
-                <Typography variant="h5" marginBottom={2}>
-                    Tạo phần thi
-                </Typography>
-                <PartsTemp questionTypes={questionTypes} />
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    marginTop="4rem"
-                    justifyContent="flex-end"
-                >
                     <TextField
-                        type="number"
-                        label="Số lượng bài thi"
-                        size="small"
-                        defaultValue={numberOfExams}
-                        onChange={(e) =>
-                            dispatch(
-                                updateNumberOfExams(Number(e.target.value))
+                        select
+                        fullWidth
+                        label="Môn học"
+                        value={
+                            examDataInfos.some(
+                                (exam) =>
+                                    exam.subjectName ===
+                                    examDataInfo.subjectName
                             )
+                                ? examDataInfo.subjectName
+                                : examDataInfos[0].subjectName
+                        }
+                        onChange={(e) => {
+                            const examDataInfo = examDataInfos.find(
+                                (examInfo) =>
+                                    examInfo.subjectName === e.target.value
+                            );
+                            if (!ultis.checkEmptyArray(parts)) {
+                                const isAllow = confirm(
+                                    "Thay đổi sẽ bỏ hết tất cả các phần đã được tạo, bạn có muốn tiếp tục ?"
+                                );
+                                if (isAllow) {
+                                    setExamDataInfo(examDataInfo);
+                                    dispatch(removeAllPartsTemp());
+                                }
+                                return;
+                            } else {
+                                setExamDataInfo(examDataInfo);
+                            }
+                        }}
+                    >
+                        {examDataInfos.map((examDataInfo, index) => (
+                            <MenuItem
+                                key={index}
+                                defaultChecked={index === 0 ? true : false}
+                                value={examDataInfo.subjectName}
+                            >
+                                {examDataInfo.subjectName}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <Typography>
+                        <span>Số bài thi: </span>
+                        {examDataInfo.numberOfExams}
+                    </Typography>
+                    {ultis.checkEmptyArray(examDataInfo.questionInfos) ? (
+                        <Typography>Đề không có câu hỏi nào</Typography>
+                    ) : (
+                        examDataInfo.questionInfos?.map(
+                            (questionInfo, index) => (
+                                <Stack key={index}>
+                                    <Typography>
+                                        <span>Loại câu hỏi: </span>
+                                        {
+                                            QuestionTypeDatas[
+                                                questionInfo.type as keyof typeof QuestionTypeDatas
+                                            ]?.label
+                                        }
+                                    </Typography>
+                                    <Typography>
+                                        <span>Số lượng câu hỏi: </span>
+                                        {questionInfo.questions.length}
+                                    </Typography>
+                                </Stack>
+                            )
+                        )
+                    )}
+                </Stack>
+                <Stack
+                    flex="1"
+                    sx={{
+                        padding: "2rem",
+                        overflowY: "auto",
+                    }}
+                >
+                    <ExamInfo
+                        exam={examToCreateInfo}
+                        editModal={
+                            <AppModal
+                                trigger={
+                                    <Button
+                                        sx={{
+                                            alignSelf: "center",
+                                            marginTop: "1rem",
+                                        }}
+                                        variant="contained"
+                                    >
+                                        <Edit />
+                                    </Button>
+                                }
+                            >
+                                <UpdateExamModal
+                                    submitAction={handleSubmitAciton}
+                                    defaultValueProp={
+                                        ultis.isEmptyObject(examToCreateInfo)
+                                            ? {
+                                                  isPublic: true,
+                                                  subjectName: "Khác",
+                                                  duration: 45,
+                                                  date: null,
+                                                  grade: "unknown",
+                                                  type: "unOfficial",
+                                              }
+                                            : examToCreateInfo
+                                    }
+                                />
+                            </AppModal>
                         }
                     />
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            if (
-                                ultis.checkEmptyArray(
-                                    examDataInfo.questionInfos
-                                )
-                            ) {
+                    <Typography variant="h5" marginBottom={2}>
+                        Tạo phần thi
+                    </Typography>
+                    <PartsTemp questionTypes={questionTypes} />
+                    <Stack
+                        spacing={2}
+                        direction={{ xs: "column", sm: "row" }}
+                        marginTop="4rem"
+                        justifyContent="flex-end"
+                    >
+                        <TextField
+                            type="number"
+                            label="Số lượng bài thi"
+                            size="small"
+                            defaultValue={numberOfExams}
+                            onChange={(e) =>
                                 dispatch(
-                                    sendAlert({
-                                        message:
-                                            "Bài thi không có câu hỏi hoặc không rõ thông tin câu hỏi, vui lòng thử lại",
-                                        severity: "error",
+                                    updateNumberOfExams(Number(e.target.value))
+                                )
+                            }
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={() => {
+                                if (
+                                    ultis.checkEmptyArray(
+                                        examDataInfo.questionInfos
+                                    )
+                                ) {
+                                    dispatch(
+                                        sendAlert({
+                                            message:
+                                                "Bài thi không có câu hỏi hoặc không rõ thông tin câu hỏi, vui lòng thử lại",
+                                            severity: "error",
+                                        })
+                                    );
+                                    return;
+                                }
+                                dispatch(
+                                    addPartTemp({
+                                        type: examDataInfo.questionInfos?.[0]
+                                            .type!,
                                     })
                                 );
-                                return;
-                            }
-                            dispatch(
-                                addPartTemp({
-                                    type: examDataInfo.questionInfos?.[0].type!,
-                                })
-                            );
-                        }}
-                    >
-                        Thêm phần
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => {
-                            handleCreateExam({
-                                examToCreateInfo: examToCreateInfo,
-                                parts,
-                                questionInfos: examDataInfo.questionInfos,
-                            });
-                        }}
-                    >
-                        Tạo bài thi
-                    </Button>
+                            }}
+                        >
+                            Thêm phần
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                handleCreateExam({
+                                    examToCreateInfo: examToCreateInfo,
+                                    parts,
+                                    questionInfos: examDataInfo.questionInfos,
+                                });
+                            }}
+                        >
+                            Tạo bài thi
+                        </Button>
+                    </Stack>
                 </Stack>
             </Stack>
-        </Stack>
+        </Container>
     );
 }

@@ -9,6 +9,8 @@ import {
     Stack,
     Switch,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from "@mui/material";
 import { grey, teal } from "@mui/material/colors";
 import React, { Suspense, useEffect } from "react";
@@ -35,6 +37,8 @@ export default function EditExamPage(props: ICreateExamPageProps) {
     const scale = React.useRef(1);
     const pageAreaRef = React.useRef<HTMLDivElement>(null);
     const paperGroupRef = React.useRef<HTMLDivElement>(null);
+    const theme = useTheme();
+    const matchSm = useMediaQuery(theme.breakpoints.down("md"));
     const [isPreview, setPreview] = React.useState(true);
     const [isNativePreview, setNativePreview] = React.useState(false);
     const navigate = useNavigate();

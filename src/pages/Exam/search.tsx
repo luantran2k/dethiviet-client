@@ -54,7 +54,7 @@ export default function SearchExamPage(props: ISearchExamPageProps) {
             alignItems="center"
             spacing={4}
             maxWidth="56.62rem"
-            m="0 auto 4rem"
+            m="0 2rem 4rem"
         >
             <Stack direction="row" spacing={2}></Stack>
             <form onSubmit={handleSubmit}>

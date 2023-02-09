@@ -72,7 +72,7 @@ export default function ExamSelected(props: IExamSelectedProps) {
                     padding: "1rem",
                     maxHeight: "80vh",
                     overflowY: "auto",
-                    width: "26rem",
+                    maxWidth: "26rem",
                 }}
             >
                 <Typography
